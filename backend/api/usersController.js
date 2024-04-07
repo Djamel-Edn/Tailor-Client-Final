@@ -4,7 +4,7 @@ const validator=require('validator');
 
 const registerClient = async (req, res) => {
     try {
-        const { firstname, lastname, password, email } = req.body;
+        const { name,gender, password, email } = req.body;
 
         let client = await clientModel.findOne({ email });
         if (client) {
@@ -16,9 +16,9 @@ const registerClient = async (req, res) => {
         if (!validator.isStrongPassword(password)) {
             return res.status(400).json('Password is weak');
         }
-        client = new clientModel({ firstname, lastname, password, email });
+        client = new clientModel({ name,gender, password, email });
         await client.save(); 
-        res.status(201).json({_id: client._id, firstname: client.firstname, lastname: client.lastname, email: client.email});
+        res.status(201).json({_id: client._id, name:client.name, email: client.email});
     } catch (err) {
         console.log(err);
         res.status(500).json('Server error');
@@ -26,7 +26,7 @@ const registerClient = async (req, res) => {
 }
 const registerTailor = async (req, res) => {
     try {
-        const { name, email, password, phone, address, city, country, Speciality, description } = req.body;
+        const { name, email,gender, password, phone, address, city } = req.body;
 
         let tailor = await tailorModel.findOne({ email });
         if (tailor) {
@@ -38,13 +38,44 @@ const registerTailor = async (req, res) => {
         if (!validator.isStrongPassword(password)) {
             return res.status(400).json('Password is weak');
         }
-        tailor = new tailorModel({ name, email, password, phone, address, city, country, Speciality, description });
+        tailor = new tailorModel({ name, email,gender, password, phone, address, city });
         await tailor.save(); 
         res.status(201).json({_id: tailor._id, name: tailor.name, email: tailor.email});
     } catch (err) {
         console.log(err);
         res.status(500).json('Server error');
     }
-
-
 };
+const loginClient = async (req, res) => {
+    try {
+        const { email, password } = req.body;
+        let client = await clientModel.findOne({ email });
+        if (client){
+            if (client.password === password) {
+                res.status(200).json({_id: client._id, name: client.name, email: client.email});
+            } else {
+                res.status(400).json('Invalid credentials');
+            }
+        }}
+        catch (err) {
+            res.status(500).json('Server error');
+
+        }}
+const loginTailor = async (req, res) => {
+    try {
+        const { email, password } = req.body;
+        let tailor = await tailorModel.findOne({ email });
+        if (tailor){
+            if (tailor.password === password) {
+                res.status(200).json({_id: tailor._id, name: tailor.name, email: tailor.email});
+            } else {
+                res.status(400).json('Invalid credentials');
+            }
+        }}
+        catch (err) {
+            res.status(500).json('Server error');
+
+        }}
+
+        
+module.exports = { registerClient, registerTailor, loginClient, loginTailor };

@@ -6,7 +6,7 @@ const tailorSchema = new mongoose.Schema({
     phone: Number,
     address: String,
     city: String,
-    country: String,
+    gender:String,
     Speciality:String,
     description: String,
     rating: Number,

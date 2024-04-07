@@ -4,7 +4,7 @@ const port =process.env.PORT || 5001;
 const mongoose=require('mongoose');
 require('dotenv').config();
 
-
+app.use(express.json());
 
 
 
