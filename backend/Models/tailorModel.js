@@ -10,6 +10,7 @@ const tailorSchema = new mongoose.Schema({
     Speciality:String,
     description: String,
     rating: Number,
+    verified:Boolean,
     reviews: [
         {
             type: mongoose.Schema.Types.ObjectId,

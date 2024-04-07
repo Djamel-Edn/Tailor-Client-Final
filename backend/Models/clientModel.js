@@ -3,7 +3,9 @@ const mongoose = require('mongoose');
 
 const clientSchema = new mongoose.Schema({
     name:String,
-    password:{type:String,required:true},
+    email:String,
+    verified:Boolean,
+    password:String,
     orders: [
         {
             type: mongoose.Schema.Types.ObjectId,
