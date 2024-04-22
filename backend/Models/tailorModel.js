@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+
 const tailorSchema = new mongoose.Schema({
     name: String,
     email: String,
@@ -7,7 +8,7 @@ const tailorSchema = new mongoose.Schema({
     address: String,
     city: String,
     gender: String,
-    speciality: String, // Corrected typo in the property name
+    speciality: String,
     description: String,
     rating: Number,
     verified: Boolean,
@@ -16,9 +17,9 @@ const tailorSchema = new mongoose.Schema({
         type: String,
         default: '../utils/pp.png'
     },
-    reviews: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Review' }], // Array of reviews
+    reviews: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Review' }],
     orders: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Order' }],
+    posts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Post' }] // Array of posts
 });
-
 
 module.exports = mongoose.model('Tailor', tailorSchema);

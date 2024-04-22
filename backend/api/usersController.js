@@ -314,7 +314,7 @@ const updatePassword = async (req, res) => {
 const updateProfile = async (req, res) => {
     try {
         const { userId } = req.params;
-        const { name, email, city, phone, profilePicture } = req.body;
+        const { name, email, city, phone, profilePicture,speciality } = req.body;
         if (!userId) {
             return res.status(400).json('User ID is required');
         }
@@ -334,6 +334,7 @@ const updateProfile = async (req, res) => {
         if (city) user.city = city;
         if (phone) user.phone = phone;
         if (profilePicture) user.profilePicture = profilePicture;
+        if (speciality) user.speciality = speciality;
         
         await user.save();
         

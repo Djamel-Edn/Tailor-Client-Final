@@ -10,13 +10,16 @@ const Profile = () => {
     const [userType, setUserType] = useState('');
     const [errorMsg, setErrorMsg] = useState('');
 
+    
+
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [image, setImage] = useState('');
     const [price, setPrice] = useState('');
     const [category, setCategory] = useState('');
+    const [postSpeciality, setPostSpeciality] = useState('');
     const [speciality, setSpeciality] = useState('');
-
+    
     const fileInputRef = useRef(null); // Ref for the file input element
 
     const handlePost = async (e) => {
@@ -27,7 +30,7 @@ const Profile = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ title, description, image, price, category, speciality,tailor:user._id })
+                body: JSON.stringify({ title, description, image, price, category, postSpeciality,tailor:user._id })
             });
 
             if (!response.ok) {
@@ -42,7 +45,7 @@ const Profile = () => {
             setImage('');
             setPrice('');
             setCategory('');
-            setSpeciality('');
+            setPostSpeciality('');
         } catch (error) {
             console.error('Error:', error);
             setErrorMsg('Server error');
@@ -68,7 +71,8 @@ const Profile = () => {
             email: newEmail || user.email,
             city: newCity || user.city,
             phone: newPhone || user.phone,
-            profilePicture: newPP || user.profilePicture
+            profilePicture: newPP || user.profilePicture,
+            speciality: speciality || user.speciality
         };
 
         try {
@@ -143,7 +147,9 @@ const Profile = () => {
                 <h2>{user?.phone}</h2>
                 <input type="text" value={newPhone} onChange={(e) => setNewPhone(e.target.value)} />
                 <br />
-                <img src="" alt="" />
+                <h2>{user?.speciality}</h2>
+                <input type="text" value={speciality} onChange={(e)=>{setSpeciality(e.target.value)}}/>
+                <br/><br />
                 <label>PP</label>
                 <img src={user?.profilePicture} alt="" />
                 <input type="file" name='image' onChange={handleFileChange} ref={fileInputRef} />
@@ -165,7 +171,7 @@ const Profile = () => {
                         <label >Category</label>
                         <input type="text" value={category} onChange={e => setCategory(e.target.value)} />
                         <label >Speciality</label>
-                        <input type="text" value={speciality} onChange={e => setSpeciality(e.target.value)} />
+                        <input type="text" value={postSpeciality} onChange={e => setPostSpeciality(e.target.value)} />
                         <button type='submit'>createPost</button>
                     </form>
                 </>
