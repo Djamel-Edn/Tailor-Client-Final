@@ -8,7 +8,15 @@ export default function RegisterTailor() {
     const [city,setCity]=useState('');
     const [phone,setPhone]=useState('');
     const [errorMsg, setErrorMsg] = useState('');
-
+    const processResponse = (data) => {
+      if (typeof data === 'object') {
+          // If data is an object, return it
+          localStorage.setItem('user', JSON.stringify(data));
+      } else if (typeof data === 'string') {
+          // If data is a string (message), set error message
+          setErrorMsg(data);
+      }
+    };
 
     async function handlesubmit(e) {
         e.preventDefault();
@@ -19,11 +27,11 @@ export default function RegisterTailor() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email, name, password, gender }),
+        body: JSON.stringify({ email, name, password, gender,city,phone }),
       });
       const data = await response.json();
       
-      if (!data.name){setErrorMsg(data); return;}
+      processResponse(data);
     } catch (error) {
       console.error('Error:', error);
      

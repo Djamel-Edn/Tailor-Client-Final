@@ -6,23 +6,18 @@ const tailorSchema = new mongoose.Schema({
     phone: Number,
     address: String,
     city: String,
-    gender:String,
-    Speciality:String,
+    gender: String,
+    speciality: String, // Corrected typo in the property name
     description: String,
     rating: Number,
-    verified:Boolean,
-    reviews: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Review'
-        }
-    ],
-    orders: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Order'
-        }
-    ],
+    verified: Boolean,
+    resetPasswordToken: String,
+    profilePicture: {
+        type: String,
+        default: '../utils/pp.png'
+    },
+    reviews: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Review' }], // Array of reviews
+    orders: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Order' }],
 });
 
 

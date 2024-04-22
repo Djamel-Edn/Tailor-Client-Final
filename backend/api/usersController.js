@@ -6,6 +6,7 @@ const nodemailer = require('nodemailer');
 const { v4: uuidv4 } = require('uuid');
 const bcrypt = require('bcrypt');
 const path = require('path');
+const { profile } = require('console');
 require('dotenv').config();
 let transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST,
@@ -93,8 +94,9 @@ const registerClient = async (req, res) => {
             _id: client._id,
             username: client.username,
             email: client.email,
-            gender: client.gender
-    
+            gender: client.gender,
+            profilePicture: client.profilePicture,
+            userType: 'client',
         });
     } catch (error) {
         console.log(error);
@@ -127,7 +129,9 @@ const registerTailor = async (req, res) => {
             email: tailor.email,
             gender: tailor.gender,
             phone: tailor.phone,
-            city: tailor.city
+            city: tailor.city,
+            profilePicture: tailor.profilePicture,
+            userType: 'tailor',
         });
     } catch (err) {
         console.log(err);
@@ -150,13 +154,30 @@ const login = async (req, res) => {
         if (user) {
             const isPasswordValid = await bcrypt.compare(password, user.password);
             if (isPasswordValid) {
-                res.status(200).json({
-                    _id: user._id,
-                    name: user.name,
-                    email: user.email,
-                    verified: user.verified,
-                    userType: userType 
-                });
+                if (userType === 'tailor') {
+                    res.status(200).json({
+                        _id: user._id,
+                        name: user.name,
+                        email: user.email,
+                        phone: user.phone,
+                        city: user.city,
+                        gender:user.gender,
+                        verified: user.verified,
+                        userType: userType ,
+                        profilePicture: user.profilePicture,
+                    });
+
+                }else{
+                    res.status(200).json({
+                        _id: user._id,
+                        name: user.name,
+                        email: user.email,
+                        verified: user.verified,
+                        gender:user.gender,
+                        userType: userType ,
+                        profilePicture: user.profilePicture,
+                    });
+                }
             } else {
                 res.status(400).json('Invalid credentials');
             }
@@ -221,5 +242,129 @@ const verifyEmail = async (req, res) => {
     }
 };
 
+const resetPassword = async (req, res) => {
+    try {
+        const { email } = req.body;
+        
+        let user = await clientModel.findOne({ email });
+        
+        if (!user) {
+            user = await tailorModel.findOne({ email });
+        }
+        
+        if (user) {
+            const resetToken = uuidv4();
 
-module.exports = { registerClient, registerTailor, login,verifyEmail };
+            user.resetPasswordToken = resetToken;
+            await user.save();
+
+            const resetUrl = `http://localhost:5000/${email}/${resetToken}`;
+            const mailOptions = {
+                from: process.env.AUTH_EMAIL,
+                to: email,
+                subject: 'Password Reset',
+                html: `<p>You have requested to reset your password. Please follow the link below to reset your password:</p><a href="${resetUrl}">here</a>`
+            };
+
+            transporter.sendMail(mailOptions, (error, info) => {
+                if (error) {
+                    console.error('Error sending email:', error);
+                    res.status(500).json('Failed to send password reset email');
+                } else {
+                    console.log('Password reset email sent:', info.response);
+                    res.status(200).json('Password reset email sent');
+                }
+            });
+        } else {
+            res.status(400).json('Email not found');
+        }
+    } catch (err) {
+        console.error('Error:', err);
+        res.status(500).json('Server error');
+    }
+};
+const updatePassword = async (req, res) => {
+    try {
+        const { resetToken, newPassword } = req.body;
+        
+        let user = await clientModel.findOne({ resetPasswordToken: resetToken });
+
+        if (!user) {
+            user = await tailorModel.findOne({ resetPasswordToken: resetToken });
+        }
+        if (!validator.isStrongPassword(newPassword)) return res.status(400).json('Password is weak');
+
+        if (user) {
+            const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+            user.password = hashedPassword;
+            user.resetPasswordToken = null; 
+            await user.save();
+
+            res.status(200).json('Password updated successfully');
+        } else {
+            res.status(400).json('Invalid or expired reset token');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json('Server error');
+    }
+};
+
+const updateProfile = async (req, res) => {
+    try {
+        const { userId } = req.params;
+        const { name, email, city, phone, profilePicture } = req.body;
+        if (!userId) {
+            return res.status(400).json('User ID is required');
+        }
+
+        let user = await clientModel.findById(userId);
+        let userType = 'client';
+        if (!user) {
+            user = await tailorModel.findById(userId);
+            userType = 'tailor';
+        }
+        
+        if (!user) {
+            return res.status(404).json('User not found');
+        }
+        if (name) {user.name = name;}
+        if (email) user.email = email;
+        if (city) user.city = city;
+        if (phone) user.phone = phone;
+        if (profilePicture) user.profilePicture = profilePicture;
+        
+        await user.save();
+        
+        const userWithoutPassword = user.toObject();
+        delete userWithoutPassword.password;
+
+        // Add userType to the response object
+        const responseObject = {
+            ...userWithoutPassword,
+            userType: userType
+        };
+
+        res.status(200).json(responseObject);
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json('Server error');
+    }
+};
+
+const getallTailors=async (req,res)=>{
+    try{
+        const tailors=await tailorModel.find();
+        res.status(200).json(tailors);
+    }catch(error){
+        res.status(500).json({error:'Server error'});
+    }
+
+}
+
+
+
+
+module.exports = { registerClient, registerTailor, login, verifyEmail, resetPassword, updatePassword, updateProfile,getallTailors};
+

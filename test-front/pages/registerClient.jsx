@@ -6,10 +6,12 @@ function RegisterClient() {
   const [email, setEmail] = useState('');
   const [gender, setGender] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
+
+  localStorage.setItem('user', {name,email,gender});
   const processResponse = (data) => {
     if (typeof data === 'object') {
         // If data is an object, return it
-        return data;
+        localStorage.setItem('user', JSON.stringify( data ));
     } else if (typeof data === 'string') {
         // If data is a string (message), set error message
         setErrorMsg(data);
@@ -17,7 +19,7 @@ function RegisterClient() {
         // Handle other types of data if necessary
         console.error('Unexpected data type:', typeof data);
     }
-};
+  };
   
   async function handleSubmit(e) {
     e.preventDefault();

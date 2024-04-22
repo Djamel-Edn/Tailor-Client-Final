@@ -1,9 +1,11 @@
 import React, { useState } from 'react'
+import { Link, Navigate } from 'react-router-dom';
 
 const Login = () => {    
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [errorMsg, setErrorMsg] = useState('');
+    const [loggedIn, setLoggedIn] = useState(false);
     async function handleSubmite(e){
         e.preventDefault();
         if (!email || !password){setErrorMsg('Please fill all the fields'); return;}
@@ -16,8 +18,12 @@ const Login = () => {
                 body:JSON.stringify({email,password}),
             })
             const data = await response.json();
-            if (!data.name){setErrorMsg(data); return;}
-            console.log(data)
+             
+            if (data.email){localStorage.setItem('user', JSON.stringify(data));
+            console.log(data);
+            setLoggedIn(true);
+            return;}
+            else {setErrorMsg(data); return;}
         }
         catch(error){
             console.error('Error:', error);
@@ -40,6 +46,7 @@ const Login = () => {
                 <button type="submit">Login</button>
                 </form>
                 {errorMsg && <p className='text-red-500 text-sm mt-2'>{errorMsg}</p>}
+                <Link to={'/login/forgotpassword'}>forget your password?</Link>
         </div>
     )
 }

@@ -6,6 +6,11 @@ const clientSchema = new mongoose.Schema({
     email:String,
     verified:Boolean,
     password:String,
+    resetPasswordToken:String,
+    profilePicture: {
+        type: String,
+        default: '/../utils/pp.png' 
+    },
     orders: [
         {
             type: mongoose.Schema.Types.ObjectId,
