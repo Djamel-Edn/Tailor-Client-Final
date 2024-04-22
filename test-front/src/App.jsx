@@ -6,6 +6,7 @@ import Forgotpassword from './../pages/forgotpassword';
 import ResetPassword from './../pages/resetPassword';
 import Profile from '../pages/profile';
 import Home from '../pages/home';
+import Recherche from '../pages/recherche';
 function App() {
 
 
@@ -21,7 +22,8 @@ function App() {
         <Route path="/" element={<Forgotpassword />} />
         <Route path="/profile" element={<Profile/>} />
         <Route path="/home" element={<Home/>} />
-        
+        <Route path="/recherche" element={<Recherche/>} />
+       
         <Route path='*' element={<Navigate  to='/'/>}></Route>
       </Routes>
     
