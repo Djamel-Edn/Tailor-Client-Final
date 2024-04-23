@@ -94,7 +94,6 @@ const registerClient = async (req, res) => {
             gender, 
             verified: false, 
             orders: [],
-            resetPasswordToken: code.toString() // Save the random code in resetPasswordToken
         });
 
         await client.save()
@@ -145,7 +144,6 @@ const registerTailor = async (req, res) => {
             speciality: '',
             description: '',
             rating: 0,
-            resetPasswordToken: code.toString(), // Save the random code in resetPasswordToken
             profilePicture: '../utils/pp.png',
             reviews: [],
             orders: [],
