@@ -1,13 +1,13 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:projetfinprepa/Data/Models_Class.dart';
-import 'package:projetfinprepa/Data/StaticData.dart';
 import 'package:projetfinprepa/Data/Tailor_Class.dart';
 import 'package:projetfinprepa/Data/category.dart';
-import 'package:projetfinprepa/Pages/Detail_Page.dart';
+import 'package:projetfinprepa/Providers/Models.dart';
 import 'package:projetfinprepa/Providers/Tailors.dart';
 import 'package:provider/provider.dart';
 
@@ -23,7 +23,7 @@ class _SearchPageState extends State<SearchPage> {
   int currentpage = 0;
   TextEditingController _controller = TextEditingController();
   List<Tailor> AllDataTailors = [];
-  List<Model> AllDataModels = StaticData().Models;
+  List<Model> AllDataModels = [];
   List<String> FilterTypes = [
     "Dress",
     "Jean",
@@ -41,6 +41,7 @@ class _SearchPageState extends State<SearchPage> {
   bool EmptyResultModels = false;
   bool _selectedSeg = false;
   bool startTransition = false;
+  bool IsInitialSheet = true;
 
   bool Showseg = false;
   List<Tailor> ResultTilors = [];
@@ -58,12 +59,11 @@ class _SearchPageState extends State<SearchPage> {
       EmptyResultTailors = false;
       EmptyResultModels = false;
     } else {
-      print(query.toUpperCase() == AllDataTailors[0].name.toUpperCase());
       Data = AllDataTailors.where((element) =>
           element.name.toUpperCase().startsWith(query.toUpperCase())).toList();
 
       Data2 = AllDataModels.where(
-              (element) => element.Category.startsWith(query.toUpperCase()))
+              (element) => element.speciality.startsWith(query.toUpperCase()))
           .toList();
       if ((Data.length == 0 || Data2.length == 0) && query == "") {
         EmptyResultTailors = false;
@@ -73,7 +73,6 @@ class _SearchPageState extends State<SearchPage> {
       } else if ((Data.length == 0 && Data2.length == 0) && query != "") {
         EmptyResultTailors = true;
         EmptyResultModels = true;
-        print("not found");
       } else {
         EmptyResultModels = false;
         EmptyResultTailors = false;
@@ -97,6 +96,9 @@ class _SearchPageState extends State<SearchPage> {
     super.initState();
     AllDataTailors =
         Provider.of<TailorsProvider>(context, listen: false).AllTailors;
+    AllDataModels =
+        Provider.of<ModelsProvider>(context, listen: false).AllModel;
+
     ResultTilors = AllDataTailors;
     ResultModels = AllDataModels;
     ResultMatchSeg = FilterTypes;
@@ -108,6 +110,7 @@ class _SearchPageState extends State<SearchPage> {
       length: 2,
       child: Scaffold(
         body: Container(
+          color: Color(0xFFFCF9F6),
           padding: EdgeInsets.symmetric(horizontal: 20, vertical: 30),
           child: Column(
             children: [
@@ -118,30 +121,36 @@ class _SearchPageState extends State<SearchPage> {
                   child: TextField(
                     controller: _controller,
                     onTapOutside: (event) {
-                      print("outsyde");
+                      ResultModels = AllDataModels;
                     },
                     onEditingComplete: () {
                       setState(() {
                         FocusScope.of(context).unfocus();
-                        print(_FilterSlected.length);
                         if (_FilterSlected.length == 0) {
                           ResultModels = AllDataModels;
                         } else {
                           _controller.text = _controller.text =
                               _FilterSlected[0].substring(0, 1).toUpperCase() +
                                   _FilterSlected[0].substring(1).toLowerCase();
+                          _FilterSlected[0] = _controller.text;
                         }
                         Showseg = false;
+                        ResultModels = AllDataModels.where(
+                          (element) =>
+                              element.speciality.toUpperCase() ==
+                              _FilterSlected[0].toUpperCase(),
+                        ).toList();
+                        if (!ResultModels.isEmpty) {
+                          EmptyResultModels = false;
+                        }
                       });
                     },
                     onTap: () {
-                      print("tap");
                       setState(() {
                         Showseg = true;
                       });
                     },
                     onChanged: (value) {
-                      print(value);
                       _ShowMatchSeg(value);
                       _ShowResult(value);
 
@@ -150,10 +159,8 @@ class _SearchPageState extends State<SearchPage> {
                             element.toUpperCase() == value.toUpperCase(),
                         orElse: () => "NotFound",
                       );
-                      print(tst);
-                      print(FilterTypes.contains(value.toUpperCase()));
+
                       if (tst != "NotFound") {
-                        print("aaaaaaaaaaaaaaaaaaaaaaaaaaooo");
                         setState(() {
                           _FilterSlected.clear();
                           _FilterSlected.add(value.toUpperCase());
@@ -218,7 +225,7 @@ class _SearchPageState extends State<SearchPage> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  "Not found",
+                                  "Not foundk",
                                   style: TextStyle(
                                       fontSize: 28, color: Color(0xFFC0AF9A)),
                                 ),
@@ -259,27 +266,76 @@ class _SearchPageState extends State<SearchPage> {
                                           microseconds: 1200 + (index * 1000)),
                                       child: InkWell(
                                         onTap: () {
-                                          Navigator.of(context)
-                                              .push(PageRouteBuilder(
-                                            reverseTransitionDuration:
-                                                Duration(milliseconds: 200),
-                                            transitionDuration:
-                                                Duration(milliseconds: 1200),
-                                            pageBuilder: (context, animation,
-                                                secondaryAnimation) {
-                                              return DetailPost(index);
+                                          showModalBottomSheet(
+                                            context: context,
+                                            builder: (context) {
+                                              return SizedBox(
+                                                  height: 600,
+                                                  width: double.infinity,
+                                                  child: Column(children: [
+                                                    Stack(
+                                                      children: [
+                                                        Container(
+                                                          decoration: BoxDecoration(
+                                                              color:
+                                                                  Colors.amber,
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          20)),
+                                                          margin:
+                                                              EdgeInsets.all(
+                                                                  10),
+                                                          child: AspectRatio(
+                                                            aspectRatio: 1,
+                                                            child: ClipRRect(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            20),
+                                                                child: Image.memory(
+                                                                    base64Decode(
+                                                                        ResultModels[index]
+                                                                            .image))),
+                                                          ),
+                                                        ),
+                                                        Positioned(
+                                                            top: 30,
+                                                            right: 30,
+                                                            child: CircleAvatar(
+                                                              backgroundColor:
+                                                                  Colors.white,
+                                                              child: IconButton(
+                                                                icon: Icon(Icons
+                                                                    .save_outlined),
+                                                                onPressed:
+                                                                    () {},
+                                                              ),
+                                                            )),
+                                                      ],
+                                                    ),
+                                                    Text("data")
+                                                  ]));
                                             },
-                                          ));
+                                          );
                                         },
                                         child: Hero(
-                                          tag: "$index",
-                                          child: Image.asset(
-                                            ResultModels[index].image,
-                                            height: 200,
-                                            width: 200,
-                                            fit: BoxFit.fill,
-                                          ),
-                                        ),
+                                            tag: "$index",
+                                            child: AspectRatio(
+                                              aspectRatio: 1,
+                                              child: Container(
+                                                decoration: BoxDecoration(
+                                                    border: Border.all(
+                                                        color: Color(0xFF84643D)
+                                                            .withAlpha(50))),
+                                                child: Image.memory(
+                                                  base64Decode(
+                                                    ResultModels[index].image,
+                                                  ),
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              ),
+                                            )),
                                       ),
                                     ),
                                   ),
@@ -335,7 +391,9 @@ class _SearchPageState extends State<SearchPage> {
                           ],
                         ),
                       )
-                    : ListView.builder(
+                    : GridView.builder(
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2, childAspectRatio: 0.87),
                         itemCount: ResultTilors.length,
                         itemBuilder: (context, index) {
                           return AnimatedContainer(
@@ -345,24 +403,18 @@ class _SearchPageState extends State<SearchPage> {
                             margin: EdgeInsets.symmetric(
                                 horizontal: 10, vertical: 12),
                             decoration: BoxDecoration(
-                                boxShadow: [
-                                  BoxShadow(
-                                      blurRadius: 0.2,
-                                      spreadRadius: 0.3,
-                                      color: Colors.black45,
-                                      offset: Offset(0, 2),
-                                      blurStyle: BlurStyle.inner)
-                                ],
-                                color: Color.fromARGB(255, 231, 231, 231)
-                                    .withOpacity(1),
+                                boxShadow: [],
+                                border: Border.all(color: Colors.black),
+                                color: Color(0xFFD9D9D9).withAlpha(60),
                                 borderRadius: BorderRadius.circular(20)),
-                            child: Row(
+                            child: Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 ResultTilors[index].profilePicture.toString() !=
                                         "../utils/pp.png"
                                     ? CircleAvatar(
-                                        radius: 30,
+                                        radius: 40,
                                         foregroundImage: MemoryImage(
                                           base64Decode(ResultTilors[index]
                                               .profilePicture
@@ -371,15 +423,30 @@ class _SearchPageState extends State<SearchPage> {
                                         ),
                                       )
                                     : CircleAvatar(
-                                        radius: 30,
+                                        radius: 40,
                                         foregroundImage: AssetImage(
                                           "images/DefaultProfileWomen.png",
                                         ),
                                       ),
-                                SizedBox(
-                                  width: 10,
+                                Text(
+                                  ResultTilors[index].name,
+                                  style: TextStyle(fontSize: 18),
                                 ),
-                                Text(ResultTilors[index].name),
+                                RatingBar.builder(
+                                  initialRating: 3,
+                                  minRating: 1,
+                                  itemSize: 15,
+                                  direction: Axis.horizontal,
+                                  allowHalfRating: true,
+                                  itemCount: 5,
+                                  itemBuilder: (context, _) => Icon(
+                                    Icons.star,
+                                    size: 1,
+                                    color: Colors.amber,
+                                  ),
+                                  onRatingUpdate: (rating) {},
+                                  ignoreGestures: true,
+                                )
                               ],
                             ),
                           );

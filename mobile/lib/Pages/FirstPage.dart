@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:projetfinprepa/Pages/Search_Page.dart';
+import 'package:projetfinprepa/Providers/Models.dart';
 import 'package:projetfinprepa/Providers/Tailors.dart';
 import 'package:projetfinprepa/tests/Home_Page.dart';
 import 'package:provider/provider.dart';
@@ -12,18 +13,18 @@ class FirstPage extends StatefulWidget {
 }
 
 class _FirstPageState extends State<FirstPage> {
+  List Pages = [HomePage(), SearchPage()];
   int currentpage = 0;
   @override
   void initState() {
-    // TODO: implement initState
-    super.initState();
     Provider.of<TailorsProvider>(context, listen: false).GetAllTailors();
+    Provider.of<ModelsProvider>(context, listen: false).GetAllModels();
+
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    List Pages = [HomePage(), SearchPage()];
-
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: SafeArea(
@@ -44,7 +45,6 @@ class _FirstPageState extends State<FirstPage> {
             elevation: 0,
             unselectedItemColor: Colors.white,
             onTap: (value) {
-              print(value);
               currentpage = value;
               setState(() {});
             },

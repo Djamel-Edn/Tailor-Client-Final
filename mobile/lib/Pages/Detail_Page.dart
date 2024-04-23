@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 class DetailPost extends StatelessWidget {
   int tag;
-  DetailPost(this.tag);
+  String image;
+  DetailPost(this.tag, this.image);
 
   @override
   Widget build(BuildContext context) {
@@ -17,8 +18,12 @@ class DetailPost extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Hero(
-                      tag: "$tag",
-                      child: Container(child: Text("lllllllllll"))),
+                    tag: "$tag",
+                    child: Image.asset(
+                      image,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
                 ],
               ),
             ),

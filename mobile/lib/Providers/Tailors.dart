@@ -18,6 +18,12 @@ class TailorsProvider extends ChangeNotifier {
       print(jsonres.length);
       for (var tailorobj in jsonres) {
         Tailor tailor = Tailor(
+            Speciality: tailorobj["speciality"],
+            address: tailorobj["address"],
+            models: tailorobj["posts"],
+            rating: tailorobj["rating"],
+            description: tailorobj["description"],
+            resetPasswordToken: tailorobj["resetPasswordToken"],
             name: tailorobj["name"],
             id: tailorobj["_id"],
             email: tailorobj["email"],
