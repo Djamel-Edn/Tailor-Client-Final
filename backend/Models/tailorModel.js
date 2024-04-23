@@ -19,7 +19,7 @@ const tailorSchema = new mongoose.Schema({
     },
     reviews: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Review' }],
     orders: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Order' }],
-    posts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Post' }] // Array of posts
+    posts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Post' }] 
 });
 
 module.exports = mongoose.model('Tailor', tailorSchema);

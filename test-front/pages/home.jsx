@@ -66,7 +66,7 @@ const Home = () => {
                     <div key={post._id}>
                         <h1>{post.title}</h1>
                         <p>{post.description}</p>
-                        <p>{post.author}</p>
+                        <p>{post.tailor.name}</p>
                         <p>{post.price}</p>
                         *
                         {post.image && (

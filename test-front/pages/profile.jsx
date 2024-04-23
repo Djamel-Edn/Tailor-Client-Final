@@ -9,9 +9,6 @@ const Profile = () => {
     const [newPP, setNewPP] = useState('');
     const [userType, setUserType] = useState('');
     const [errorMsg, setErrorMsg] = useState('');
-
-    
-
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [image, setImage] = useState('');
@@ -51,7 +48,7 @@ const Profile = () => {
             setErrorMsg('Server error');
         }
     }
-
+  
     useEffect(() => {
         const userData = JSON.parse(localStorage.getItem('user'));
         if (userData) {
@@ -156,8 +153,7 @@ const Profile = () => {
                 
                 <input type="submit" />
             </form>
-            {userType === "tailor" && (
-                <>
+           
                     <br />
                     <form onSubmit={handlePost}>
                         <label >Title</label>
@@ -174,8 +170,8 @@ const Profile = () => {
                         <input type="text" value={postSpeciality} onChange={e => setPostSpeciality(e.target.value)} />
                         <button type='submit'>createPost</button>
                     </form>
-                </>
-            )}
+                
+         
         </div>
     );
 };

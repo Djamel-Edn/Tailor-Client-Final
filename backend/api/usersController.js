@@ -71,7 +71,7 @@ const sendVerificationEmail = ({ _id, email }, res) => {
 
 const registerClient = async (req, res) => {
     try {
-        const { username, email, password, gender } = req.body;
+        const { name, email, password, gender } = req.body;
 
         let client = await clientModel.findOne({ email });
         if (client) return res.status(400).json("User with this email already exists...");
@@ -85,18 +85,19 @@ const registerClient = async (req, res) => {
 
         const hashedPassword = await bcrypt.hash(password, 10); 
 
-        client = new clientModel({ username, email, password: hashedPassword, gender,verified:false });
+        client = new clientModel({ name, email, password: hashedPassword, gender,verified:false,orders:[] });
 
         await client.save()
         .then(result=>{sendVerificationEmail(result,res)}); 
 
         res.status(200).json({
             _id: client._id,
-            username: client.username,
+            name: client.name,
             email: client.email,
             gender: client.gender,
             profilePicture: client.profilePicture,
-            userType: 'client',
+            verified: client.verified,
+            orders:client.orders,
         });
     } catch (error) {
         console.log(error);
@@ -120,7 +121,20 @@ const registerTailor = async (req, res) => {
        
         const hashedPassword = await bcrypt.hash(password, 10); 
 
-        tailor = new tailorModel({ name, email, gender, password: hashedPassword, phone, city,verified:false });
+        tailor = new tailorModel({
+             name, email, gender, password: hashedPassword, phone, city,verified:false ,
+             address:'',
+             city:'',
+             gender: '',
+             speciality: '',
+             description: '',
+             rating: 0,
+             resetPasswordToken: '',
+             profilePicture:'../utils/pp.png',
+             reviews: [],
+             orders: [],
+             posts: [] 
+            });
        await  tailor.save()
         .then(result=>{sendVerificationEmail(result,res)}); 
         res.status(200).json({
@@ -131,7 +145,20 @@ const registerTailor = async (req, res) => {
             phone: tailor.phone,
             city: tailor.city,
             profilePicture: tailor.profilePicture,
-            userType: 'tailor',
+            
+           verified:false ,
+             address:'',
+             city:'',
+             gender: '',
+             speciality: '',
+             description: '',
+             rating: 0,
+             resetPasswordToken: '',
+             
+             reviews: [],
+             orders: [],
+             posts: [] 
+           
         });
     } catch (err) {
         console.log(err);
@@ -164,6 +191,7 @@ const login = async (req, res) => {
                         gender:user.gender,
                         verified: user.verified,
                         userType: userType ,
+                        orders: user.orders,
                         profilePicture: user.profilePicture,
                     });
 
@@ -341,7 +369,6 @@ const updateProfile = async (req, res) => {
         const userWithoutPassword = user.toObject();
         delete userWithoutPassword.password;
 
-        // Add userType to the response object
         const responseObject = {
             ...userWithoutPassword,
             userType: userType
