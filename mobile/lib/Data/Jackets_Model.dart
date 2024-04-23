@@ -1,0 +1,33 @@
+class JacketModel {
+  static List JacketsPath = [
+    "images/blousonJaket.jpeg",
+    "images/BoleroJaket.jpeg",
+    "images/bomberJaket.jpeg",
+    "images/cardiganJaket.jpeg",
+    "images/chanelJaket.jpeg",
+    "images/cropJaket.jpeg",
+    "images/cutawayJacket.jpeg",
+    "images/denimJaket.jpeg",
+    "images/doubleBreastedbigJacket.jpeg",
+    "images/doubleBreastedfittedJacket.jpeg",
+    "images/doubleBreastedJacket.jpeg",
+    "images/doubleBreastedLongJacket.jpeg",
+    "images/doubleBreastedthreelinesJacket.jpeg",
+    "images/empireJacket.jpeg",
+    "images/HodieJaket.jpeg",
+    "images/leatherJaket.jpeg",
+    "images/NorfolkJaket.jpeg",
+    "images/peplumJacket.jpeg",
+    "images/PonchoJaket.jpeg",
+    "images/safariJacket.jpeg",
+    "images/shearlingJacket.jpeg",
+    "images/singlebreastedfittedJacket.jpeg",
+    "images/singlebreastedJacket.jpeg",
+    "images/singlebreastednopocketJacket.jpeg",
+    "images/singlebreastedshortJacket.jpeg",
+    "images/singlebreastedThreebuttonJacket.jpeg",
+    "images/trapezJaket.jpeg",
+    "images/waterfallJacket.jpeg",
+    "images/windbreakerJaket.jpeg"
+  ];
+}
