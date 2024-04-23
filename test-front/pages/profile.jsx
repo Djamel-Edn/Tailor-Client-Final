@@ -17,7 +17,7 @@ const Profile = () => {
     const [postSpeciality, setPostSpeciality] = useState('');
     const [speciality, setSpeciality] = useState('');
     
-    const fileInputRef = useRef(null); // Ref for the file input element
+    const fileInputRef = useRef(null); 
 
     const handlePost = async (e) => {
         e.preventDefault();

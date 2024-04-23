@@ -77,7 +77,7 @@ const deletePost = async (req, res) => {
 
 const getallPosts = async (req, res) => {
     try {
-        const posts = await Post.find().populate('tailor');
+        const posts = await Post.find().populate('tailor').sort({createdAt:-1});
         res.status(200).json(posts);
     } catch (error) {
         console.error('Error fetching all posts:', error);

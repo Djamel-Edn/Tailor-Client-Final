@@ -402,9 +402,35 @@ const getallTailors=async (req,res)=>{
     }
 
 }
+const addFavorite = async (req, res) => {
+    try {
+        const { userId } = req.params;
+        const { postId } = req.body;
+
+        
+        const user = await clientModel.findById(userId);
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+       
+        const postExists = user.favorites.some(favorite => favorite.equals(postId));
+        if (postExists) {
+            return res.status(400).json({ error: 'Post is already in favorites' });
+        }
+
+        
+        user.favorites.push(postId);
+        await user.save();
+
+        res.status(200).json({ message: 'Post added to favorites successfully', favorites: user.favorites });
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ error: 'Server error' });
+    }
+};
 
 
 
-
-module.exports = { registerClient, registerTailor, login, verifyEmail, resetPassword, updatePassword, updateProfile,getallTailors,verifyEmail};
+module.exports = { registerClient, registerTailor, login, verifyEmail, resetPassword, updatePassword, updateProfile,getallTailors,verifyEmail,addFavorite};
 
