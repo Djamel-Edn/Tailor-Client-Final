@@ -6,7 +6,6 @@ const nodemailer = require('nodemailer');
 const { v4: uuidv4 } = require('uuid');
 const bcrypt = require('bcrypt');
 const path = require('path');
-const { profile } = require('console');
 require('dotenv').config();
 let transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST,
@@ -28,16 +27,18 @@ transporter.verify((error, success) => {
 });
 
 const sendVerificationEmail = ({ _id, email }, res) => {
-    const currentUrl = "http://localhost:5001/";
-    const uniqueString = uuidv4() + _id;
+    const code = Math.floor(1000 + Math.random() * 9000); // Génère un nombre aléatoire entre 1000 et 9999
+
     const mailOptions = {
         from: process.env.AUTH_EMAIL,
         to: email,
         subject: 'Verify your email',
-        html: `<h1>Click on the link below to verify your email</h1> <br> <a href=${currentUrl}verify/${_id}/${uniqueString}>Verify Email</a>`
+        html: `<h1>Use this code to verify your email: ${code}</h1>`
     };
 
     const saltRounds = 10;
+    const uniqueString = code.toString(); // Utilisez le code comme uniqueString
+
     bcrypt.hash(uniqueString, saltRounds)
         .then((hashedUniqueString) => {
             const newVerification = new userVerification({
@@ -69,6 +70,7 @@ const sendVerificationEmail = ({ _id, email }, res) => {
         });
 };
 
+
 const registerClient = async (req, res) => {
     try {
         const { name, email, password, gender } = req.body;
@@ -82,13 +84,21 @@ const registerClient = async (req, res) => {
         if (!validator.isEmail(email)) return res.status(400).json("Please enter a valid email ...");
         if (!validator.isStrongPassword(password)) return res.status(400).json("The password must be a strong one ...");
 
-
+        const code = Math.floor(1000 + Math.random() * 9000); // Génère un nombre aléatoire entre 1000 et 9999
         const hashedPassword = await bcrypt.hash(password, 10); 
 
-        client = new clientModel({ name, email, password: hashedPassword, gender,verified:false,orders:[] });
+        client = new clientModel({ 
+            name, 
+            email, 
+            password: hashedPassword, 
+            gender, 
+            verified: false, 
+            orders: [],
+            resetPasswordToken: code.toString() // Save the random code in resetPasswordToken
+        });
 
         await client.save()
-        .then(result=>{sendVerificationEmail(result,res)}); 
+            .then(result => { sendVerificationEmail(result, res) });
 
         res.status(200).json({
             _id: client._id,
@@ -97,7 +107,7 @@ const registerClient = async (req, res) => {
             gender: client.gender,
             profilePicture: client.profilePicture,
             verified: client.verified,
-            orders:client.orders,
+            orders: client.orders,
         });
     } catch (error) {
         console.log(error);
@@ -118,25 +128,33 @@ const registerTailor = async (req, res) => {
         if (!validator.isEmail(email)) return res.status(400).json('Invalid email');
         if (!validator.isStrongPassword(password)) return res.status(400).json('Password is weak');
 
-       
-        const hashedPassword = await bcrypt.hash(password, 10); 
+        const code = Math.floor(1000 + Math.random() * 9000); // Génère un nombre aléatoire entre 1000 et 9999
+        const hashedPassword = await bcrypt.hash(password, 10);
 
         tailor = new tailorModel({
-             name, email, gender, password: hashedPassword, phone, city,verified:false ,
-             address:'',
-             city:'',
-             gender: '',
-             speciality: '',
-             description: '',
-             rating: 0,
-             resetPasswordToken: '',
-             profilePicture:'../utils/pp.png',
-             reviews: [],
-             orders: [],
-             posts: [] 
-            });
-       await  tailor.save()
-        .then(result=>{sendVerificationEmail(result,res)}); 
+            name,
+            email,
+            gender,
+            password: hashedPassword,
+            phone,
+            city,
+            verified: false,
+            address: '',
+            city: '',
+            gender: '',
+            speciality: '',
+            description: '',
+            rating: 0,
+            resetPasswordToken: code.toString(), // Save the random code in resetPasswordToken
+            profilePicture: '../utils/pp.png',
+            reviews: [],
+            orders: [],
+            posts: []
+        });
+
+        await tailor.save()
+            .then(result => { sendVerificationEmail(result, res) });
+
         res.status(200).json({
             _id: tailor._id,
             name: tailor.name,
@@ -145,26 +163,26 @@ const registerTailor = async (req, res) => {
             phone: tailor.phone,
             city: tailor.city,
             profilePicture: tailor.profilePicture,
-            
-           verified:false ,
-             address:'',
-             city:'',
-             gender: '',
-             speciality: '',
-             description: '',
-             rating: 0,
-             resetPasswordToken: '',
-             
-             reviews: [],
-             orders: [],
-             posts: [] 
-           
+
+            verified: false,
+            address: '',
+            city: '',
+            gender: '',
+            speciality: '',
+            description: '',
+            rating: 0,
+            resetPasswordToken: code.toString(),
+
+            reviews: [],
+            orders: [],
+            posts: []
         });
     } catch (err) {
         console.log(err);
         res.status(500).json('Server error');
     }
 };
+
 
 const login = async (req, res) => {
     try {
@@ -218,7 +236,8 @@ const login = async (req, res) => {
 };
 const verifyEmail = async (req, res) => {
     try {
-        const { userId, uniqueString } = req.params;
+        const { userId } = req.params;
+        const { uniqueString } = req.body;
 
         let user = await clientModel.findById(userId);
         let userType = 'client';
@@ -241,23 +260,17 @@ const verifyEmail = async (req, res) => {
         bcrypt.compare(uniqueString, userVerificationEntry.uniqueString)
             .then(async (isMatch) => {
                 if (isMatch) {
-                    if (userType === 'client')
-                    await clientModel.findByIdAndUpdate(userId, { verified: true });
-                    else{
+                    if (userType === 'client') {
+                        await clientModel.findByIdAndUpdate(userId, { verified: true });
+                    } else {
                         await tailorModel.findByIdAndUpdate(userId, { verified: true });
                     }
 
                     await userVerification.findByIdAndDelete(userVerificationEntry._id);
 
-                    const filePath = path.join(__dirname,'..', 'verified.html');
-                    res.sendFile(filePath, (err) => {
-                        if (err) {
-                            console.error('Error sending file:', err);
-                            res.status(500).send('Error sending page');
-                        }
-                    });
+                    res.status(200).json('Email verified successfully');
                 } else {
-                    res.status(400).json('Invalid verification link');
+                    res.status(400).json('Invalid verification code');
                 }
             })
             .catch((err) => {
@@ -269,6 +282,7 @@ const verifyEmail = async (req, res) => {
         res.status(500).json('Server error');
     }
 };
+
 
 const resetPassword = async (req, res) => {
     try {
@@ -394,5 +408,5 @@ const getallTailors=async (req,res)=>{
 
 
 
-module.exports = { registerClient, registerTailor, login, verifyEmail, resetPassword, updatePassword, updateProfile,getallTailors};
+module.exports = { registerClient, registerTailor, login, verifyEmail, resetPassword, updatePassword, updateProfile,getallTailors,verifyEmail};
 
