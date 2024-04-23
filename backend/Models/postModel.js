@@ -12,7 +12,7 @@ const mongoose=require('mongoose');
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Tailor'
         },
-        CreatedAt: {
+        createdAt: {
             type: Date,
             default: Date.now
         }

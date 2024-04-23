@@ -9,7 +9,7 @@ router.post('/register/tailor',registerTailor );
 router.post('/login',login);
 router.post('/resetPassword',resetPassword);
 router.post('/updatePassword',updatePassword);
-
+router.post('/verifyEmail/:userId',verifyEmail)
 router.put('/update/:userId', updateProfile);
 router.get('/getallTailors',getallTailors);
 module.exports = router;

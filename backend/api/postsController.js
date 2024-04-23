@@ -3,7 +3,8 @@ const Tailor = require('../Models/tailorModel'); // Import the Tailor model
 const mongoose = require('mongoose');
 
 const createPost = async (req, res) => {
-    const { title, image, description, price, category, speciality, tailor } = req.body;
+    const { title, image, description, price, category, postSpeciality: speciality, tailor } = req.body;
+
     try {
         const post = await Post.create({
             title,
@@ -15,7 +16,6 @@ const createPost = async (req, res) => {
             tailor
         });
 
-        // Update the posts array in the Tailor object
         await Tailor.findByIdAndUpdate(tailor, { $push: { posts: post._id } });
 
         res.status(201).json(post);

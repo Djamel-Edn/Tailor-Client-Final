@@ -2,7 +2,11 @@
 const mongoose=require('mongoose');
 
 const reviewSchema = new mongoose.Schema({
-    clientId: String,
+    client: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Client'
+    },
+    tailorid:String,
     text: String,
     rating: {
         type: Number,

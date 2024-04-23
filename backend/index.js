@@ -7,6 +7,7 @@ require('dotenv').config();
 const usersRoute = require('./Routes/usersRoute');
 const postsRoute = require('./Routes/postsRoute');
 const bodyParser = require('body-parser');
+const ordersRoute = require('./Routes/ordersRoute');
 // Middleware
 app.use(cors());
 app.use(cors()); 
@@ -23,8 +24,8 @@ app.use(cors({
 app.use(express.json());
 app.use('/', usersRoute);
 app.use('/post', postsRoute);
-
-
+app.use('/order', ordersRoute);
+app.use
 // Connect to MongoDB
 mongoose.connect("mongodb+srv://dib:Ddjames035@cluster0.fd3ji68.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0", {})
     .then(() => {
