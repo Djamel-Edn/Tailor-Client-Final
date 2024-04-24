@@ -90,7 +90,8 @@ const registerClient = async (req, res) => {
         client = new clientModel({ 
             name, 
             email, 
-            password: hashedPassword, 
+            password: hashedPassword,
+            resetPasswordToken: "", 
             gender, 
             verified: false, 
             orders: [],

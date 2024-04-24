@@ -12,8 +12,8 @@ const createOrFindChat = async (req, res) => {
         }
 
         // Assuming clientModel and tailorModel are imported from their respective files
-        const client = await clientModel.findById(clientId);
-        const tailor = await tailorModel.findById(tailorId);
+        const client = await clientModel.findById(clientId)
+        const tailor = await tailorModel.findById(tailorId)
 
         if (!client) {
             return res.status(404).json({ error: 'Client not found' });
