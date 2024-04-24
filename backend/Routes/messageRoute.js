@@ -2,7 +2,7 @@ const express=require('express')
 const { createMessage,getMessages } = require('../api/messageController')
 const router = express.Router()
 
-router.post('/',createMessage)
+router.post('/create',createMessage)
 router.get('/:chatId',getMessages)
 
 

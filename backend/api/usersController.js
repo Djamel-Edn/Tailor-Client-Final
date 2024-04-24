@@ -182,46 +182,41 @@ const registerTailor = async (req, res) => {
 };
 
 
+
+
 const login = async (req, res) => {
     try {
         const { email, password } = req.body;
-        
-        let user = await clientModel.findOne({ email });
-        let userType = 'client'; 
-        
+
+        let user = await clientModel.findOne({ email }).populate({
+            path: 'orders',
+            populate: {
+                path: 'tailor',
+                model: 'Tailor'
+            }
+        }).populate({
+            path: 'orders',
+            populate: {
+                path: 'posts',
+                model: 'Post'
+            }
+        });
+
         if (!user) {
-            user = await tailorModel.findOne({ email });
-            userType = 'tailor'; 
+            user = await tailorModel.findOne({ email }).populate('posts');
         }
-        
+
+        // If user is found
         if (user) {
+            // Check if the password is correct
             const isPasswordValid = await bcrypt.compare(password, user.password);
             if (isPasswordValid) {
-                if (userType === 'tailor') {
-                    res.status(200).json({
-                        _id: user._id,
-                        name: user.name,
-                        email: user.email,
-                        phone: user.phone,
-                        city: user.city,
-                        gender:user.gender,
-                        verified: user.verified,
-                        userType: userType ,
-                        orders: user.orders,
-                        profilePicture: user.profilePicture,
-                    });
+                user = user.toObject(); // Convert to plain object
+                delete user.password;
 
-                }else{
-                    res.status(200).json({
-                        _id: user._id,
-                        name: user.name,
-                        email: user.email,
-                        verified: user.verified,
-                        gender:user.gender,
-                        userType: userType ,
-                        profilePicture: user.profilePicture,
-                    });
-                }
+               
+                    res.status(200).json(user);
+                
             } else {
                 res.status(400).json('Invalid credentials');
             }
@@ -229,9 +224,14 @@ const login = async (req, res) => {
             res.status(400).json('User not found');
         }
     } catch (err) {
+        console.error('Error in login:', err);
         res.status(500).json('Server error');
     }
 };
+module.exports = login;
+
+
+
 const verifyEmail = async (req, res) => {
     try {
         const { userId } = req.params;
@@ -244,7 +244,7 @@ const verifyEmail = async (req, res) => {
             user = await tailorModel.findById(userId);
             userType = 'tailor';
         }
-
+po
         if (!user) {
             return res.status(404).json('User not found');
         }

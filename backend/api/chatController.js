@@ -1,7 +1,7 @@
 const chatModel = require('../Models/chatModel');
 
-const createChat = async (req, res) => {
-    const [clientId, tailorId] = req.body;
+const createOrFindChat = async (req, res) => {
+    const { clientId, tailorId } = req.body;
 
     try {
         // Check if both client and tailor IDs are provided
@@ -9,7 +9,6 @@ const createChat = async (req, res) => {
             return res.status(400).json({ error: 'Both client and tailor IDs are required' });
         }
 
-       
         // Assuming clientModel and tailorModel are imported from their respective files
         const clientExists = await clientModel.exists({ _id: clientId });
         const tailorExists = await tailorModel.exists({ _id: tailorId });
@@ -22,11 +21,16 @@ const createChat = async (req, res) => {
             return res.status(404).json({ error: 'Tailor not found' });
         }
 
-        // Create a new chat
-        const newChat = new chatModel({ client: clientId, tailor: tailorId });
-        const savedChat = await newChat.save();
+        // Find the chat between the client and tailor
+        let chat = await chatModel.findOne({ client: clientId, tailor: tailorId }).populate('messages');
 
-        res.status(201).json(savedChat);
+        // If chat doesn't exist, create a new one
+        if (!chat) {
+            const newChat = new chatModel({ client: clientId, tailor: tailorId });
+            chat = await newChat.save();
+        }
+
+        res.status(200).json(chat);
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Server error' });
@@ -34,15 +38,4 @@ const createChat = async (req, res) => {
 };
 
 
-const findChat = async (req, res) => {
-    const { clientId, tailorId } = req.params;
-    try {
-        const chat = await chatModel.findOne({ client: clientId, tailor: tailorId }).populate('messages');
-        res.status(200).json(chat);
-    } catch (error) {
-        console.log(error);
-        res.status(500).json(error);
-    }
-};
-
-module.exports={createChat,findUserChats,findChat}
+module.exports={createOrFindChat}

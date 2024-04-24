@@ -57,7 +57,7 @@ const Home = () => {
             return null;
         }
     };
-    console.log(posts)
+    
     return (
         <div>
             <h1>Home</h1>

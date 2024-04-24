@@ -1,9 +1,11 @@
+const mongoose = require('mongoose');
 const Tailor = require('../Models/tailorModel');
 const Order = require('../Models/orderModel');
-const mongoose = require('mongoose');
+const Client = require('../Models/clientmodel');
+
 
 const createOrder = async (req, res) => {
-    const { client, tailor, totalPrice } = req.body;
+    const { client, tailor, totalPrice, posts } = req.body;
     try {
         if (!mongoose.Types.ObjectId.isValid(client) || !mongoose.Types.ObjectId.isValid(tailor)) {
             return res.status(400).json({ error: 'Invalid client or tailor ID' });
@@ -12,10 +14,12 @@ const createOrder = async (req, res) => {
         const order = await Order.create({
             client,
             tailor,
-            totalPrice
+            totalPrice,
+            posts // Assign the posts array
         });
 
         await Tailor.findByIdAndUpdate(tailor, { $push: { orders: order._id } });
+        await Client.findByIdAndUpdate(client, { $push: { orders: order._id } });
 
         res.status(201).json(order);
     } catch (error) {
@@ -24,10 +28,9 @@ const createOrder = async (req, res) => {
     }
 };
 
-
 const updateOrder = async (req, res) => {
     const { id } = req.params;
-    const { status, totalPrice } = req.body;
+    const { status, totalPrice, posts } = req.body; // Add posts
     try {
         if (!mongoose.Types.ObjectId.isValid(id)) {
             return res.status(400).json({ error: 'Invalid order ID' });
@@ -41,6 +44,9 @@ const updateOrder = async (req, res) => {
         }
         if (totalPrice) {
             order.totalPrice = totalPrice;
+        }
+        if (posts) { // Update posts if provided
+            order.posts = posts;
         }
         const updatedOrder = await order.save();
         res.json(updatedOrder);
@@ -68,8 +74,5 @@ const deleteOrder = async (req, res) => {
         res.status(500).json({ error: 'Server error' });
     }
 };
-
-module.exports = { createOrder, updateOrder, deleteOrder };
-
 
 module.exports = { createOrder, updateOrder, deleteOrder };
