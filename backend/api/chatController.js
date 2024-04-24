@@ -1,28 +1,43 @@
 const chatModel = require('../Models/chatModel');
+const clientmodel = require('../Models/clientmodel');
+const tailorModel = require('../Models/tailorModel');
 
 const createOrFindChat = async (req, res) => {
     const { clientId, tailorId } = req.body;
 
     try {
         // Check if both client and tailor IDs are provided
+        console.log("test")
         if (!clientId || !tailorId) {
             return res.status(400).json({ error: 'Both client and tailor IDs are required' });
         }
 
         // Assuming clientModel and tailorModel are imported from their respective files
-        const clientExists = await clientModel.exists({ _id: clientId });
-        const tailorExists = await tailorModel.exists({ _id: tailorId });
+        const client = await clientmodel.findById(clientId);
+        const tailor = await tailorModel.findById(tailorId);
 
-        if (!clientExists) {
+        if (!client) {
             return res.status(404).json({ error: 'Client not found' });
         }
 
-        if (!tailorExists) {
+        if (!tailor) {
             return res.status(404).json({ error: 'Tailor not found' });
         }
 
-        // Find the chat between the client and tailor
-        let chat = await chatModel.findOne({ client: clientId, tailor: tailorId }).populate('messages');
+        // Find the chat between the client and tailor and populate client, tailor, and messages
+        let chat = await chatModel.findOne({ client: clientId, tailor: tailorId })
+                                   .populate({
+                                       path: 'client',
+                                       model: 'Client'
+                                   })
+                                   .populate({
+                                       path: 'tailor',
+                                       model: 'Tailor'
+                                   })
+                                   .populate({
+                                       path: 'messages',
+                                       model: 'Message'
+                                   });
 
         // If chat doesn't exist, create a new one
         if (!chat) {
@@ -36,6 +51,8 @@ const createOrFindChat = async (req, res) => {
         res.status(500).json({ error: 'Server error' });
     }
 };
+
+
 
 
 module.exports={createOrFindChat}
