@@ -6,7 +6,7 @@ const messageSchema=new mongoose.Schema({
     text:String,
     image:[],
 },
-timestamps=true
+{timestamps:true}
 )
 
  const messageModel=mongoose.model('Message',messageSchema)

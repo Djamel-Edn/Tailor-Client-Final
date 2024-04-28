@@ -18,7 +18,6 @@ const createMessage = async (req, res) => {
         const newMessage = new messageModel({ chatId, senderId, text, image });
         const savedMessage = await newMessage.save();
 
-        // Add the message to the chat's messages array
         chat.messages.push(savedMessage);
         await chat.save();
 
