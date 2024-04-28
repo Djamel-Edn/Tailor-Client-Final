@@ -1,5 +1,6 @@
 const chatModel = require('../Models/chatModel');
 const clientModel = require('../Models/clientmodel');
+const messageModel = require('../Models/messageModel');
 const tailorModel = require('../Models/tailorModel');
 
 const createOrFindChat = async (req, res) => {
@@ -10,43 +11,41 @@ const createOrFindChat = async (req, res) => {
         if (!clientId || !tailorId) {
             return res.status(400).json({ error: 'Both client and tailor IDs are required' });
         }
-
         // Assuming clientModel and tailorModel are imported from their respective files
-        const client = await clientModel.findById(clientId)
-        const tailor = await tailorModel.findById(tailorId)
-
+        const client = await clientModel.findById(clientId);
+        const tailor = await tailorModel.findById(tailorId);
+        
         if (!client) {
             return res.status(404).json({ error: 'Client not found' });
         }
-
+        
         if (!tailor) {
             return res.status(404).json({ error: 'Tailor not found' });
         }
-
-        // Create a new chat
+        
+        // Try to find the chat
+        let chat = await chatModel.findOne({ client: clientId, tailor: tailorId })
+        .populate('client')  // Populate the client field
+        .populate('tailor')
+        .populate('messages')
+        
+        // If chat already exists, return it
+        if (chat) {
+            return res.status(200).json(chat);
+        }
         const newChat = new chatModel({ client: clientId, tailor: tailorId });
-        delete client.password;
-        delete tailor.password
-        // Populate client and tailor fields
-        newChat.client = client;
-        newChat.tailor = tailor;
-
-        // Optionally, you can populate the messages field if needed
-        // For example:
-        // const messages = await Message.find({ chat: newChat._id });
-        // newChat.messages = messages;
-
+        
+        
+        // Optionally, populate the messages field if needed
+        console.log('test')
+        
         const savedChat = await newChat.save();
 
-        res.status(200).json(savedChat);
+        res.status(201).json(savedChat); // Return 201 for created
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Server error' });
     }
 };
 
-
-
-
-
-module.exports={createOrFindChat}
+module.exports = { createOrFindChat };

@@ -1,4 +1,6 @@
+const { default: mongoose } = require('mongoose');
 const messageModel = require('../Models/messageModel');
+const chatModel = require('../Models/chatModel');
 
 const createMessage = async (req, res) => {
     const { chatId, senderId, text, image } = req.body;
@@ -17,7 +19,7 @@ const createMessage = async (req, res) => {
         const savedMessage = await newMessage.save();
 
         // Add the message to the chat's messages array
-        chat.messages.push(savedMessage._id);
+        chat.messages.push(savedMessage);
         await chat.save();
 
         res.status(201).json(savedMessage);
