@@ -15,9 +15,9 @@ const Login = () => {
             return;
         }
         try {
-            const response = await fetch('http://localhost:5001/login', {
+            const response = await fetch('https://api.render.com/deploy/srv-connkaocmk4c73a92u50?key=el7MZybdCBM/login', {
                 method: 'POST',
-                mode: 'no-cors',
+               
                 headers: {
                     'Content-Type': 'application/json',
                 },
