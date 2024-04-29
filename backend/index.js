@@ -12,9 +12,7 @@ const messageRoute = require('./Routes/messageRoute');
 const { Server } = require("socket.io");
 const http = require("http"); 
 
-app.use(cors({
-  origin: 'http://localhost:5000'
-}));
+app.use(cors())
 app.use(bodyParser.json({ limit: '20mb' }));
 app.use(bodyParser.urlencoded({ limit: '20mb', extended: true }));
 
