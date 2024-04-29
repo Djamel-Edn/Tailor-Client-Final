@@ -72,6 +72,6 @@ mongoose.connect("mongodb+srv://dib:Ddjames035@cluster0.fd3ji68.mongodb.net/?ret
     });
 
 // Start server
-app.listen(port, () => {
+app.listen(process.env.PORT || 5001, () => {
     console.log(`Server is running on port ${port}`);
 });
