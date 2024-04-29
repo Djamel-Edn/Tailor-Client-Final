@@ -17,6 +17,7 @@ const Login = () => {
         try {
             const response = await fetch('http://localhost:5001/login', {
                 method: 'POST',
+                mode: 'no-cors',
                 headers: {
                     'Content-Type': 'application/json',
                 },
