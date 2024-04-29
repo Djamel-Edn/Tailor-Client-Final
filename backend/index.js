@@ -13,7 +13,7 @@ const { Server } = require("socket.io");
 const http = require("http"); 
 
 app.use(cors({
-  origin: '*', 
+  origin: 'https://api.render.com/deploy/srv-connkaocmk4c73a92u50?key=el7MZybdCBM', 
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: [
