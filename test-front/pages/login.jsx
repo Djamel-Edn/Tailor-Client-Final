@@ -17,7 +17,6 @@ const Login = () => {
         try {
             const response = await fetch('https://api.render.com/deploy/srv-connkaocmk4c73a92u50?key=el7MZybdCBM/login', {
                 method: 'POST',
-               
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -37,6 +36,7 @@ const Login = () => {
             setErrorMsg('Server error');
         }
     }
+    
 
     if (loggedIn) {
         // Redirect user to another page after successful login
