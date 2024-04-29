@@ -5,7 +5,7 @@ const nodemailer = require('nodemailer');
 const { v4: uuidv4 } = require('uuid');
 const bcrypt = require('bcrypt');
 const path = require('path');
-const clientmodel = require('../Models/clientModel');
+const clientModel = require('../Models/clientModel');
 require('dotenv').config();
 let transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST,
@@ -188,7 +188,6 @@ const registerTailor = async (req, res) => {
 const login = async (req, res) => {
     try {
         const { email, password } = req.body;
-
         let user = await clientModel.findOne({ email }).populate({
             path: 'orders',
             populate: {
