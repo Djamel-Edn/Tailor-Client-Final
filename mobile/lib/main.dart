@@ -5,6 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:palette_generator/palette_generator.dart';
 import 'package:projetfinprepa/Data/category.dart';
 import 'package:projetfinprepa/Pages/FirstPage.dart';
+import 'package:projetfinprepa/Pages/registration/MyApp.dart';
 import 'package:projetfinprepa/Providers/Models.dart';
 import 'package:projetfinprepa/Providers/Tailors.dart';
 import 'package:provider/provider.dart';
@@ -23,7 +24,7 @@ void main() {
         create: (context) => ModelsProvider(),
       )
     ],
-    child: const FirstPage(),
+    child: const MyAppHia(),
   ));
 }
 
