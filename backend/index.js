@@ -12,7 +12,10 @@ const messageRoute = require('./Routes/messageRoute');
 const { Server } = require("socket.io");
 const http = require("http"); 
 
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:5000', // Replace with your frontend origin
+  credentials: true // If you're sending cookies or authorization headers
+}));
 app.use(bodyParser.json({ limit: '20mb' }));
 app.use(bodyParser.urlencoded({ limit: '20mb', extended: true }));
 
@@ -71,8 +74,8 @@ io.on("connection", (socket) => {
 });
 
 // Start server
-const PORT = process.env.PORT || 5001;
-server.listen(5001, () => {
+
+server.listen(process.env.PORT, () => {
     console.log(`Server is running on port ${PORT}`);
     console.log(`process.env.PORT: ${process.env.PORT}`);
 });
