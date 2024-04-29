@@ -11,48 +11,52 @@ const chatRoute = require('./Routes/chatRoute');
 const messageRoute = require('./Routes/messageRoute');
 const { Server } = require("socket.io");
 const http = require("http"); 
-// Middleware
-app.use(cors());
-app.use(cors()); 
 
+app.use(cors());
 app.use(bodyParser.json({ limit: '20mb' }));
 app.use(bodyParser.urlencoded({ limit: '20mb', extended: true }));
-app.use(cors({
-    origin: '*',
-    methods: '*', 
-    allowedHeaders: '*', 
-}));
 
-const server = http.createServer(app);
-const io = new Server(server, { cors: { origin: "*" } }); 
-
+// Routes
 app.use(express.json());
 app.use('/', usersRoute);
 app.use('/post', postsRoute);
 app.use('/chat', chatRoute);
 app.use('/order', ordersRoute);
 app.use('/message', messageRoute);
+// MongoDB Connection
+mongoose.connect(process.env.MONGODB_URI, {})
+    .then(() => {
+        console.log("Connected to MongoDB successfully");
+    }).catch((error) => {
+        console.error("Error connecting to MongoDB:", error);
+    });
+
+// Create HTTP server
+const server = http.createServer(app);
+
+// Socket.io setup
+const io = new Server(server, { cors: { origin: "*" } }); 
+
 let onlineUsers = [];
-const port =  5001;
+
 io.on("connection", (socket) => {
     socket.on("addNewUser", (userId) => {
-      onlineUsers.some((user) => user.userId === userId)
-        ? null
-        : onlineUsers.push({ userId, socketId: socket.id });
-  
+        onlineUsers.some((user) => user.userId === userId)
+            ? null
+            : onlineUsers.push({ userId, socketId: socket.id });
         io.emit("getOnlineUsers", onlineUsers);
-      });
-      socket.on("sendMessage", (data) => {
-          const { chatId,senderId,text, secondUser } = data;
-          if (text ) {
-  
-            const nvMessage={chatId,senderId,text}
-            const user=onlineUsers.find((user)=>user.userId===secondUser);
-            
+    });
+
+    socket.on("sendMessage", (data) => {
+        const { chatId, senderId, text, secondUser } = data;
+        if (text) {
+            const nvMessage = { chatId, senderId, text };
+            const user = onlineUsers.find((user) => user.userId === secondUser);
             io.to(user?.socketId).emit("receiveMessage", nvMessage);
-          }
-      });
-      socket.on("disconnect", () => {
+        }
+    });
+
+    socket.on("disconnect", () => {
         // Find the user object in the onlineUsers array
         const userIndex = onlineUsers.findIndex((user) => user.socketId === socket.id);
       
@@ -63,15 +67,11 @@ io.on("connection", (socket) => {
       
         // Emit the updated onlineUsers array to all connected clients
         io.emit("getOnlineUsers", onlineUsers);
-      });})
-mongoose.connect("mongodb+srv://dib:Ddjames035@cluster0.fd3ji68.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0", {})
-.then(() => {
-        console.log("Connected to MongoDB successfully");
-    }).catch((error) => {
-        console.error("Error connecting to MongoDB:", error);
     });
+});
 
 // Start server
-app.listen(process.env.PORT || 5001, () => {
-    console.log(`Server is running on port ${port}`);
+const PORT = process.env.PORT || 5001;
+server.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
 });
