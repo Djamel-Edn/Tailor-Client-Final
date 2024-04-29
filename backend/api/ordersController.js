@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Tailor = require('../Models/tailorModel');
 const Order = require('../Models/orderModel');
-const Client = require('../Models/clientmodel');
+const Client = require('../Models/clientModel');
 
 
 const createOrder = async (req, res) => {

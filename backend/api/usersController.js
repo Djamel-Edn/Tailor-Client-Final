@@ -1,4 +1,3 @@
-const clientModel = require('../Models/clientmodel');
 const tailorModel = require('../Models/tailorModel');
 const validator = require('validator');
 const userVerification = require('../Models/userVerificationModel')
@@ -6,6 +5,7 @@ const nodemailer = require('nodemailer');
 const { v4: uuidv4 } = require('uuid');
 const bcrypt = require('bcrypt');
 const path = require('path');
+const clientmodel = require('../Models/clientModel');
 require('dotenv').config();
 let transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST,
@@ -75,7 +75,7 @@ const registerClient = async (req, res) => {
     try {
         const { name, email, password, gender } = req.body;
 
-        let client = await clientModel.findOne({ email });
+        let client = await clientmodel.findOne({ email });
         if (client) return res.status(400).json("User with this email already exists...");
 
         let tailor = await tailorModel.findOne({ email });
