@@ -12,7 +12,18 @@ const messageRoute = require('./Routes/messageRoute');
 const { Server } = require("socket.io");
 const http = require("http"); 
 
-app.use(cors())
+app.use(cors({
+  origin: '*', 
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: [
+    'Origin',
+    'Content-Type',
+    'Accept',
+    'Authorization',
+    'X-Requested-With',
+  ],
+}));
 app.use(bodyParser.json({ limit: '20mb' }));
 app.use(bodyParser.urlencoded({ limit: '20mb', extended: true }));
 
