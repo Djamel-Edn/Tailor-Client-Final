@@ -13,7 +13,7 @@ const { Server } = require("socket.io");
 const http = require("http"); 
 
 app.use(cors({
-    origin: 'http://localhost:5000',
+    origin: 'http://localhost:5000/login',
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Origin', 'Content-Type', 'Accept', 'Authorization', 'X-Requested-With'],
     credentials: true
