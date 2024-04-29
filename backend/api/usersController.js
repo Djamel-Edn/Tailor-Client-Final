@@ -1,4 +1,4 @@
-const clientModel = require('../Models/clientmodel'); 
+const clientModel = require('../Models/clientmodel');
 const tailorModel = require('../Models/tailorModel');
 const validator = require('validator');
 const userVerification = require('../Models/userVerificationModel')
