@@ -15,7 +15,7 @@ const createOrder = async (req, res) => {
             client,
             tailor,
             totalPrice,
-            posts // Assign the posts array
+            posts 
         });
 
         await Tailor.findByIdAndUpdate(tailor, { $push: { orders: order._id } });
@@ -67,7 +67,7 @@ const deleteOrder = async (req, res) => {
             return res.status(404).json({ error: 'No order with that id' });
         }
         await Tailor.findByIdAndUpdate(order.tailor, { $pull: { orders: id } });
-        await Order.findByIdAndRemove(id);
+        await Order.findByIdAndDelete(id);
         res.json('Order deleted successfully');
     } catch (error) {
         console.error('Error deleting order:', error);

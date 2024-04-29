@@ -3,6 +3,6 @@ const { createOrder, updateOrder, deleteOrder } = require('../api/ordersControll
 const router = express.Router();
 router.post('/create',createOrder)
 router.put('/update/:id',updateOrder)
-router.put('/delete/:id',deleteOrder)
+router.delete('/delete/:id',deleteOrder)
 
 module.exports = router;
