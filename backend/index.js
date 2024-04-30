@@ -14,10 +14,11 @@ const http = require("http");
 
 app.use(cors({
     origin: '*',
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-    allowedHeaders: ['Content-Type'],
+    methods: '*',
+    allowedHeaders: '*',
     credentials: true
 }));
+
 app.use(bodyParser.json({ limit: '20mb' }));
 app.use(bodyParser.urlencoded({ limit: '20mb', extended: true }));
 
