@@ -214,9 +214,8 @@ const login = async (req, res) => {
                     path: 'posts',
                     model: 'Post'
                 }
-            })
-            .populate('posts')
-            .populate('reviews');
+            }).populate('posts').populate('reviews');
+
             userType="Tailor";
         }
 
