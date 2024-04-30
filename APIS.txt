@@ -57,7 +57,7 @@ userType:"Client",
 verified:false,
 __v:0,
 _id:String,
-} sinon :
+} else :
 response{
 address: "",
 city:"",
@@ -76,4 +76,26 @@ userType: "Tailor",
 verified: false,
 __v:0,
 _id:"6626eb65ed54ccf5c1e7e8ed"
+}
+verifyEmail//compare code in input with code in database of the user
+const response = await fetch('https://tailor-client-ps9z.onrender.com/verifyEmail/:userId', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ uniqueString }),//code in String
+            });
+response{
+  "Email verified succesfully"else "'Invalid verification code'"
+}
+resetPassword://
+const response = await fetch('https://tailor-client-ps9z.onrender.com/resetPassword', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email }),//String
+            });
+response{
+  "Email sent" else "'Email not found'"
 }

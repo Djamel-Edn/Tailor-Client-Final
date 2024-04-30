@@ -307,7 +307,6 @@ const verifyEmail = async (req, res) => {
             }
             
             if (user) {
-                // Send verification email for password reset
                 sendVerificationEmail(user, res);
             } else {
                 res.status(400).json('Email not found');
@@ -317,33 +316,7 @@ const verifyEmail = async (req, res) => {
             res.status(500).json('Server error');
         }
     };
-    const updatePassword = async (req, res) => {
-        try {
-            const { resetToken, newPassword } = req.body;
-            
-            let user = await clientModel.findOne({ resetPasswordToken: resetToken });
-            
-            if (!user) {
-                user = await tailorModel.findOne({ resetPasswordToken: resetToken });
-            }
-            if (!validator.isStrongPassword(newPassword)) return res.status(400).json('Password is weak');
-            
-            if (user) {
-                const hashedPassword = await bcrypt.hash(newPassword, 10);
-                
-                user.password = hashedPassword;
-                user.resetPasswordToken = null; 
-                await user.save();
-                
-                res.status(200).json('Password updated successfully');
-            } else {
-                res.status(400).json('Invalid or expired reset token');
-            }
-        } catch (error) {
-            console.error('Error:', error);
-            res.status(500).json('Server error');
-        }
-    };
+    
     
     const updateProfile = async (req, res) => {
         try {
@@ -426,6 +399,6 @@ const verifyEmail = async (req, res) => {
     
     
     
-    module.exports = { registerClient, registerTailor, login, verifyEmail, resetPassword, updatePassword, updateProfile,getallTailors,verifyEmail,addFavorite};
+    module.exports = { registerClient, registerTailor, login, verifyEmail, resetPassword, updateProfile,getallTailors,verifyEmail,addFavorite};
     
     

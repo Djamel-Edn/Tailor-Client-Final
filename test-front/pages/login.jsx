@@ -15,7 +15,7 @@ const Login = () => {
             return;
         }
         try {
-            const response = await fetch('http://localhost:5001/login', {
+            const response = await fetch('https://tailor-client-ps9z.onrender.com/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
