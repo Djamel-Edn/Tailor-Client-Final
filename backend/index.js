@@ -9,7 +9,7 @@ const bodyParser = require('body-parser');
 const ordersRoute = require('./Routes/ordersRoute');
 const chatRoute = require('./Routes/chatRoute');
 const messageRoute = require('./Routes/messageRoute');
-const reviewRoute = require('./Routes/reviewRoute');
+const reviewRoute = require('./Routes/reviewsRoute');
 const { Server } = require("socket.io");
 const http = require("http"); 
 
