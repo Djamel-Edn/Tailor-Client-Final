@@ -6,7 +6,7 @@ const Recherche = () => {
     useEffect(() => {
         const fetchTailors = async () => {
             try {
-                const response = await fetch('http://localhost:5001/getallTailors', {
+                const response = await fetch('https://tailor-client-ps9z.onrender.com/getallTailors', {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',

@@ -75,7 +75,7 @@ const registerClient = async (req, res) => {
     try {
         const { name, email, password, gender } = req.body;
 
-        let client = await clientmodel.findOne({ email });
+        let client = await clientModel.findOne({ email });
         if (client) return res.status(400).json("User with this email already exists...");
 
         let tailor = await tailorModel.findOne({ email });

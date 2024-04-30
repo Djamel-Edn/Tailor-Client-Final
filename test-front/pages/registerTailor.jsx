@@ -22,7 +22,7 @@ export default function RegisterTailor() {
         e.preventDefault();
     if (!name || !email || !password || !gender ||!city ||!phone){setErrorMsg('Please fill all the fields'); return;}
     try {
-      const response = await fetch('http://localhost:5001/register/tailor', {
+      const response = await fetch('https://tailor-client-ps9z.onrender.com/register/tailor', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -19,7 +19,7 @@ export default function ResetPassword() {
         }
 
         try {
-            const response = await fetch('http://localhost:5001/updatePassword', {
+            const response = await fetch('https://tailor-client-ps9z.onrender.com/updatePassword', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

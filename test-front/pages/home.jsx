@@ -6,7 +6,7 @@ const Home = () => {
     useEffect(() => {
         const fetchPosts = async () => {
             try {
-                const response = await fetch('http://localhost:5001/post/getall', {
+                const response = await fetch('https://tailor-client-ps9z.onrender.com/post/getall', {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',

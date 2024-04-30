@@ -22,7 +22,7 @@ const Profile = () => {
     const handlePost = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch('http://localhost:5001/post/create', {
+            const response = await fetch(' https://tailor-client-ps9z.onrender.com/post/create', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -73,7 +73,7 @@ const Profile = () => {
         };
 
         try {
-            const response = await fetch(`http://localhost:5001/update/${user._id}`, {
+            const response = await fetch(` https://tailor-client-ps9z.onrender.com/update/${user._id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
