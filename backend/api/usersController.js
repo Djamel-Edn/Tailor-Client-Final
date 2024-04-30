@@ -2,7 +2,6 @@ const tailorModel = require('../Models/tailorModel');
 const validator = require('validator');
 const userVerification = require('../Models/userVerificationModel')
 const nodemailer = require('nodemailer');
-const { v4: uuidv4 } = require('uuid');
 const bcrypt = require('bcrypt');
 const path = require('path');
 const clientModel = require('../Models/clientModel');
@@ -203,7 +202,21 @@ const login = async (req, res) => {
         });
 
         if (!user) {
-            user = await tailorModel.findOne({ email }).populate('posts');
+            user = await tailorModel.findOne({ email }).populate({
+                path: 'orders',
+                populate: {
+                    path: 'client',
+                    model: 'Client'
+                }
+            }).populate({
+                path: 'orders',
+                populate: {
+                    path: 'posts',
+                    model: 'Post'
+                }
+            })
+            .populate('posts')
+            .populate('reviews');
         }
 
         // If user is found
@@ -244,7 +257,7 @@ const verifyEmail = async (req, res) => {
             user = await tailorModel.findById(userId);
             userType = 'tailor';
         }
-po
+
         if (!user) {
             return res.status(404).json('User not found');
         }
@@ -293,33 +306,13 @@ const resetPassword = async (req, res) => {
         }
         
         if (user) {
-            const resetToken = uuidv4();
-
-            user.resetPasswordToken = resetToken;
-            await user.save();
-
-            const resetUrl = `http://localhost:5000/${email}/${resetToken}`;
-            const mailOptions = {
-                from: process.env.AUTH_EMAIL,
-                to: email,
-                subject: 'Password Reset',
-                html: `<p>You have requested to reset your password. Please follow the link below to reset your password:</p><a href="${resetUrl}">here</a>`
-            };
-
-            transporter.sendMail(mailOptions, (error, info) => {
-                if (error) {
-                    console.error('Error sending email:', error);
-                    res.status(500).json('Failed to send password reset email');
-                } else {
-                    console.log('Password reset email sent:', info.response);
-                    res.status(200).json('Password reset email sent');
-                }
-            });
+            // Send verification email for password reset
+            sendVerificationEmail(user, res);
         } else {
             res.status(400).json('Email not found');
         }
-    } catch (err) {
-        console.error('Error:', err);
+    } catch (error) {
+        console.error('Error:', error);
         res.status(500).json('Server error');
     }
 };

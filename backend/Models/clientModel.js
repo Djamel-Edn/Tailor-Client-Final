@@ -6,7 +6,6 @@ const mongoose = require('mongoose');
         email:String,
         verified:Boolean,
         password:String,
-        resetPasswordToken:String,
         profilePicture: {
             type: String,
             default: '/../utils/pp.png' 
