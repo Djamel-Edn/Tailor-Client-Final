@@ -12,12 +12,11 @@ const tailorSchema = new mongoose.Schema({
     description: String,
     rating: String,
     verified: Boolean,
-    resetPasswordToken: String,
     profilePicture: {
         type: String,
         default: '../utils/pp.png'
     },
-    reviews: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Review' }],
+    reviews:[{ type: mongoose.Schema.Types.ObjectId, ref: 'Review' }],
     orders: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Order' }],
     posts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Post' }] 
 });

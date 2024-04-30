@@ -9,6 +9,7 @@ const bodyParser = require('body-parser');
 const ordersRoute = require('./Routes/ordersRoute');
 const chatRoute = require('./Routes/chatRoute');
 const messageRoute = require('./Routes/messageRoute');
+const reviewRoute = require('./Routes/reviewRoute');
 const { Server } = require("socket.io");
 const http = require("http"); 
 
@@ -29,6 +30,7 @@ app.use('/post', postsRoute);
 app.use('/chat', chatRoute);
 app.use('/order', ordersRoute);
 app.use('/message', messageRoute);
+app.use('/review',reviewRoute)
 // MongoDB Connection
 mongoose.connect(process.env.MONGODB_URI, {})
     .then(() => {

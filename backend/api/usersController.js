@@ -202,26 +202,28 @@ const login = async (req, res) => {
         });
         let userType="Client";
         if (!user) {
-            user = await tailorModel.findOne({ email }).populate({
+            user = await tailorModel.findOne({ email })
+            .populate({
                 path: 'orders',
                 populate: {
                     path: 'client',
                     model: 'Client'
                 }
-            }).populate({
+            })
+            .populate({
                 path: 'orders',
                 populate: {
                     path: 'posts',
                     model: 'Post'
                 }
-            }).populate('posts').populate('reviews');
+            })
+            .populate('reviews')
+            .populate('posts')
 
             userType="Tailor";
         }
 
-        // If user is found
         if (user) {
-            // Check if the password is correct
             const isPasswordValid = await bcrypt.compare(password, user.password);
             if (isPasswordValid) {
                 user = user.toObject(); 

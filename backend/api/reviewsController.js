@@ -1,9 +1,9 @@
-const Review = require('../Models/reviewModel');
+const reviewModel = require('../Models/reviewModel');
 const Tailor = require('../Models/tailorModel');
 
 const createReview = async (req, res) => {
     const { clientId, text, rating } = req.body;
-    const review = new Review({
+    const review = new reviewModel({
         clientId,
         text,
         rating
@@ -23,14 +23,14 @@ const deleteReview = async (req, res) => {
     try {
         const { id } = req.params;
 
-        const review = await Review.findById(id);
+        const review = await reviewModel.findById(id);
         if (!review) {
             return res.status(404).send('No review with that id');
         }
 
         await Tailor.findByIdAndUpdate(review.client, { $pull: { reviews: id } });
 
-        await Review.findByIdAndRemove(id);
+        await reviewModel.findByIdAndRemove(id);
         res.json('Review deleted successfully');
     } catch (error) {
         res.status(500).json('Server error');

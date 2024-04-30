@@ -1,0 +1,79 @@
+registerClient:
+const response = await fetch('https://tailor-client-ps9z.onrender.com/register/client', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, name, password, gender }),//4 String
+      });
+response={
+email: String,
+name: String,
+orders: Array(0).length:0,
+profilePicture:"/../utils/pp.png",
+verified:false
+_id: String
+}
+registerTailor:
+const response = await fetch('https://tailor-client-ps9z.onrender.com/register/tailor', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, name, password, gender,city,phone }),//5 String + phone: Number
+      });
+response={
+address:"",
+city:"",
+description:"",
+email:"eroslmast3r@gmail.com",
+gender:"",
+name:"Houda",
+orders:[],
+phone:654938521,
+posts:[],
+profilePicture:"../utils/pp.png",
+rating:0,
+reviews:[],
+speciality:"",
+verified:false,
+_id:String
+}
+Login:
+ const response = await fetch('https://tailor-client-ps9z.onrender.com/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email, password }),//2 String
+            });
+response{
+email: String,
+favorites: [],
+name: String,
+orders: [],
+profilePicture:"/../utils/pp.png",
+userType:"Client",
+verified:false,
+__v:0,
+_id:String,
+} sinon :
+response{
+address: "",
+city:"",
+description: "",
+email: "Nour035@yahoo.com",
+gender: "",
+name: "Nour",
+orders: [],
+phone: 4535786535,
+posts: [{_id: "6626eb79ed54ccf5c1e7e8f1", title: "Jean",…},…],
+profilePicture:"data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAA,
+rating:"0",
+reviews: [],
+speciality: "",
+userType: "Tailor",
+verified: false,
+__v:0,
+_id:"6626eb65ed54ccf5c1e7e8ed"
+}
