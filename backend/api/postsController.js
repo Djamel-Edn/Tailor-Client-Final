@@ -62,7 +62,7 @@ const deletePost = async (req, res) => {
         const post = await Post.findById(id);
         const tailorId = post.tailor;
 
-        await Post.findByIdAndde(id);
+        await Post.findByIdAndDelete(id);
 
         // Update the posts array in the Tailor object
         await Tailor.findByIdAndUpdate(tailorId, { $pull: { posts: id } });
