@@ -67,7 +67,7 @@ const deletePost = async (req, res) => {
         // Update the posts array in the Tailor object
         await Tailor.findByIdAndUpdate(tailorId, { $pull: { posts: id } });
 
-        res.json('Post deleted successfully' });
+        res.json('Post deleted successfully' );
     } catch (error) {
         console.error('Error deleting post:', error);
         res.status(500).json('Server error');
@@ -100,12 +100,14 @@ module.exports = { getNewestPosts };
 const getTailorPosts = async (req, res) => {
     try {
         const { tailorId } = req.params;
-        const posts = await Post.find({ tailor: tailorId });
+
+        // Assuming tailorId is a valid ObjectId
+        const posts = await Post.find({ tailor: tailorId }).populate('tailor');
+
         res.status(200).json(posts);
     } catch (error) {
         console.error('Error fetching tailor posts:', error);
-        res.status(500).json('Server error');
+        res.status(500).json({ error: 'Server error' });
     }
 };
-
 module.exports = { createPost, updatePost, deletePost, getallPosts, getNewestPosts, getTailorPosts };
