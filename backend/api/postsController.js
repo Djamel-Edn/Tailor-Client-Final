@@ -3,7 +3,7 @@ const Tailor = require('../Models/tailorModel'); // Import the Tailor model
 const mongoose = require('mongoose');
 
 const createPost = async (req, res) => {
-    const { title, image, description, price, category, postSpeciality: speciality, tailor } = req.body;
+    const { title, image, description, price, category, postSpeciality:speciality, tailor } = req.body;
 
     try {
         const post = await Post.create({
@@ -28,7 +28,7 @@ const createPost = async (req, res) => {
 const updatePost = async (req, res) => {
     try {
         const { id } = req.params;
-        const { title, image, description, price, category, speciality, tailor } = req.body;
+        const { title, image, description, price, category, postSpeciality:speciality } = req.body;
 
         if (!mongoose.Types.ObjectId.isValid(id)) {
             return res.status(404).send('No post with that id');
@@ -41,7 +41,6 @@ const updatePost = async (req, res) => {
             price,
             category,
             speciality,
-            tailor
         }, { new: true });
 
         res.json(updatedPost);
@@ -63,7 +62,7 @@ const deletePost = async (req, res) => {
         const post = await Post.findById(id);
         const tailorId = post.tailor;
 
-        await Post.findByIdAndRemove(id);
+        await Post.findByIdAndde(id);
 
         // Update the posts array in the Tailor object
         await Tailor.findByIdAndUpdate(tailorId, { $pull: { posts: id } });

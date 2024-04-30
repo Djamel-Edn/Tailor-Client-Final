@@ -8,7 +8,7 @@ const Forgotpassword = () => {
         e.preventDefault();
         if (!email ){setErrorMsg('Please fill all the fields'); return;}
         try{
-            const response =await fetch('http://localhost:5001/resetPassword',{
+            const response =await fetch(' https://tailor-client-ps9z.onrender.com/resetPassword',{
                 method:'POST',
                 headers:{
                     'Content-Type':'application/json',

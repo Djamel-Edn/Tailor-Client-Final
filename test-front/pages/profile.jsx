@@ -36,7 +36,6 @@ const Profile = () => {
             }
 
             const data = await response.json();
-            console.log(data);
             setTitle('');
             setDescription('');
             setImage('');
@@ -73,7 +72,7 @@ const Profile = () => {
         };
 
         try {
-            const response = await fetch(` https://tailor-client-ps9z.onrender.com/update/${user._id}`, {
+            const response = await fetch(`https://tailor-client-ps9z.onrender.com/update/${user._id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

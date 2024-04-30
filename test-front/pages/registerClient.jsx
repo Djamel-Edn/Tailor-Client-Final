@@ -35,7 +35,6 @@ function RegisterClient() {
       const data = await response.json();
       
       processResponse(data);
-      console.log(data)
       
     } catch (error) {
       console.error('Error:', error);
