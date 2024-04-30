@@ -227,9 +227,9 @@ const login = async (req, res) => {
             if (isPasswordValid) {
                 user = user.toObject(); 
                 delete user.password;
-
+                const userData = { ...user, userType };
                
-                    res.status(200).json({user, userType});
+                    res.status(200).json(userData);
                 
             } else {
                 res.status(400).json('Invalid credentials');
