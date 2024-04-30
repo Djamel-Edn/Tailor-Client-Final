@@ -1,3 +1,4 @@
+Password:Test1234!!
 registerClient:
 const response = await fetch('https://tailor-client-ps9z.onrender.com/register/client', {
         method: 'POST',
