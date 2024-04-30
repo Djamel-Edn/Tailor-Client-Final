@@ -390,7 +390,7 @@ const verifyEmail = async (req, res) => {
             user.favorites.push(postId);
             await user.save();
             
-            res.status(200).json({  user.favorites });
+            res.status(200).json({ favorites: user.favorites });
         } catch (error) {
             console.error('Error:', error);
             res.status(500).json({ error: 'Server error' });
