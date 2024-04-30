@@ -13,9 +13,9 @@ const { Server } = require("socket.io");
 const http = require("http"); 
 
 app.use(cors({
-    origin: 'http://localhost:5000',
+    origin: '*',
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-    allowedHeaders: ['Origin', 'Content-Type', 'Accept', 'Authorization', 'X-Requested-With'],
+    allowedHeaders: ['Content-Type'],
     credentials: true
 }));
 
