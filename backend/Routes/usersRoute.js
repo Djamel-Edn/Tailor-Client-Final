@@ -10,5 +10,5 @@ router.post('/resetPassword',resetPassword);
 router.post('/verifyEmail/:userId',verifyEmail)
 router.put('/update/:userId', updateProfile);
 router.get('/getallTailors',getallTailors);
-router.post('/addFavorite',addFavorite)
+router.post('/addFavorite/:userId',addFavorite)
 module.exports = router;

@@ -99,3 +99,24 @@ const response = await fetch('https://tailor-client-ps9z.onrender.com/resetPassw
 response{
   "Email sent" else "'Email not found'"
 }
+getallTailors: 
+const response = await fetch('https://tailor-client-ps9z.onrender.com/getallTailors', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+response{
+  [{Tailors}]// array of Tailors object
+}
+addFavorite:
+const response = await fetch('https://tailor-client-ps9z.onrender.com/resetPassword', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email }),//String
+            });
+response{
+  "Email sent" else "'Email not found'"
+}
