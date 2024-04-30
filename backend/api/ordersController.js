@@ -30,7 +30,7 @@ const createOrder = async (req, res) => {
 
 const updateOrder = async (req, res) => {
     const { id } = req.params;
-    const { status, totalPrice, posts } = req.body; // Add posts
+    const { status, totalPrice, posts } = req.body; 
     try {
         if (!mongoose.Types.ObjectId.isValid(id)) {
             return res.status(400).json({ error: 'Invalid order ID' });
@@ -45,7 +45,7 @@ const updateOrder = async (req, res) => {
         if (totalPrice) {
             order.totalPrice = totalPrice;
         }
-        if (posts) { // Update posts if provided
+        if (posts) { 
             order.posts = posts;
         }
         const updatedOrder = await order.save();
@@ -60,11 +60,11 @@ const deleteOrder = async (req, res) => {
     try {
         const { id } = req.params;
         if (!mongoose.Types.ObjectId.isValid(id)) {
-            return res.status(400).json({ error: 'Invalid order ID' });
+            return res.status(400).json('Invalid order ID' );
         }
         const order = await Order.findById(id);
         if (!order) {
-            return res.status(404).json({ error: 'No order with that id' });
+            return res.status(404).json( 'No order with that id' );
         }
         await Tailor.findByIdAndUpdate(order.tailor, { $pull: { orders: id } });
         await Order.findByIdAndDelete(id);

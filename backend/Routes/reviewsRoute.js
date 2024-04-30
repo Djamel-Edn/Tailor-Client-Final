@@ -1,8 +1,8 @@
 const express = require('express');
-const { getallPosts } = require('../api/postsController');
+const { createReview, deleteReview, } = require('../api/reviewsController');
 const router = express.Router();
-router.get('/getall',getallPosts);
 
-
+router.post('/create',createReview)
+router.delete('/delete/:id',deleteReview)
 
 module.exports = router;

@@ -67,7 +67,7 @@ const deletePost = async (req, res) => {
         // Update the posts array in the Tailor object
         await Tailor.findByIdAndUpdate(tailorId, { $pull: { posts: id } });
 
-        res.json({ message: 'Post deleted successfully' });
+        res.json('Post deleted successfully' });
     } catch (error) {
         console.error('Error deleting post:', error);
         res.status(500).json('Server error');

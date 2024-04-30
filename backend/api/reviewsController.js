@@ -2,16 +2,16 @@ const reviewModel = require('../Models/reviewModel');
 const Tailor = require('../Models/tailorModel');
 
 const createReview = async (req, res) => {
-    const { clientId, text, rating } = req.body;
+    const { client, text, rating } = req.body;
     const review = new reviewModel({
-        clientId,
+        client,
         text,
         rating
     });
     try {
         await review.save();
 
-        await Tailor.findByIdAndUpdate(clientId, { $push: { reviews: review._id } });
+        await Tailor.findByIdAndUpdate(client, { $push: { reviews: review._id } });
 
         res.status(201).json(review);
     } catch (error) {
@@ -36,5 +36,18 @@ const deleteReview = async (req, res) => {
         res.status(500).json('Server error');
     }
 }
+const getTailorReviews = async (req, res) => {
+const { tailorId } = req.params;
+try {
+const tailor = await Tailor.findById(tailorId).populate('reviews');
+if (!tailor) {
+    return res.status(400).json({ error: 'Tailor not found' });
+}
+const reviews=tailor.reviews;
+res.status(200).json(reviews);
+}catch(error){
+console.error(error);
+}}
 
-module.exports = { createReview, deleteReview };
+
+module.exports = { createReview, deleteReview,getTailorReviews };

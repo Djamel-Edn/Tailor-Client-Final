@@ -170,5 +170,145 @@ const response = await fetch(' https://tailor-client-ps9z.onrender.com/post/dele
                 body: JSON.stringify({ title, description, image, price, category, postSpeciality,tailor:user._id })
             });
  response{
-
+"Post deleted successfully"
+}
+getallPosts:
+const response = await fetch(' https://tailor-client-ps9z.onrender.com/post/getall', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ title, description, image, price, category, postSpeciality,tailor:user._id })
+            });
+ response{
+[Posts]
+}
+getNewest:
+const response = await fetch(' https://tailor-client-ps9z.onrender.com/post/getnewest', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ title, description, image, price, category, postSpeciality,tailor:user._id })
+            });
+ response{
+[Posts]
+}
+getTailorPosts:
+const response = await fetch(' https://tailor-client-ps9z.onrender.com/post/:tailorId', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ title, description, image, price, category, postSpeciality,tailor:user._id })
+            });
+ response{
+[Posts]
+}
+createOrder:
+const response = await fetch(' https://tailor-client-ps9z.onrender.com/order/create', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({client, tailor, totalPrice, posts })
+            });
+ response{
+{
+    "client": "6630e1c32247a6426baa31ce",
+    "tailor": "6626eb65ed54ccf5c1e7e8ed",
+    "status": "Pending",
+    "posts": [
+        "6626eb79ed54ccf5c1e7e8f1"
+    ],
+    "totalPrice": 2990,
+    "_id": "663163a85044ed990e93d7dd",
+    "orderDate": "2024-04-30T21:33:28.745Z",
+    "__v": 0
+}
+}
+updateOrder:
+const response = await fetch(' https://tailor-client-ps9z.onrender.com/order/update/:id', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({client, tailor, totalPrice, posts })
+            });
+ response{
+    "_id": "663163a85044ed990e93d7dd",
+    "client": "6630e1c32247a6426baa31ce",
+    "tailor": "6626eb65ed54ccf5c1e7e8ed",
+    "status": "Accepted",
+    "posts": [
+        "6626eb79ed54ccf5c1e7e8f1"
+    ],
+    "totalPrice": 2990,
+    "orderDate": "2024-04-30T21:33:28.745Z",
+    "__v": 0
+}
+deleteOrder:
+const response = await fetch(' https://tailor-client-ps9z.onrender.com/order/delete/:id', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({client, tailor, totalPrice, posts })
+            });
+response{
+  "Order deleted successfully" 
+}
+createOrfindChat:
+const response = await fetch(' https://tailor-client-ps9z.onrender.com/chat/fetch', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({clientId, tailorId })
+            });
+    response{
+      chat
+    }
+createmessage:
+const response = await fetch(' https://tailor-client-ps9z.onrender.com/message/create', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({chatId, senderId, text, image})
+            });
+            reponse{
+             message
+            }
+getMessages:
+const response = await fetch(' https://tailor-client-ps9z.onrender.com/message/:chatId', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+          
+            });
+            reponse{
+             message
+            }
+createReview:
+const response = await fetch(' https://tailor-client-ps9z.onrender.com/review/create', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({client, text, rating })
+            });
+            reponse{
+             message
+            }
+deleteReview:
+const response = await fetch(' https://tailor-client-ps9z.onrender.com/review/delete/:id', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            reponse{
+             message
             }
