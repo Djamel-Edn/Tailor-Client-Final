@@ -229,7 +229,7 @@ const login = async (req, res) => {
                 delete user.password;
 
                
-                    res.status(200).json(user, userType);
+                    res.status(200).json({user, userType});
                 
             } else {
                 res.status(400).json('Invalid credentials');
@@ -242,7 +242,6 @@ const login = async (req, res) => {
         res.status(500).json('Server error');
     }
 };
-module.exports = login;
 
 
 
@@ -250,181 +249,182 @@ const verifyEmail = async (req, res) => {
     try {
         const { userId } = req.params;
         const { uniqueString } = req.body;
-
+        
         let user = await clientModel.findById(userId);
         let userType = 'client';
-
+        
         if (!user) {
             user = await tailorModel.findById(userId);
             userType = 'tailor';
         }
-
+        
         if (!user) {
             return res.status(404).json('User not found');
         }
-
+        
         const userVerificationEntry = await userVerification.findOne({ userId });
-
+        
         if (!userVerificationEntry) {
             return res.status(404).json('User verification entry not found');
         }
-
+        
         bcrypt.compare(uniqueString, userVerificationEntry.uniqueString)
-            .then(async (isMatch) => {
-                if (isMatch) {
-                    if (userType === 'client') {
-                        await clientModel.findByIdAndUpdate(userId, { verified: true });
-                    } else {
-                        await tailorModel.findByIdAndUpdate(userId, { verified: true });
-                    }
-
-                    await userVerification.findByIdAndDelete(userVerificationEntry._id);
-
-                    res.status(200).json('Email verified successfully');
+        .then(async (isMatch) => {
+            if (isMatch) {
+                if (userType === 'client') {
+                    await clientModel.findByIdAndUpdate(userId, { verified: true });
                 } else {
-                    res.status(400).json('Invalid verification code');
+                    await tailorModel.findByIdAndUpdate(userId, { verified: true });
                 }
-            })
+                
+                await userVerification.findByIdAndDelete(userVerificationEntry._id);
+                
+                res.status(200).json('Email verified successfully');
+            } else {
+                res.status(400).json('Invalid verification code');
+            }
+        })
             .catch((err) => {
                 console.log(err);
                 res.status(500).json('Server error');
             });
-    } catch (error) {
-        console.log(error);
-        res.status(500).json('Server error');
-    }
-};
-
-
-const resetPassword = async (req, res) => {
-    try {
-        const { email } = req.body;
-        
-        let user = await clientModel.findOne({ email });
-        
-        if (!user) {
-            user = await tailorModel.findOne({ email });
+        } catch (error) {
+            console.log(error);
+            res.status(500).json('Server error');
         }
-        
-        if (user) {
-            // Send verification email for password reset
-            sendVerificationEmail(user, res);
-        } else {
-            res.status(400).json('Email not found');
+    };
+    
+    
+    const resetPassword = async (req, res) => {
+        try {
+            const { email } = req.body;
+            
+            let user = await clientModel.findOne({ email });
+            
+            if (!user) {
+                user = await tailorModel.findOne({ email });
+            }
+            
+            if (user) {
+                // Send verification email for password reset
+                sendVerificationEmail(user, res);
+            } else {
+                res.status(400).json('Email not found');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            res.status(500).json('Server error');
         }
-    } catch (error) {
-        console.error('Error:', error);
-        res.status(500).json('Server error');
-    }
-};
-const updatePassword = async (req, res) => {
-    try {
-        const { resetToken, newPassword } = req.body;
-        
-        let user = await clientModel.findOne({ resetPasswordToken: resetToken });
-
-        if (!user) {
-            user = await tailorModel.findOne({ resetPasswordToken: resetToken });
+    };
+    const updatePassword = async (req, res) => {
+        try {
+            const { resetToken, newPassword } = req.body;
+            
+            let user = await clientModel.findOne({ resetPasswordToken: resetToken });
+            
+            if (!user) {
+                user = await tailorModel.findOne({ resetPasswordToken: resetToken });
+            }
+            if (!validator.isStrongPassword(newPassword)) return res.status(400).json('Password is weak');
+            
+            if (user) {
+                const hashedPassword = await bcrypt.hash(newPassword, 10);
+                
+                user.password = hashedPassword;
+                user.resetPasswordToken = null; 
+                await user.save();
+                
+                res.status(200).json('Password updated successfully');
+            } else {
+                res.status(400).json('Invalid or expired reset token');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            res.status(500).json('Server error');
         }
-        if (!validator.isStrongPassword(newPassword)) return res.status(400).json('Password is weak');
-
-        if (user) {
-            const hashedPassword = await bcrypt.hash(newPassword, 10);
-
-            user.password = hashedPassword;
-            user.resetPasswordToken = null; 
+    };
+    
+    const updateProfile = async (req, res) => {
+        try {
+            const { userId } = req.params;
+            const { name, email, city, phone, profilePicture,speciality } = req.body;
+            if (!userId) {
+                return res.status(400).json('User ID is required');
+            }
+            
+            let user = await clientModel.findById(userId);
+            let userType = 'client';
+            if (!user) {
+                user = await tailorModel.findById(userId);
+                userType = 'tailor';
+            }
+            
+            if (!user) {
+                return res.status(404).json('User not found');
+            }
+            if (name) {user.name = name;}
+            if (email) user.email = email;
+            if (city) user.city = city;
+            if (phone) user.phone = phone;
+            if (profilePicture) user.profilePicture = profilePicture;
+            if (speciality) user.speciality = speciality;
+            
             await user.save();
-
-            res.status(200).json('Password updated successfully');
-        } else {
-            res.status(400).json('Invalid or expired reset token');
+            
+            const userWithoutPassword = user.toObject();
+            delete userWithoutPassword.password;
+            
+            const responseObject = {
+                ...userWithoutPassword,
+                userType: userType
+            };
+            
+            res.status(200).json(responseObject);
+        } catch (error) {
+            console.error('Error:', error);
+            res.status(500).json('Server error');
         }
-    } catch (error) {
-        console.error('Error:', error);
-        res.status(500).json('Server error');
+    };
+    
+    const getallTailors=async (req,res)=>{
+        try{
+            const tailors=await tailorModel.find();
+            res.status(200).json(tailors);
+        }catch(error){
+            res.status(500).json({error:'Server error'});
+        }
+        
     }
-};
-
-const updateProfile = async (req, res) => {
-    try {
-        const { userId } = req.params;
-        const { name, email, city, phone, profilePicture,speciality } = req.body;
-        if (!userId) {
-            return res.status(400).json('User ID is required');
+    const addFavorite = async (req, res) => {
+        try {
+            const { userId } = req.params;
+            const { postId } = req.body;
+            
+            
+            const user = await clientModel.findById(userId);
+            if (!user) {
+                return res.status(404).json({ error: 'User not found' });
+            }
+            
+            
+            const postExists = user.favorites.some(favorite => favorite.equals(postId));
+            if (postExists) {
+                return res.status(400).json({ error: 'Post is already in favorites' });
+            }
+            
+            
+            user.favorites.push(postId);
+            await user.save();
+            
+            res.status(200).json({ message: 'Post added to favorites successfully', favorites: user.favorites });
+        } catch (error) {
+            console.error('Error:', error);
+            res.status(500).json({ error: 'Server error' });
         }
-
-        let user = await clientModel.findById(userId);
-        let userType = 'client';
-        if (!user) {
-            user = await tailorModel.findById(userId);
-            userType = 'tailor';
-        }
-        
-        if (!user) {
-            return res.status(404).json('User not found');
-        }
-        if (name) {user.name = name;}
-        if (email) user.email = email;
-        if (city) user.city = city;
-        if (phone) user.phone = phone;
-        if (profilePicture) user.profilePicture = profilePicture;
-        if (speciality) user.speciality = speciality;
-        
-        await user.save();
-        
-        const userWithoutPassword = user.toObject();
-        delete userWithoutPassword.password;
-
-        const responseObject = {
-            ...userWithoutPassword,
-            userType: userType
-        };
-
-        res.status(200).json(responseObject);
-    } catch (error) {
-        console.error('Error:', error);
-        res.status(500).json('Server error');
-    }
-};
-
-const getallTailors=async (req,res)=>{
-    try{
-        const tailors=await tailorModel.find();
-        res.status(200).json(tailors);
-    }catch(error){
-        res.status(500).json({error:'Server error'});
-    }
-
-}
-const addFavorite = async (req, res) => {
-    try {
-        const { userId } = req.params;
-        const { postId } = req.body;
-
-        
-        const user = await clientModel.findById(userId);
-        if (!user) {
-            return res.status(404).json({ error: 'User not found' });
-        }
-
-       
-        const postExists = user.favorites.some(favorite => favorite.equals(postId));
-        if (postExists) {
-            return res.status(400).json({ error: 'Post is already in favorites' });
-        }
-
-        
-        user.favorites.push(postId);
-        await user.save();
-
-        res.status(200).json({ message: 'Post added to favorites successfully', favorites: user.favorites });
-    } catch (error) {
-        console.error('Error:', error);
-        res.status(500).json({ error: 'Server error' });
-    }
-};
-
-
-
-module.exports = { registerClient, registerTailor, login, verifyEmail, resetPassword, updatePassword, updateProfile,getallTailors,verifyEmail,addFavorite};
-
+    };
+    
+    
+    
+    module.exports = { registerClient, registerTailor, login, verifyEmail, resetPassword, updatePassword, updateProfile,getallTailors,verifyEmail,addFavorite};
+    
+    
