@@ -34,7 +34,7 @@ const updateMessage=async (req,res)=>{
         if (!mongoose.Types.ObjectId.isValid(id)) {
             return res.status(404).send('No message with that id');
         }
-        c
+        
         const updatedMessage = await messageModel.findByIdAndUpdate(id, {
             text,
             image

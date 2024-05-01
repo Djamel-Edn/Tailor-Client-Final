@@ -396,9 +396,54 @@ const verifyEmail = async (req, res) => {
             res.status(500).json({ error: 'Server error' });
         }
     };
+    const getTailor=async (req,res)=>{
+        const {id}=req.body;
+        try{
+            const tailor=await tailorModel.findById(id).populate({
+                path: 'orders',
+                populate: {
+                    path: 'client',
+                    model: 'Client'
+                }
+            })
+            .populate({
+                path: 'orders',
+                populate: {
+                    path: 'posts',
+                    model: 'Post'
+                }
+            })
+            .populate('posts')
+
+            userType="Tailor";
+        
+            delete tailor.password
+            res.status(200).json(tailor);
+    }catch(error){
+        console.log(error)
+    }}
+    const getClient=async (req,res)=>{
+        const {id}=req.body;
+        try{
+            const client=await clientModel.findById(id).populate({
+                path: 'orders',
+                populate: {
+                    path: 'tailor',
+                    model: 'Tailor'
+                }
+            }).populate({
+                path: 'orders',
+                populate: {
+                    path: 'posts',
+                    model: 'Post'
+                }
+            });
+            delete client.password
+            res.status(200).json(client);
+    }catch(error){
+        console.log(error)
+    }}
     
-    
-    
-    module.exports = { registerClient, registerTailor, login, verifyEmail, resetPassword, updateProfile,getallTailors,verifyEmail,addFavorite};
+    module.exports = {getTailor,getClient, registerClient, registerTailor, login, verifyEmail, resetPassword, updateProfile,getallTailors,verifyEmail,addFavorite};
     
     

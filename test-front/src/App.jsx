@@ -24,7 +24,7 @@ function App() {
         <Route path="/home" element={<Home/>} />
         <Route path="/recherche" element={<Recherche/>} />
        
-        <Route path='*' element={<Navigate  to='/'/>}></Route>
+        <Route path='*' element={<Navigate  to='/'/>}/>
       </Routes>
     
   )
