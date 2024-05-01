@@ -89,7 +89,7 @@ const response = await fetch('https://tailor-client-ps9z.onrender.com/verifyEmai
 response{
   "Email verified succesfully"else "'Invalid verification code'"
 }
-resetPassword://
+resetPassword://sends email to the user with the code for verification
 const response = await fetch('https://tailor-client-ps9z.onrender.com/resetPassword', {
                 method: 'POST',
                 headers: {
@@ -100,6 +100,18 @@ const response = await fetch('https://tailor-client-ps9z.onrender.com/resetPassw
 response{
   "Email sent" else "'Email not found'"
 }
+updatePassword:
+const response = await fetch('https://tailor-client-ps9z.onrender.com/updatePassword/:id', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ uniqueString,newPassword }),//2 String
+            });
+response{
+  "Password updated succesfully"
+}
+
 getallTailors: 
 const response = await fetch('https://tailor-client-ps9z.onrender.com/getallTailors', {
                 method: 'GET',

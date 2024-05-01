@@ -6,10 +6,10 @@ const bcrypt = require('bcrypt');
 const path = require('path');
 const clientModel = require('../Models/clientModel');
 require('dotenv').config();
-let transporter = nodemailer.createTransport({
+const transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST,
     port: process.env.SMTP_PORT,
-    secure: process.env.SMTP_SECURE === 'true', // true for 465, false for other ports
+    secure: process.env.SMTP_SECURE === 'true',
     auth: {
         user: process.env.SMTP_USER,
         pass: process.env.SMTP_PASSWORD
@@ -19,14 +19,14 @@ let transporter = nodemailer.createTransport({
 // Verify transporter
 transporter.verify((error, success) => {
     if (error) {
-        console.log(error);
+        console.log('SMTP transporter verification failed:', error);
     } else {
         console.log('SMTP transporter ready for messages');
     }
 });
 
 const sendVerificationEmail = ({ _id, email }, res) => {
-    const code = Math.floor(1000 + Math.random() * 9000); // Génère un nombre aléatoire entre 1000 et 9999
+    const code = Math.floor(1000 + Math.random() * 9000); // Generate a random code between 1000 and 9999
 
     const mailOptions = {
         from: process.env.AUTH_EMAIL,
@@ -36,7 +36,7 @@ const sendVerificationEmail = ({ _id, email }, res) => {
     };
 
     const saltRounds = 10;
-    const uniqueString = code.toString(); // Utilisez le code comme uniqueString
+    const uniqueString = code.toString(); // Use the code as the uniqueString
 
     bcrypt.hash(uniqueString, saltRounds)
         .then((hashedUniqueString) => {
@@ -50,25 +50,24 @@ const sendVerificationEmail = ({ _id, email }, res) => {
                 .then(() => {
                     transporter.sendMail(mailOptions, (error, info) => {
                         if (error) {
-                            console.log(error);
+                            console.log('Error sending verification email:', error);
                             res.status(500).json(error);
                         } else {
-                            console.log('Email sent:', info.response);
-                            res.status(200).json('Email sent');
+                            console.log('Verification email sent:', info.response);
+                            res.status(200).json('Verification email sent');
                         }
                     });
                 })
                 .catch((err) => {
-                    console.log(err);
+                    console.log('Error saving verification data:', err);
                     res.status(500).json(err);
                 });
         })
         .catch((err) => {
-            console.log(err);
+            console.log('Error hashing code:', err);
             res.status(500).json(err);
         });
 };
-
 
 const registerClient = async (req, res) => {
     try {
@@ -83,7 +82,6 @@ const registerClient = async (req, res) => {
         if (!validator.isEmail(email)) return res.status(400).json("Please enter a valid email ...");
         if (!validator.isStrongPassword(password)) return res.status(400).json("The password must be a strong one ...");
 
-        const code = Math.floor(1000 + Math.random() * 9000); // Génère un nombre aléatoire entre 1000 et 9999
         const hashedPassword = await bcrypt.hash(password, 10); 
 
         client = new clientModel({ 
@@ -96,8 +94,9 @@ const registerClient = async (req, res) => {
             orders: [],
         });
 
-        await client.save()
-            .then(result => { sendVerificationEmail(result, res) });
+        await client.save();
+
+        sendVerificationEmail(client, res); // Send verification email after client is saved
 
         res.status(200).json({
             _id: client._id,
@@ -109,10 +108,11 @@ const registerClient = async (req, res) => {
             orders: client.orders,
         });
     } catch (error) {
-        console.log(error);
+        console.log('Error registering client:', error);
         res.status(500).json(error);
     }
 };
+
 
 const registerTailor = async (req, res) => {
     try {
@@ -219,18 +219,19 @@ const login = async (req, res) => {
             })
             .populate('reviews')
             .populate('posts')
-
+            
             userType="Tailor";
         }
-
         if (user) {
             const isPasswordValid = await bcrypt.compare(password, user.password);
+             let tri=await bcrypt.compare("newTest!", user.password)
+            console.log(tri)
             if (isPasswordValid) {
                 user = user.toObject(); 
                 delete user.password;
                 const userData = { ...user, userType };
-               
-                    res.status(200).json(userData);
+                
+                res.status(200).json(userData);
                 
             } else {
                 res.status(400).json('Invalid credentials');
@@ -329,6 +330,7 @@ const verifyEmail = async (req, res) => {
                     
                     await userVerification.findByIdAndDelete(userVerificationEntry._id);
                     user.password=await bcrypt.hash(newPassword, 10);
+                    user.save();
                     res.status(200).json('Password update succesfully');
                 } else {
                     res.status(400).json('Invalid verification code');
