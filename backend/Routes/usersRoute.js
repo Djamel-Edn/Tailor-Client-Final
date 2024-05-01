@@ -11,6 +11,6 @@ router.post('/verifyEmail/:userId',verifyEmail)
 router.put('/update/:userId', updateProfile);
 router.get('/getallTailors',getallTailors);
 router.post('/addFavorite/:userId',addFavorite)
-router.post('/getTailor',getTailor)
-router.post('/getClient',getClient)
+router.get('/getTailor/:id',getTailor)
+router.get('/getClient/:id',getClient)
 module.exports = router;

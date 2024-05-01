@@ -397,7 +397,7 @@ const verifyEmail = async (req, res) => {
         }
     };
     const getTailor=async (req,res)=>{
-        const {id}=req.body;
+        const {id}=req.params;
         try{
             const tailor=await tailorModel.findById(id).populate({
                 path: 'orders',
@@ -423,7 +423,7 @@ const verifyEmail = async (req, res) => {
         console.log(error)
     }}
     const getClient=async (req,res)=>{
-        const {id}=req.body;
+        const {id}=req.params;
         try{
             const client=await clientModel.findById(id).populate({
                 path: 'orders',
