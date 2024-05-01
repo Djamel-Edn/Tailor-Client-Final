@@ -5,6 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:palette_generator/palette_generator.dart';
 import 'package:projetfinprepa/Data/category.dart';
 import 'package:projetfinprepa/Pages/FirstPage.dart';
+import 'package:projetfinprepa/Providers/Chat.dart';
 import 'package:projetfinprepa/Providers/Models.dart';
 import 'package:projetfinprepa/Providers/Tailors.dart';
 import 'package:provider/provider.dart';
@@ -21,9 +22,13 @@ void main() {
       ),
       ChangeNotifierProvider(
         create: (context) => ModelsProvider(),
+      ),
+      ChangeNotifierProvider(
+        create: (context) => ChatProvider(),
       )
     ],
     child: const FirstPage(),
+    // child: MyAppMap(),
   ));
 }
 

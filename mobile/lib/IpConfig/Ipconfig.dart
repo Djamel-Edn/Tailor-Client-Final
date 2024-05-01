@@ -1,3 +1,3 @@
 class IPCONFIG {
-  static String iPCONFIG = "192.168.78.34";
+  static String iPCONFIG = "192.168.249.34";
 }

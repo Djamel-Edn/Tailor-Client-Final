@@ -15,7 +15,6 @@ class TailorsProvider extends ChangeNotifier {
     var res = await http.get(Uri.parse(uri));
     if (res.statusCode == 200) {
       var jsonres = convert.jsonDecode(res.body);
-      print(jsonres.length);
       for (var tailorobj in jsonres) {
         Tailor tailor = Tailor(
             Speciality: tailorobj["speciality"],

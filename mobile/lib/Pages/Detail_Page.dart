@@ -17,12 +17,9 @@ class DetailPost extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Hero(
-                    tag: "$tag",
-                    child: Image.asset(
-                      image,
-                      fit: BoxFit.cover,
-                    ),
+                  Image.asset(
+                    image,
+                    fit: BoxFit.cover,
                   ),
                 ],
               ),

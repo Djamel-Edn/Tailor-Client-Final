@@ -1,20 +1,15 @@
 class Tailor {
-  String id,
-      name,
-      resetPasswordToken,
-      email,
-      password,
-      address,
-      city,
-      gender,
-      Speciality,
-      description,
-      profilePicture;
+  String? resetPasswordToken;
+  String? address;
+  String? Speciality;
+  String? description;
+
+  String id, name, email, password, city, gender, profilePicture;
   int phone;
   var rating;
-  List<dynamic> orders;
-  List<dynamic> reviews;
-  List<dynamic> models;
+  List<dynamic>? orders;
+  List<dynamic>? reviews;
+  List<dynamic>? models;
   bool verified;
 
   Tailor(

@@ -1,11 +1,13 @@
 import 'package:projetfinprepa/Data/Order_class.dart';
 
-class Client {
-  String id, name, email, password, resetPasswordToken, profilePicture;
+class ClientClass {
+  String id, name, email, profilePicture;
+  String? password;
+  String? resetPasswordToken;
   bool verified;
-  List<Order> orders;
+  List<Order>? orders;
 
-  Client(
+  ClientClass(
       {required this.name,
       required this.email,
       required this.id,

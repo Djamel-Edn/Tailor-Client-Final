@@ -25,7 +25,6 @@ class _HomePageState extends State<HomePage> {
   List<Model> WomanModels = [];
   List<Model> KidModels = [];
   Future<Uint8List> DecodeIamge(image) async {
-    print("in decode");
     return base64Decode(image);
   }
 
@@ -48,14 +47,11 @@ class _HomePageState extends State<HomePage> {
     AllModelsByCategory.add(ManModels);
     AllModelsByCategory.add(WomanModels);
     AllModelsByCategory.add(KidModels);
-
-    print("ffffffffffffffffff ${ManModels}");
-    print("ffffffffffffffffff ${WomanModels}");
-    print("ffffffffffffffffff ${KidModels}");
   }
 
   @override
   void initState() {
+    print("in homeeeeeeeeeeeeeeeeeeeeeeeeeee ${AllModels.length}");
     super.initState();
   }
 

@@ -7,6 +7,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:projetfinprepa/Data/Models_Class.dart';
 import 'package:projetfinprepa/Data/Tailor_Class.dart';
 import 'package:projetfinprepa/Data/category.dart';
+import 'package:projetfinprepa/Pages/ProfiPage.dart';
 import 'package:projetfinprepa/Providers/Models.dart';
 import 'package:projetfinprepa/Providers/Tailors.dart';
 import 'package:provider/provider.dart';
@@ -266,56 +267,203 @@ class _SearchPageState extends State<SearchPage> {
                                           microseconds: 1200 + (index * 1000)),
                                       child: InkWell(
                                         onTap: () {
+                                          print(index);
+                                          print(AllDataModels[index]);
+
                                           showModalBottomSheet(
+                                            isDismissible: true,
                                             context: context,
                                             builder: (context) {
-                                              return SizedBox(
-                                                  height: 600,
-                                                  width: double.infinity,
-                                                  child: Column(children: [
-                                                    Stack(
-                                                      children: [
-                                                        Container(
-                                                          decoration: BoxDecoration(
-                                                              color:
-                                                                  Colors.amber,
+                                              return Column(children: [
+                                                Expanded(
+                                                  child: Stack(
+                                                    children: [
+                                                      Container(
+                                                        decoration: BoxDecoration(
+                                                            color: Color(
+                                                                0xFFF5ECDD),
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        20)),
+                                                        margin:
+                                                            EdgeInsets.all(10),
+                                                        child: AspectRatio(
+                                                          aspectRatio: 1,
+                                                          child: ClipRRect(
                                                               borderRadius:
                                                                   BorderRadius
                                                                       .circular(
-                                                                          20)),
-                                                          margin:
-                                                              EdgeInsets.all(
-                                                                  10),
-                                                          child: AspectRatio(
-                                                            aspectRatio: 1,
-                                                            child: ClipRRect(
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            20),
-                                                                child: Image.memory(
-                                                                    base64Decode(
-                                                                        ResultModels[index]
-                                                                            .image))),
-                                                          ),
+                                                                          20),
+                                                              child:
+                                                                  Image.memory(
+                                                                base64Decode(
+                                                                    ResultModels[
+                                                                            index]
+                                                                        .image),
+                                                                fit: BoxFit
+                                                                    .cover,
+                                                              )),
                                                         ),
-                                                        Positioned(
-                                                            top: 30,
-                                                            right: 30,
-                                                            child: CircleAvatar(
-                                                              backgroundColor:
-                                                                  Colors.white,
-                                                              child: IconButton(
-                                                                icon: Icon(Icons
-                                                                    .save_outlined),
-                                                                onPressed:
-                                                                    () {},
-                                                              ),
-                                                            )),
-                                                      ],
+                                                      ),
+                                                      Positioned(
+                                                          top: 30,
+                                                          right: 20,
+                                                          child: CircleAvatar(
+                                                            backgroundColor:
+                                                                Colors.white,
+                                                            child: IconButton(
+                                                              icon: Icon(Icons
+                                                                  .save_outlined),
+                                                              onPressed: () {},
+                                                            ),
+                                                          )),
+                                                    ],
+                                                  ),
+                                                ),
+                                                Padding(
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
+                                                      horizontal: 20,
+                                                      vertical: 8),
+                                                  child: Container(
+                                                    decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(15),
+                                                        border: Border.all()),
+                                                    child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              8.0),
+                                                      child: Row(
+                                                        children: [
+                                                          CircleAvatar(
+                                                            radius: 25,
+                                                            backgroundImage: MemoryImage(
+                                                                base64Decode(AllDataModels[
+                                                                        index]
+                                                                    .tailor
+                                                                    .profilePicture
+                                                                    .substring(
+                                                                        23))),
+                                                          ),
+                                                          SizedBox(
+                                                            width: 6,
+                                                          ),
+                                                          Column(
+                                                            children: [
+                                                              Text(
+                                                                  AllDataModels[
+                                                                          index]
+                                                                      .tailor
+                                                                      .name),
+                                                              RatingBar.builder(
+                                                                initialRating: double.parse(
+                                                                    AllDataModels[
+                                                                            index]
+                                                                        .tailor
+                                                                        .rating),
+                                                                minRating: 1,
+                                                                itemSize: 15,
+                                                                direction: Axis
+                                                                    .horizontal,
+                                                                allowHalfRating:
+                                                                    true,
+                                                                itemCount: 5,
+                                                                itemBuilder:
+                                                                    (context,
+                                                                            _) =>
+                                                                        Icon(
+                                                                  Icons.star,
+                                                                  size: 1,
+                                                                  color: Colors
+                                                                      .amber,
+                                                                ),
+                                                                onRatingUpdate:
+                                                                    (rating) {},
+                                                                ignoreGestures:
+                                                                    true,
+                                                              )
+                                                            ],
+                                                          ),
+                                                          Expanded(
+                                                              child:
+                                                                  SizedBox()),
+                                                          Row(
+                                                            children: [
+                                                              IconButton(
+                                                                  onPressed:
+                                                                      () {},
+                                                                  icon: Icon(Icons
+                                                                      .favorite_border)),
+                                                              InkWell(
+                                                                onTap: () {
+                                                                  Navigator.push(
+                                                                      context,
+                                                                      MaterialPageRoute(
+                                                                        builder:
+                                                                            (context) =>
+                                                                                ProfilPage(tailor: AllDataModels[index].tailor),
+                                                                      ));
+                                                                },
+                                                                child:
+                                                                    Container(
+                                                                  decoration: BoxDecoration(
+                                                                      color: Color(
+                                                                          0xFF84643D),
+                                                                      border: Border
+                                                                          .all(),
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              12)),
+                                                                  child:
+                                                                      Padding(
+                                                                    padding:
+                                                                        const EdgeInsets
+                                                                            .all(
+                                                                            6.0),
+                                                                    child: Text(
+                                                                      "Voir Profil",
+                                                                      style: TextStyle(
+                                                                          color:
+                                                                              Colors.white),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              )
+                                                            ],
+                                                          )
+                                                        ],
+                                                      ),
                                                     ),
-                                                    Text("data")
-                                                  ]));
+                                                  ),
+                                                ),
+                                                Padding(
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
+                                                      horizontal: 20,
+                                                      vertical: 15),
+                                                  child: Container(
+                                                    alignment: Alignment.center,
+                                                    height: 60,
+                                                    width: double.infinity,
+                                                    decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(20),
+                                                        border: Border.all(),
+                                                        color:
+                                                            Color(0xFF84643D)),
+                                                    child: Text(
+                                                      "Order Now",
+                                                      style: TextStyle(
+                                                          fontSize: 21,
+                                                          color: Colors.white),
+                                                    ),
+                                                  ),
+                                                )
+                                              ]);
                                             },
                                           );
                                         },

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:projetfinprepa/Pages/Command_Page.dart';
 import 'package:projetfinprepa/Pages/Search_Page.dart';
+import 'package:projetfinprepa/Pages/tstthreeD.dart';
 import 'package:projetfinprepa/Providers/Models.dart';
 import 'package:projetfinprepa/Providers/Tailors.dart';
 import 'package:projetfinprepa/tests/Home_Page.dart';
@@ -13,7 +15,7 @@ class FirstPage extends StatefulWidget {
 }
 
 class _FirstPageState extends State<FirstPage> {
-  List Pages = [HomePage(), SearchPage()];
+  List Pages = [HomePage(), SearchPage(), tstthreed(), MyCommandPage()];
   int currentpage = 0;
   @override
   void initState() {
