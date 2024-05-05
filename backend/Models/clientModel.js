@@ -16,7 +16,8 @@ const mongoose = require('mongoose');
                 ref: 'Order'
             }
         ],
-        favorites:[{ type: mongoose.Schema.Types.ObjectId, ref: 'Post' }]
+        favorites:[{ type: mongoose.Schema.Types.ObjectId, ref: 'Post' }],
+        city:String,
 
     });
 module.exports = mongoose.model('Client', clientSchema);

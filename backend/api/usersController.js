@@ -71,7 +71,7 @@ const sendVerificationEmail = ({ _id, email }, res) => {
 
 const registerClient = async (req, res) => {
     try {
-        const { name, email, password, gender } = req.body;
+        const { name, email, password, gender,city } = req.body;
 
         let client = await clientModel.findOne({ email });
         if (client) return res.status(400).json("User with this email already exists...");
@@ -92,6 +92,7 @@ const registerClient = async (req, res) => {
             gender, 
             verified: false, 
             orders: [],
+            city
         });
 
         await client.save();
@@ -106,6 +107,7 @@ const registerClient = async (req, res) => {
             profilePicture: client.profilePicture,
             verified: client.verified,
             orders: client.orders,
+            city: client.city
         });
     } catch (error) {
         console.log('Error registering client:', error);

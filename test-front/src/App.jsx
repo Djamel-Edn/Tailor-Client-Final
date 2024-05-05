@@ -7,6 +7,7 @@ import Profile from './pages/profile';
 import Home from './pages/home';
 import Recherche from './pages/recherche';
 import LandingPage from './pages/LandingPage';
+import CreateStyle from './pages/createYourStyle';
 
 function App() {
 
@@ -22,6 +23,7 @@ function App() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/profile" element={<Profile/>} />
         <Route path="/home" element={<Home/>} />
+        <Route path="/createYourStyle" element={<CreateStyle/>} />
         <Route path="/recherche" element={<Recherche/>} />
         <Route path="/*" element={<Recherche/>} />
         <Route path='*' element={<Navigate  to='/'/>}/>
