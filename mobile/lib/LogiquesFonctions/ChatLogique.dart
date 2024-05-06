@@ -11,11 +11,11 @@ class ChatLogique {
   static Future GetChat(IdClient, IdTailor) async {
     Chat? chat;
     List<Message> messages = [];
-    var uri = "http://${IPCONFIG.iPCONFIG}:5001/chat/fetch";
+    var uri = "https://tailor-client-ps9z.onrender.com/chat/fetch";
 
     final headerall = {'Content-Type': 'application/json'};
     final bodyall = convert.jsonEncode({
-      "clientId": "66278875e654b5bc787bfe6b",
+      "clientId": IPCONFIG.ClientId,
       "tailorId": "6626eb65ed54ccf5c1e7e8ed"
     });
 
@@ -81,7 +81,7 @@ class ChatLogique {
 
   static Future PostMessage(IdClient, IdChat, textmsg) async {
     Message? message;
-    var uri = "http://${IPCONFIG.iPCONFIG}:5001/message/create";
+    var uri = "https://tailor-client-ps9z.onrender.com/message/create";
 
     final headerall = {'Content-Type': 'application/json'};
     final bodyall = convert.jsonEncode(

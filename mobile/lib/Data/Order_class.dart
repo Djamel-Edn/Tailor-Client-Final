@@ -1,16 +1,16 @@
-import 'package:http/http.dart';
+import 'package:projetfinprepa/Data/Models_Class.dart';
 import 'package:projetfinprepa/Data/Tailor_Class.dart';
 
 class Order {
   String status, id;
-  DateTime orderDate;
-  Client client;
+  String orderDate;
   Tailor tailor;
-  double totalPrice;
+  List<Model>? models;
+  var totalPrice;
   Order(
-      {required this.client,
-      required this.orderDate,
+      {required this.orderDate,
       required this.id,
+      required this.models,
       required this.status,
       required this.totalPrice,
       required this.tailor});

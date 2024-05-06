@@ -1,12 +1,10 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:projetfinprepa/Data/Models_Class.dart';
 import 'package:projetfinprepa/Data/category.dart';
 import 'package:projetfinprepa/LogiquesFonctions/ModelLogique.dart';
-import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class HomePage extends StatefulWidget {
   HomePage();
@@ -51,7 +49,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
-    print("in homeeeeeeeeeeeeeeeeeeeeeeeeeee ${AllModels.length}");
     super.initState();
   }
 
@@ -65,12 +62,12 @@ class _HomePageState extends State<HomePage> {
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
           decoration: BoxDecoration(
-            color: Color(0xFFFCF9F6),
+            color: Color(0xFFFFF4DE),
           ),
           child: CustomScrollView(
             slivers: [
               SliverAppBar(
-                backgroundColor: Color(0xFFFCF9F6),
+                backgroundColor: Color(0xFFFFF4DE),
                 pinned: false,
                 leadingWidth: MediaQuery.of(context).size.width * 0.4,
                 leading: Container(
@@ -79,8 +76,10 @@ class _HomePageState extends State<HomePage> {
                       children: [
                         Text(
                           "Hi,Leila",
-                          style:
-                              TextStyle(fontSize: 20, color: Color(0xFF54361E)),
+                          style: TextStyle(
+                              fontSize: 20,
+                              color: Colors.black,
+                              fontFamily: "Nanum_Myeongjo"),
                         ),
                         SizedBox(
                           width: 6,
@@ -104,7 +103,7 @@ class _HomePageState extends State<HomePage> {
                   height: MediaQuery.of(context).size.height,
                   width: MediaQuery.of(context).size.width,
                   decoration: BoxDecoration(
-                    color: Color(0xFFFCF9F6),
+                    color: Color(0xFFFFF4DE),
                   ),
                   child: Wrap(
                     children: [
@@ -116,96 +115,35 @@ class _HomePageState extends State<HomePage> {
                             "Explore our stunning collection and create your unique piece today! 🌟✨",
                             style: TextStyle(
                                 fontSize: 25,
-                                fontFamily: "Marcellus",
-                                color: Color(0xFF7C583C)),
+                                fontFamily: "Nanum_Myeongjo",
+                                color: Colors.black),
                           ),
                         ),
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 10.0, vertical: 20),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Offers",
-                              style: TextStyle(
-                                  fontSize: 25,
-                                  fontFamily: "Marcellus",
-                                  color: Color(0xFF9E7B61)),
-                            ),
-                            CarouselSlider.builder(
-                              itemCount: 3,
-                              itemBuilder: (context, index, realIndex) {
-                                return Padding(
-                                  padding: const EdgeInsets.all(13.0),
-                                  child: Container(
-                                    width: MediaQuery.of(context).size.width,
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(10),
-                                        border: Border.all(
-                                            color: Color(0xFFA38E7E))),
-                                    child: Image.asset(
-                                      "images/Group 9.png",
-                                      fit: BoxFit.fill,
-                                    ),
-                                  ),
-                                );
-                              },
-                              options: CarouselOptions(
-                                  onPageChanged: (index, reason) {
-                                    // setState(() {
-                                    //   activateindex = index;
-                                    // });
-                                  },
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.23,
-                                  autoPlay: true,
-                                  autoPlayInterval: Duration(seconds: 10),
-                                  enlargeCenterPage: true),
-                            ),
-                            Center(
-                              child: AnimatedSmoothIndicator(
-                                activeIndex: activateindex,
-                                count: 3,
-                                effect: WormEffect(
-                                    activeDotColor: Color(0xFFDBBFAA),
-                                    dotColor:
-                                        Color.fromARGB(255, 207, 207, 207)),
-                              ),
-                            )
-                          ],
+                            horizontal: 30, vertical: 10),
+                        child: Divider(
+                          color: Colors.black,
                         ),
                       ),
                     ],
                   ),
                 ),
                 floating: false,
-                toolbarHeight: MediaQuery.of(context).size.height * 0.47,
+                toolbarHeight: MediaQuery.of(context).size.height * 0.15,
               ),
               SliverAppBar(
                 shadowColor: Colors.black,
                 pinned: true,
                 flexibleSpace: Container(
                   decoration: BoxDecoration(
-                    color: Color(0xFFFCF9F6),
+                    color: Color(0xFFFFF4DE),
                   ),
                   child: Wrap(
                     children: [
                       Padding(
-                        padding: EdgeInsets.only(left: 10, bottom: 10),
-                        child: Container(
-                          child: Text(
-                            "Category",
-                            style: TextStyle(
-                                fontSize: 20,
-                                fontFamily: "JejuGothic",
-                                color: Color(0xFF9E7B61)),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 8.0),
+                        padding: const EdgeInsets.only(bottom: 8.0, top: 6),
                         child: TabBar(
                           onTap: (index) {
                             if (indexCategory != index) {
@@ -214,37 +152,33 @@ class _HomePageState extends State<HomePage> {
                               });
                             }
                           },
-                          isScrollable: true,
-                          labelColor: Colors.white,
+                          padding: EdgeInsets.symmetric(horizontal: 10),
                           tabAlignment: TabAlignment.start,
                           dividerColor: Colors.transparent,
-                          indicatorColor: Colors.transparent,
+                          isScrollable: true,
+                          indicatorWeight: 1,
+                          labelColor: Colors.black,
+                          indicatorSize: TabBarIndicatorSize.tab,
+                          indicatorColor: Colors.black,
+                          labelPadding: EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 10),
+                          indicatorPadding: EdgeInsets.only(bottom: 5),
                           tabs: CategoryData.category.map((e) {
-                            return AnimatedContainer(
-                                height: 30,
-                                width: 60,
-                                duration: Duration(microseconds: 400),
-                                decoration: BoxDecoration(
-                                    color: indexCategory == e.id
-                                        ? Color(0xFF9E7B61)
-                                        : null,
-                                    border: indexCategory == e.id
-                                        ? Border.all(color: Color(0xFF9E7B61))
-                                        : Border.all(color: Color(0xFF9E7B61)),
-                                    borderRadius: BorderRadius.circular(50)),
-                                child: Center(
-                                  child: Text(
-                                    e.category,
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ));
+                            return Text(
+                              e.category,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  fontFamily: "Nanum_Myeongjo",
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 17,
+                                  letterSpacing: 1.2),
+                            );
                           }).toList(),
                         ),
                       ),
                     ],
                   ),
                 ),
-                toolbarHeight: MediaQuery.of(context).size.height * 0.1,
               ),
               FutureBuilder(
                 future: GetMAllModels(),
@@ -311,10 +245,9 @@ class _HomePageState extends State<HomePage> {
                               SliverGridDelegateWithFixedCrossAxisCount(
                                   crossAxisCount: 2,
                                   crossAxisSpacing: 1,
-                                  childAspectRatio: 0.72),
+                                  childAspectRatio: 0.6),
                           itemCount: AllModelsByCategory[indexCategory].length,
                           itemBuilder: (context, index) {
-                            print("mmmmmmmmmmmmmmmmmmmmmmm");
                             return Padding(
                               padding: const EdgeInsets.only(right: 5, left: 4),
                               child: Container(
@@ -326,19 +259,21 @@ class _HomePageState extends State<HomePage> {
                                                 0.6,
                                         height:
                                             MediaQuery.of(context).size.height *
-                                                0.18,
+                                                0.25,
                                         decoration: BoxDecoration(
+                                          boxShadow: [
+                                            BoxShadow(
+                                                color: Color(0xFFFFDB93)
+                                                    .withAlpha(80),
+                                                spreadRadius: 1,
+                                                blurRadius: 1,
+                                                offset: Offset(0, 1))
+                                          ],
+                                          border: Border.all(
+                                              color: Color(0xFFFFDB93)
+                                                  .withAlpha(30)),
                                           borderRadius:
                                               BorderRadius.circular(20),
-                                          gradient: const LinearGradient(
-                                            colors: [
-                                              Color(0xFFC7A59B),
-                                              Color(0xFFD8CECB),
-                                              Color(0xFFD8CECB),
-                                            ],
-                                            begin: Alignment.topCenter,
-                                            end: Alignment.bottomCenter,
-                                          ),
                                         ),
                                         child: FutureBuilder(
                                           future: DecodeIamge(
@@ -358,9 +293,13 @@ class _HomePageState extends State<HomePage> {
                                                 width: 200,
                                               );
                                             }
-                                            return Image.memory(
-                                              snapshot.data!,
-                                              fit: BoxFit.cover,
+                                            return ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                              child: Image.memory(
+                                                snapshot.data!,
+                                                fit: BoxFit.cover,
+                                              ),
                                             );
                                           },
                                         )),
@@ -371,19 +310,19 @@ class _HomePageState extends State<HomePage> {
                                       decoration: BoxDecoration(
                                           boxShadow: [
                                             BoxShadow(
-                                                color: Colors.white54,
-                                                offset: Offset(0, 1),
-                                                blurRadius: 0,
-                                                spreadRadius: 1)
+                                                color: Color(0xFFFFDB93)
+                                                    .withAlpha(30),
+                                                spreadRadius: 1,
+                                                blurRadius: 1,
+                                                offset: Offset(0, 1))
                                           ],
                                           border: Border.all(
-                                              color: Color(0xFF84643D)
-                                                  .withAlpha(40)),
+                                              color: Color(0xFFFFDB93)
+                                                  .withAlpha(80)),
                                           borderRadius: BorderRadius.only(
-                                              topRight: Radius.circular(20),
-                                              bottomLeft: Radius.circular(20)),
-                                          color:
-                                              Color(0xFFD9D9D9).withAlpha(40)),
+                                              topRight: Radius.circular(15),
+                                              bottomLeft: Radius.circular(15)),
+                                          color: Colors.white),
                                       width: MediaQuery.of(context).size.width *
                                           0.6,
                                       child: ListTile(
@@ -395,45 +334,59 @@ class _HomePageState extends State<HomePage> {
                                               decoration:
                                                   TextDecoration.underline,
                                               fontSize: 16,
-                                              fontFamily: "JejuGothic"),
+                                              color: Colors.black,
+                                              fontFamily: "Nanum_Myeongjo"),
+                                          textAlign: TextAlign.center,
                                         ),
-                                        subtitle: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceAround,
-                                          children: [
-                                            CircleAvatar(
-                                                foregroundImage: MemoryImage(
-                                                    base64Decode(
-                                                        AllModelsByCategory[
-                                                                    indexCategory]
-                                                                [index]
-                                                            .tailor
-                                                            .profilePicture
-                                                            .substring(23)))),
-                                            Text(
-                                              "${AllModelsByCategory[indexCategory][index].tailor.name}",
-                                              style: TextStyle(
-                                                  fontFamily: "JejuGothic",
-                                                  color: Color(0xFF54361E)),
-                                            ),
-                                            SizedBox(
-                                              width: 8,
-                                            ),
-                                            Row(
-                                              children: [
-                                                Icon(
-                                                  Icons.star,
-                                                  size: 30,
-                                                  color: Colors.yellow,
-                                                ),
-                                                Text(
-                                                  "${AllModelsByCategory[indexCategory][index].tailor.rating}",
-                                                  style: TextStyle(
-                                                      color: Color(0xFF54361E)),
-                                                ),
-                                              ],
-                                            )
-                                          ],
+                                        subtitle: Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 1),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceAround,
+                                            children: [
+                                              CircleAvatar(
+                                                  foregroundImage: MemoryImage(
+                                                      base64Decode(
+                                                          AllModelsByCategory[
+                                                                      indexCategory]
+                                                                  [index]
+                                                              .tailor!
+                                                              .profilePicture!
+                                                              .substring(23)))),
+                                              Text(
+                                                "${AllModelsByCategory[indexCategory][index].tailor!.name}",
+                                                style: TextStyle(
+                                                    fontFamily:
+                                                        "Nanum_Myeongjo",
+                                                    color: Colors.black,
+                                                    fontSize: 15,
+                                                    fontWeight:
+                                                        FontWeight.w300),
+                                              ),
+                                              SizedBox(
+                                                width: 8,
+                                              ),
+                                              Row(
+                                                children: [
+                                                  Icon(
+                                                    Icons.star,
+                                                    size: 30,
+                                                    color: Colors.yellow,
+                                                  ),
+                                                  Text(
+                                                    "${AllModelsByCategory[indexCategory][index].tailor!.rating}",
+                                                    style: TextStyle(
+                                                        color: Colors.black,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        fontFamily:
+                                                            "Nanum_Myeongjo"),
+                                                  ),
+                                                ],
+                                              )
+                                            ],
+                                          ),
                                         ),
                                       ),
                                     )
@@ -446,6 +399,7 @@ class _HomePageState extends State<HomePage> {
                 },
               ),
               SliverAppBar(
+                backgroundColor: Color(0xFFFFF4DE),
                 toolbarHeight: MediaQuery.of(context).size.height * 0.1,
               ),
             ],

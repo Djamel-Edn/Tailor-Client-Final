@@ -7,18 +7,21 @@ import 'package:projetfinprepa/Data/category.dart';
 import 'package:projetfinprepa/Pages/FirstPage.dart';
 import 'package:projetfinprepa/Providers/Chat.dart';
 import 'package:projetfinprepa/Providers/Models.dart';
+import 'package:projetfinprepa/Providers/Tailors%20copy.dart';
 import 'package:projetfinprepa/Providers/Tailors.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 void main() {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: Color(0xFF9E7B61),
-      systemNavigationBarColor: Color(0xFF9E7B61)));
+      statusBarColor: Colors.black, systemNavigationBarColor: Colors.black));
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(
         create: (context) => TailorsProvider(),
+      ),
+      ChangeNotifierProvider(
+        create: (context) => ClientProvider(),
       ),
       ChangeNotifierProvider(
         create: (context) => ModelsProvider(),

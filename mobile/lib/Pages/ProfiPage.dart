@@ -1,18 +1,29 @@
 import 'dart:convert';
-import 'dart:io';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:projetfinprepa/Data/Models_Class.dart';
 import 'package:projetfinprepa/Data/Tailor_Class.dart';
+import 'package:projetfinprepa/IpConfig/Ipconfig.dart';
+import 'package:projetfinprepa/LogiquesFonctions/OrderLogique.dart';
+import 'package:projetfinprepa/Pages/SousPages/MapScreenPage.dart';
 import 'package:projetfinprepa/Providers/Models.dart';
+import 'package:projetfinprepa/Providers/Tailors%20copy.dart';
 import 'package:provider/provider.dart';
 
 class ProfilPage extends StatefulWidget {
   Tailor tailor;
-  ProfilPage({super.key, required this.tailor});
+  bool IsFoRead;
+  bool IsFoOrder;
+  Model? model;
+
+  ProfilPage(
+      {super.key,
+      required this.tailor,
+      required this.IsFoRead,
+      required this.IsFoOrder,
+      required this.model});
 
   @override
   State<ProfilPage> createState() => _ProfilPageState();
@@ -21,30 +32,24 @@ class ProfilPage extends StatefulWidget {
 class _ProfilPageState extends State<ProfilPage> {
   bool ForRead = true;
   bool InOrder = false;
-  File? image;
-  final imagePicker = ImagePicker();
-  List<File> ImagesSelected = [];
+
   String? _groupvalue;
   List<Model> Catalogue = [];
   List<Model> ModelsSelected = [];
   List<bool> bools = [];
-  UploadImage() async {
-    var pickedimage = await imagePicker.pickImage(source: ImageSource.gallery);
-    if (pickedimage != null) {
-      setState(() {
-        image = File(pickedimage.path);
-        ImagesSelected.add(image!);
-      });
-    }
-  }
 
   @override
   void initState() {
     // Catalogue = Provider.of<ModelsProvider>(context, listen: false).AllModel;
 
+    if (widget.model != null) {
+      ModelsSelected.add(widget.model!);
+    }
+    ForRead = widget.IsFoRead;
+    InOrder = widget.IsFoOrder;
     for (var model
         in Provider.of<ModelsProvider>(context, listen: false).AllModel) {
-      if (model.tailor.id == widget.tailor.id) {
+      if (model.tailor!.id == widget.tailor.id) {
         Catalogue.add(model);
       }
     }
@@ -54,6 +59,7 @@ class _ProfilPageState extends State<ProfilPage> {
 
   @override
   Widget build(BuildContext context) {
+    var GContext = context;
     return SafeArea(
       child: DefaultTabController(
         length: 3,
@@ -61,8 +67,11 @@ class _ProfilPageState extends State<ProfilPage> {
           body: Container(
             decoration: BoxDecoration(
                 image: DecorationImage(
-              image: AssetImage("images/coverture.png"),
-            )),
+                    image: AssetImage(
+                      "images/BackgroundProfileImage.png",
+                    ),
+                    alignment: Alignment.topCenter,
+                    fit: BoxFit.fitWidth)),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -78,49 +87,67 @@ class _ProfilPageState extends State<ProfilPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      CircleAvatar(
-                        radius: 46,
-                        foregroundImage: MemoryImage(
-                          base64Decode(
-                              widget.tailor.profilePicture.substring(23)),
-                        ),
-                      ),
+                      widget.tailor.profilePicture != "../utils/pp.png"
+                          ? !ForRead
+                              ? SizedBox(
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.11,
+                                )
+                              : CircleAvatar(
+                                  radius: 46,
+                                  foregroundImage: MemoryImage(
+                                    base64Decode(widget.tailor.profilePicture!
+                                        .substring(23)),
+                                  ),
+                                )
+                          : SizedBox(),
+                      // CircleAvatar(
+                      //     radius: 46,
+                      //     foregroundImage: AssetImage(
+                      //       "images/DefaultProfileWomen.png",
+                      //     ),
+                      //   ),
                       ForRead ? Expanded(child: SizedBox()) : SizedBox(),
                       !ForRead
-                          ? Text(
-                              widget.tailor.name,
-                              style: TextStyle(
-                                  fontSize: 28,
-                                  decoration: TextDecoration.underline),
-                            )
+                          ? SizedBox()
+                          // Text(
+                          //     widget.tailor.name!,
+                          //     style: TextStyle(
+                          //         fontFamily: "Nanum_Myeongjo",
+                          //         fontSize: 28,
+                          //         decoration: TextDecoration.underline),
+                          //   )
                           : Container(
                               padding: EdgeInsets.all(4),
                               alignment: Alignment.center,
                               width: 100,
                               decoration: BoxDecoration(
-                                  color: Color(0xFF84643D),
-                                  borderRadius: BorderRadius.circular(16)),
+                                  color: Colors.black,
+                                  borderRadius: BorderRadius.circular(8)),
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,
                                 children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 4),
-                                    child: Icon(
-                                      Icons.favorite_outline_outlined,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 3,
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(right: 4),
-                                    child: Text(
-                                      "follow",
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                  ),
+                                  // Padding(
+                                  //   padding: const EdgeInsets.only(left: 4),
+                                  //   child: Icon(
+                                  //     Icons.favorite_outline_outlined,
+                                  //     color: Colors.white,
+                                  //   ),
+                                  // ),
+                                  // SizedBox(
+                                  //   width: 3,
+                                  // ),
+                                  // Padding(
+                                  //   padding: const EdgeInsets.only(right: 4),
+                                  //   child: Text(
+                                  //     "Follow",
+                                  //     style: TextStyle(
+                                  //         color: Colors.white,
+                                  //         fontFamily: "Nanum_Myeongjo",
+                                  //         fontSize: 16),
+                                  //   ),
+                                  // ),
                                 ],
                               ),
                             ),
@@ -137,11 +164,12 @@ class _ProfilPageState extends State<ProfilPage> {
                   alignment: Alignment.topLeft,
                   width: double.infinity,
                   decoration: BoxDecoration(
-                      color: Color(0xFFFCF9F6),
-                      border: Border.all(color: Color(0xFF715B49)),
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(30),
-                          topRight: Radius.circular(30))),
+                    color: Color(0xFFFFF4DE),
+                    border: Border.all(color: Color(0xFF715B49)),
+                    //  borderRadius: BorderRadius.only(
+                    //     topLeft: Radius.circular(30),
+                    //     topRight: Radius.circular(30))
+                  ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -159,9 +187,11 @@ class _ProfilPageState extends State<ProfilPage> {
                                         Column(
                                           children: [
                                             Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
                                               children: [
                                                 Text(
-                                                  widget.tailor.name,
+                                                  widget.tailor.name!,
                                                   style: TextStyle(
                                                       fontSize: 28,
                                                       decoration: TextDecoration
@@ -170,7 +200,9 @@ class _ProfilPageState extends State<ProfilPage> {
                                                 Text(
                                                   "Female",
                                                   style: TextStyle(
-                                                    fontSize: 11,
+                                                    fontSize: 13,
+                                                    fontFamily:
+                                                        "Nanum_Myeongjo",
                                                   ),
                                                 ),
                                               ],
@@ -212,8 +244,19 @@ class _ProfilPageState extends State<ProfilPage> {
                                         horizontal: 30, vertical: 2),
                                     child: Row(
                                       children: [
-                                        Icon(Icons.local_movies),
-                                        Text("8430 Preston Rd. Medea,Medea"),
+                                        Container(
+                                            height: 20,
+                                            child: Image.asset(
+                                                "images/adress.png")),
+                                        SizedBox(
+                                          width: 5,
+                                        ),
+                                        Text(
+                                          "8430 Preston Rd. Medea,Medea",
+                                          style: TextStyle(
+                                              fontFamily: "Nanum_Myeongjo",
+                                              fontWeight: FontWeight.w400),
+                                        ),
                                       ],
                                     ),
                                   ),
@@ -222,8 +265,19 @@ class _ProfilPageState extends State<ProfilPage> {
                                         horizontal: 30, vertical: 2),
                                     child: Row(
                                       children: [
-                                        Icon(Icons.approval_outlined),
-                                        Text("Available for the moment."),
+                                        Container(
+                                            height: 25,
+                                            child: Image.asset(
+                                                "images/eprouve.png")),
+                                        SizedBox(
+                                          width: 6,
+                                        ),
+                                        Text(
+                                          "Available for the moment.",
+                                          style: TextStyle(
+                                              fontFamily: "Nanum_Myeongjo",
+                                              fontWeight: FontWeight.w400),
+                                        ),
                                       ],
                                     ),
                                   ),
@@ -249,20 +303,33 @@ class _ProfilPageState extends State<ProfilPage> {
                                   });
                                 },
                                 child: Container(
+                                  alignment: Alignment.center,
+                                  padding: EdgeInsets.only(
+                                      left: 12, top: 12, bottom: 12, right: 4),
+                                  child: Container(
+                                      alignment: Alignment.center,
+                                      child: Image.asset(
+                                        "images/order.png",
+                                        color: InOrder
+                                            ? Colors.white
+                                            : Colors.black,
+                                      )),
                                   height: 60,
                                   width: 60,
                                   decoration: BoxDecoration(
                                       border: Border.all(),
                                       color: InOrder
-                                          ? Color(0xFF9E7B61)
+                                          ? Colors.black
                                           : Colors.transparent,
-                                      image: DecorationImage(
-                                          image: AssetImage(
-                                              "images/1193609 1.png")),
                                       borderRadius: BorderRadius.circular(100)),
                                 ),
                               ),
-                              Text("Order")
+                              Text(
+                                "Order",
+                                style: TextStyle(
+                                    fontFamily: "Nanum_Myeongjo",
+                                    fontWeight: FontWeight.bold),
+                              )
                             ],
                           ),
                           Column(
@@ -275,37 +342,62 @@ class _ProfilPageState extends State<ProfilPage> {
                                   });
                                 },
                                 child: Container(
+                                  padding: EdgeInsets.all(10),
+                                  child: Container(
+                                    child: Image.asset(
+                                      "images/destination.png",
+                                      color: ForRead
+                                          ? Colors.black
+                                          : !InOrder
+                                              ? Colors.white
+                                              : Colors.black,
+                                    ),
+                                  ),
                                   height: 60,
                                   width: 60,
                                   decoration: BoxDecoration(
                                       color: ForRead
                                           ? Colors.transparent
                                           : !InOrder
-                                              ? Color(0xFF9E7B61)
+                                              ? Colors.black
                                               : Colors.transparent,
                                       border: Border.all(),
-                                      image: DecorationImage(
-                                          image: AssetImage(
-                                              "images/Vector (9).png")),
                                       borderRadius: BorderRadius.circular(100)),
                                 ),
                               ),
-                              Text("Direction")
+                              Text(
+                                "Direction",
+                                style: TextStyle(
+                                    fontFamily: "Nanum_Myeongjo",
+                                    fontWeight: FontWeight.bold),
+                              )
                             ],
                           ),
                           Column(
                             children: [
                               Container(
+                                padding: EdgeInsets.all(12),
                                 height: 60,
                                 width: 60,
+                                child: InkWell(
+                                  onTap: () {
+                                    // Share.share(
+                                    //     'check out my website https://example.com');
+                                  },
+                                  child: Container(
+                                    child: Image.asset("images/partager.png"),
+                                  ),
+                                ),
                                 decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                        image: AssetImage(
-                                            "images/Vector (10).png")),
                                     border: Border.all(),
                                     borderRadius: BorderRadius.circular(100)),
                               ),
-                              Text("Share")
+                              Text(
+                                "Share",
+                                style: TextStyle(
+                                    fontFamily: "Nanum_Myeongjo",
+                                    fontWeight: FontWeight.bold),
+                              )
                             ],
                           )
                         ],
@@ -315,15 +407,36 @@ class _ProfilPageState extends State<ProfilPage> {
                       ),
                       ForRead
                           ? TabBar(
-                              dividerColor: Color(0xFF54361E),
-                              labelColor: Color(0xFF54361E),
+                              dividerColor: Colors.transparent,
+                              indicatorPadding: EdgeInsets.all(1),
+                              labelColor: Colors.black,
+                              splashBorderRadius: BorderRadius.circular(0),
                               indicatorColor: Colors.black,
                               indicatorSize: TabBarIndicatorSize.tab,
-                              labelPadding: EdgeInsets.all(6),
+                              labelPadding: EdgeInsets.all(10),
+                              padding: EdgeInsets.symmetric(vertical: 3),
                               tabs: [
-                                Text("Gallery"),
-                                Text("Review"),
-                                Text("About us")
+                                Text(
+                                  "Gallery",
+                                  style: TextStyle(
+                                      fontFamily: "Nanum_Myeongjo",
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18),
+                                ),
+                                Text(
+                                  "Review",
+                                  style: TextStyle(
+                                      fontFamily: "Nanum_Myeongjo",
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18),
+                                ),
+                                Text(
+                                  "About us",
+                                  style: TextStyle(
+                                      fontFamily: "Nanum_Myeongjo",
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18),
+                                )
                               ],
                             )
                           : InOrder
@@ -334,76 +447,19 @@ class _ProfilPageState extends State<ProfilPage> {
                                       height: 2,
                                       color: Colors.black,
                                     ),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 10),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Padding(
-                                            padding:
-                                                const EdgeInsets.only(top: 1),
-                                            child: Text(
-                                                "1/ Choose your tailoring timeframe"),
-                                          ),
-                                          IconButton(
-                                              onPressed: () {},
-                                              icon: Icon(Icons.settings))
-                                        ],
-                                      ),
-                                    ),
-                                    Center(
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(2.0),
-                                        child: DropdownMenu(
-                                          trailingIcon: Icon(Icons
-                                              .keyboard_arrow_down_outlined),
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.7,
-                                          hintText: "select",
-                                          enableFilter: true,
-                                          enableSearch: true,
-                                          onSelected: (value) {
-                                            print(value);
-                                          },
-                                          menuStyle: MenuStyle(
-                                              backgroundColor:
-                                                  MaterialStatePropertyAll(
-                                                      Color(0xFFF8F2E9)),
-                                              elevation:
-                                                  MaterialStatePropertyAll(10)),
-                                          dropdownMenuEntries: [
-                                            DropdownMenuEntry(
-                                                style: ButtonStyle(
-                                                    overlayColor:
-                                                        MaterialStatePropertyAll(
-                                                            Color(0xFFF8F2E9)),
-                                                    surfaceTintColor:
-                                                        MaterialStatePropertyAll(
-                                                            Color(0xFFF8F2E9)),
-                                                    shadowColor:
-                                                        MaterialStatePropertyAll(
-                                                            Color(0xFFF8F2E9)),
-                                                    backgroundColor:
-                                                        MaterialStatePropertyAll(
-                                                            Color(0xFFF8F2E9)),
-                                                    foregroundColor:
-                                                        MaterialStatePropertyAll(
-                                                            Color(0xFFF8F2E9))),
-                                                value: "sss",
-                                                label: "sss"),
-                                          ],
-                                        ),
-                                      ),
+                                    SizedBox(
+                                      height: 10,
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.symmetric(
                                           horizontal: 10, vertical: 2),
                                       child: Text(
-                                          "2/ Select one or more models from the catalog for tailoring."),
+                                        "2/ Select one or more models from the catalog for tailoring.",
+                                        style: TextStyle(
+                                            fontFamily: "Nanum_Myeongjo",
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16),
+                                      ),
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.symmetric(
@@ -432,9 +488,27 @@ class _ProfilPageState extends State<ProfilPage> {
                                                                   Colors.white,
                                                               title: ListTile(
                                                                 title: Text(
-                                                                    "Catalog"),
+                                                                  "Catalog",
+                                                                  style: TextStyle(
+                                                                      fontFamily:
+                                                                          "Nanum_Myeongjo",
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
+                                                                      fontSize:
+                                                                          18),
+                                                                ),
                                                                 subtitle: Text(
-                                                                    "Choose your desired style from our catalog of previously tailored models."),
+                                                                  "Choose your desired style from our catalog of previously tailored models.",
+                                                                  style: TextStyle(
+                                                                      fontFamily:
+                                                                          "Nanum_Myeongjo",
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w400,
+                                                                      fontSize:
+                                                                          16),
+                                                                ),
                                                               ),
                                                               content: Wrap(
                                                                 children: [
@@ -533,11 +607,11 @@ class _ProfilPageState extends State<ProfilPage> {
                                                                         decoration:
                                                                             BoxDecoration(
                                                                           color:
-                                                                              Color(0xFF84643D),
+                                                                              Colors.black,
                                                                           border:
                                                                               Border.all(),
                                                                           borderRadius:
-                                                                              BorderRadius.circular(20),
+                                                                              BorderRadius.circular(12),
                                                                         ),
                                                                         child:
                                                                             InkWell(
@@ -548,8 +622,11 @@ class _ProfilPageState extends State<ProfilPage> {
                                                                           child:
                                                                               Text(
                                                                             "Next",
-                                                                            style:
-                                                                                TextStyle(color: Colors.white),
+                                                                            style: TextStyle(
+                                                                                color: Colors.white,
+                                                                                fontFamily: "Nanum_Myeongjo",
+                                                                                fontWeight: FontWeight.bold,
+                                                                                fontSize: 14),
                                                                           ),
                                                                         ),
                                                                       ),
@@ -558,21 +635,23 @@ class _ProfilPageState extends State<ProfilPage> {
                                                                   Center(
                                                                       child:
                                                                           InkWell(
-                                                                    child:
-                                                                        InkWell(
-                                                                      onTap:
-                                                                          () {
-                                                                        Navigator.pop(
-                                                                            context);
-                                                                      },
-                                                                      child:
-                                                                          Text(
-                                                                        "Back",
-                                                                        style: TextStyle(
-                                                                            color:
-                                                                                Color(0xFF84643D),
-                                                                            decoration: TextDecoration.underline),
-                                                                      ),
+                                                                    onTap: () {
+                                                                      Navigator.pop(
+                                                                          context);
+                                                                    },
+                                                                    child: Text(
+                                                                      "Back",
+                                                                      style: TextStyle(
+                                                                          decoration: TextDecoration
+                                                                              .underline,
+                                                                          color: Colors
+                                                                              .black,
+                                                                          fontFamily:
+                                                                              "Nanum_Myeongjo",
+                                                                          fontWeight: FontWeight
+                                                                              .bold,
+                                                                          fontSize:
+                                                                              18),
                                                                     ),
                                                                   ))
                                                                 ],
@@ -661,13 +740,25 @@ class _ProfilPageState extends State<ProfilPage> {
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.symmetric(
-                                          horizontal: 10, vertical: 2),
+                                        horizontal: 10,
+                                      ),
                                       child: Text(
-                                          "3/ Would you like to provide the fabric, or shall the tailor handle it?"),
+                                        "3/ Would you like to provide the fabric, or shall the tailor handle it?",
+                                        style: TextStyle(
+                                            fontFamily: "Nanum_Myeongjo",
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 15),
+                                      ),
                                     ),
                                     RadioListTile(
                                         activeColor: Colors.black,
-                                        title: Text("I'll provide the fabric."),
+                                        title: Text(
+                                          "I'll provide the fabric.",
+                                          style: TextStyle(
+                                              fontFamily: "Nanum_Myeongjo",
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 15),
+                                        ),
                                         value: "I'll provide the fabric.",
                                         groupValue: _groupvalue,
                                         onChanged: (val) {
@@ -678,7 +769,12 @@ class _ProfilPageState extends State<ProfilPage> {
                                     RadioListTile(
                                         activeColor: Colors.black,
                                         title: Text(
-                                            "Tailor to handle fabric purchase."),
+                                          "Tailor to handle fabric purchase.",
+                                          style: TextStyle(
+                                              fontFamily: "Nanum_Myeongjo",
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 15),
+                                        ),
                                         value:
                                             "Tailor to handle fabric purchase.",
                                         groupValue: _groupvalue,
@@ -687,35 +783,63 @@ class _ProfilPageState extends State<ProfilPage> {
                                             _groupvalue = val;
                                           });
                                         }),
+                                    SizedBox(
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.11,
+                                    ),
                                     Center(
                                       child: InkWell(
                                         onTap: () {
-                                          showDialog(
-                                            context: context,
-                                            builder: (context) =>
-                                                BackdropFilter(
-                                                    filter: ImageFilter.blur(
-                                                        sigmaX: 5, sigmaY: 5),
-                                                    child: AlertDialog(
-                                                      alignment:
-                                                          Alignment.center,
-                                                      title: Center(
-                                                        child: Text(
-                                                          "Success! ",
-                                                          style: TextStyle(
-                                                              fontSize: 23),
-                                                        ),
-                                                      ),
-                                                      content: Text(
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                          " Your order has been placed. \n Your request is currently being processed. You'll receive a notification once the tailor accepts your order"),
-                                                    )),
-                                          );
-                                          Future.delayed(Duration(seconds: 2),
-                                              () {
-                                            Navigator.pop(context);
-                                          });
+                                          List<String> IDSModel = [];
+                                          for (var i = 0;
+                                              i < ModelsSelected.length;
+                                              i++) {
+                                            IDSModel.add(ModelsSelected[i].id);
+                                          }
+                                          if (ModelsSelected.length != 0) {
+                                            BuildContext c;
+                                            OrderLogique.AddOrder(
+                                                    IPCONFIG.ClientId,
+                                                    widget.tailor.id,
+                                                    "1200",
+                                                    IDSModel)
+                                                .then((value) async {
+                                              Provider.of<ClientProvider>(
+                                                      context,
+                                                      listen: false)
+                                                  .GetALlAboutCurrentUser();
+                                              return Future.delayed(
+                                                  Duration(seconds: 1), () {
+                                                showDialog(
+                                                  context: context,
+                                                  builder: (context) =>
+                                                      BackdropFilter(
+                                                          filter:
+                                                              ImageFilter.blur(
+                                                                  sigmaX: 5,
+                                                                  sigmaY: 5),
+                                                          child: AlertDialog(
+                                                            alignment: Alignment
+                                                                .center,
+                                                            title: Center(
+                                                              child: Text(
+                                                                "Success! ",
+                                                                style: TextStyle(
+                                                                    fontSize:
+                                                                        23),
+                                                              ),
+                                                            ),
+                                                            content: Text(
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .center,
+                                                                " Your order has been placed. \n Your request is currently being processed. You'll receive a notification once the tailor accepts your order"),
+                                                          )),
+                                                );
+                                              });
+                                            });
+                                          }
                                         },
                                         child: Container(
                                           margin: EdgeInsets.symmetric(
@@ -724,38 +848,50 @@ class _ProfilPageState extends State<ProfilPage> {
                                                     .width *
                                                 0.16,
                                           ),
-                                          height: 50,
+                                          height: 48,
                                           alignment: Alignment.center,
                                           decoration: BoxDecoration(
-                                            color: Color(0xFF84643D),
+                                            color: Colors.black,
                                             border: Border.all(),
                                             borderRadius:
-                                                BorderRadius.circular(20),
+                                                BorderRadius.circular(10),
                                           ),
                                           child: Text(
                                             "Order now",
-                                            style:
-                                                TextStyle(color: Colors.white),
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontFamily: "Nanum_Myeongjo",
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 15),
                                           ),
                                         ),
                                       ),
+                                    ),
+                                    SizedBox(
+                                      height: 10,
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.only(top: 3),
                                       child: Center(
                                           child: InkWell(
+                                        onTap: () {
+                                          Navigator.pop(context);
+                                        },
                                         child: Text(
                                           "Back",
                                           style: TextStyle(
-                                              color: Color(0xFF84643D),
+                                              fontFamily: "Nanum_Myeongjo",
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 15,
+                                              color: Colors.black,
                                               decoration:
                                                   TextDecoration.underline),
                                         ),
                                       )),
-                                    )
+                                    ),
                                   ],
                                 )
-                              : Text("Direction"),
+                              : Expanded(child: MapScreen()),
                       ForRead
                           ? Expanded(
                               child: TabBarView(children: [

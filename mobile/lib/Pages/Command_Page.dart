@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:grouped_list/grouped_list.dart';
 import 'package:projetfinprepa/Pages/SousPages/ChatPage.dart';
+import 'package:projetfinprepa/Providers/Tailors%20copy.dart';
 import 'package:projetfinprepa/Widgets/CommandItem.dart';
+import 'package:provider/provider.dart';
 
 class MyCommandPage extends StatefulWidget {
   const MyCommandPage({super.key});
@@ -15,45 +16,60 @@ class _MyCommandPageState extends State<MyCommandPage> {
   List<double> leftPositions = [];
   @override
   Widget build(BuildContext context) {
+    print(
+        "outi${Provider.of<ClientProvider>(context, listen: false).client!.orders!.length}");
     return Scaffold(
-        backgroundColor: Color(0xFFFCF9F6),
+        backgroundColor: Color(0xFFFFF4DE),
         appBar: AppBar(
-          backgroundColor: Color(0xFFFCF9F6),
+          backgroundColor: Color(0xFFFFF4DE),
           shadowColor: Colors.black,
           elevation: 01,
-          title: Text("My Command"),
+          title: Text(
+            "My Command",
+            style: TextStyle(
+              fontSize: 24,
+              fontFamily: "Nanum_Myeongjo",
+              fontWeight: FontWeight.w600,
+            ),
+          ),
           toolbarHeight: MediaQuery.of(context).size.height * 0.12,
         ),
-        body: Container(
-          alignment: Alignment.topCenter,
-          child: GroupedListView(
-            groupBy: (element) => DateTime(2024),
-            elements: ["zzzzzzzz", "zzzzzzzzzzzz"],
-            groupHeaderBuilder: (element) {
-              return Text("data");
-            },
-            itemBuilder: (context, element) {
-              return Slidable(
-                closeOnScroll: true,
-                endActionPane: ActionPane(motion: StretchMotion(), children: [
-                  SlidableAction(
-                    onPressed: (context) {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ChatPAge(),
-                          ));
-                    },
-                    backgroundColor: Color(0xFFFCF9F6),
-                    icon: Icons.arrow_forward_ios_rounded,
-                  )
-                ]),
-                // child: Text(element),
+        body: Consumer<ClientProvider>(
+          builder: (context, value, child) {
+            print("eeeeeeeeeeeeeeeeeeeeeeee ${value.client!.orders!.length}");
+            return Container(
+                alignment: Alignment.topCenter,
+                child: ListView.builder(
+                  itemCount: value.client!.orders!.length,
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Slidable(
+                        closeOnScroll: true,
+                        endActionPane:
+                            ActionPane(motion: StretchMotion(), children: [
+                          SlidableAction(
+                            onPressed: (context) {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => ChatPAge(),
+                                  ));
+                            },
+                            backgroundColor: Color(0xFFFCF9F6),
+                            icon: Icons.arrow_forward_ios_rounded,
+                          )
+                        ]),
+                        // child: Text(element),
 
-                child: CommandItem(),
-              );
-            },
-          ),
+                        child: CommandItem(
+                          order: value.client!.orders![index],
+                        ),
+                      ),
+                    );
+                  },
+                ));
+          },
         ));
   }
 }

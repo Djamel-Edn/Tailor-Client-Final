@@ -3,6 +3,7 @@ import 'package:projetfinprepa/Pages/Command_Page.dart';
 import 'package:projetfinprepa/Pages/Search_Page.dart';
 import 'package:projetfinprepa/Pages/tstthreeD.dart';
 import 'package:projetfinprepa/Providers/Models.dart';
+import 'package:projetfinprepa/Providers/Tailors%20copy.dart';
 import 'package:projetfinprepa/Providers/Tailors.dart';
 import 'package:projetfinprepa/tests/Home_Page.dart';
 import 'package:provider/provider.dart';
@@ -15,12 +16,14 @@ class FirstPage extends StatefulWidget {
 }
 
 class _FirstPageState extends State<FirstPage> {
-  List Pages = [HomePage(), SearchPage(), tstthreed(), MyCommandPage()];
+  List Pages = [HomePage(), SearchPage(), parx(), MyCommandPage()];
   int currentpage = 0;
   @override
   void initState() {
-    Provider.of<TailorsProvider>(context, listen: false).GetAllTailors();
     Provider.of<ModelsProvider>(context, listen: false).GetAllModels();
+    Provider.of<ClientProvider>(context, listen: false)
+        .GetALlAboutCurrentUser();
+    Provider.of<TailorsProvider>(context, listen: false).GetAllTailors();
 
     super.initState();
   }
@@ -31,20 +34,20 @@ class _FirstPageState extends State<FirstPage> {
       debugShowCheckedModeBanner: false,
       home: SafeArea(
           child: Scaffold(
-        extendBody: true,
-        extendBodyBehindAppBar: true,
-        bottomNavigationBar: Container(
-          margin: EdgeInsets.only(bottom: 15, left: 20, right: 20),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        floatingActionButton: Container(
+          margin: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+          height: MediaQuery.of(context).size.height * 0.0899,
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-              color: Color(0xFF84643D)),
+              borderRadius: BorderRadius.circular(20), color: Colors.black),
           child: BottomNavigationBar(
+            showSelectedLabels: false,
             type: BottomNavigationBarType.fixed,
             backgroundColor: Colors.transparent,
             selectedItemColor: Colors.black,
             currentIndex: currentpage,
             showUnselectedLabels: false,
-            elevation: 0,
+            elevation: 14,
             unselectedItemColor: Colors.white,
             onTap: (value) {
               currentpage = value;
@@ -52,39 +55,98 @@ class _FirstPageState extends State<FirstPage> {
             },
             items: [
               BottomNavigationBarItem(
-                  icon: Image.asset(
-                    "images/HomeIcon.png",
-                    color: currentpage != 0 ? Colors.white : Colors.black,
+                  icon: Container(
+                    decoration: BoxDecoration(
+                        color: currentpage != 0
+                            ? Colors.transparent
+                            : Colors.white,
+                        borderRadius: BorderRadius.circular(3)),
+                    child: Padding(
+                      padding: const EdgeInsets.all(3.0),
+                      child: Image.asset(
+                        "images/Home (5).png",
+                        color: currentpage != 0 ? Colors.white : Colors.black,
+                      ),
+                    ),
                   ),
                   label: "Home"),
               BottomNavigationBarItem(
-                icon: Image.asset(
-                  "images/SearchIcon.png",
-                  color: currentpage != 1 ? Colors.white : Colors.black,
+                icon: Container(
+                  margin: EdgeInsets.only(top: 3),
+                  decoration: BoxDecoration(
+                      color:
+                          currentpage != 1 ? Colors.transparent : Colors.white,
+                      borderRadius: BorderRadius.circular(3)),
+                  child: Padding(
+                    padding: const EdgeInsets.all(3.0),
+                    child: Image.asset(
+                      "images/Search1.png",
+                      color: currentpage != 1 ? Colors.white : Colors.black,
+                    ),
+                  ),
                 ),
+                // images/Search1.png
                 label: "Search",
               ),
               BottomNavigationBarItem(
-                  icon: Image.asset(
-                    "images/HomeIcon.png",
-                    color: currentpage != 2 ? Colors.white : Color(0xFF352107),
+                  icon: Container(
+                    margin: EdgeInsets.only(top: 3),
+                    decoration: BoxDecoration(
+                        color: currentpage != 2
+                            ? Colors.transparent
+                            : Colors.white,
+                        borderRadius: BorderRadius.circular(3)),
+                    child: Padding(
+                      padding: const EdgeInsets.all(3.1),
+                      child: Image.asset(
+                        "images/image 5 (3).png",
+                        color: currentpage != 2 ? Colors.white : Colors.black,
+                      ),
+                    ),
                   ),
+                  // images/image 5 (3).png
                   label: "Home"),
               BottomNavigationBarItem(
-                  icon: Image.asset(
-                    "images/HomeIcon.png",
-                    color: currentpage != 3 ? Colors.white : Color(0xFF352107),
+                  icon: Container(
+                    margin: EdgeInsets.only(top: 3),
+                    decoration: BoxDecoration(
+                        color: currentpage != 3
+                            ? Colors.transparent
+                            : Colors.white,
+                        borderRadius: BorderRadius.circular(3)),
+                    child: Padding(
+                      padding: const EdgeInsets.all(6.0),
+                      child: Image.asset(
+                        "images/image 6 (1).png",
+                        color: currentpage != 3 ? Colors.white : Colors.black,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
                   ),
-                  label: "Home"),
+                  // images/image 6 (1).png
+                  label: "Command"),
               BottomNavigationBarItem(
-                  icon: Image.asset(
-                    "images/HomeIcon.png",
-                    color: currentpage != 4 ? Colors.white : Color(0xFF352107),
+                  icon: Container(
+                    margin: EdgeInsets.only(top: 3),
+                    decoration: BoxDecoration(
+                        color: currentpage != 4
+                            ? Colors.transparent
+                            : Colors.white,
+                        borderRadius: BorderRadius.circular(3)),
+                    child: Padding(
+                      padding: const EdgeInsets.all(3.0),
+                      child: Image.asset(
+                        "images/Customer (1).png",
+                        color: currentpage != 4 ? Colors.white : Colors.black,
+                      ),
+                    ),
                   ),
-                  label: "Home")
+                  // images/Customer (1).png
+                  label: "Profil")
             ],
           ),
         ),
+        backgroundColor: Color(0xFFFCF9F6),
         body: AnimatedSwitcher(
           child: Pages[currentpage],
           transitionBuilder: (child, animation) {

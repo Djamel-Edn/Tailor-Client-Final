@@ -1,9 +1,8 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:intl/intl.dart';
 import 'package:projetfinprepa/Data/Message_Class.dart';
+import 'package:projetfinprepa/IpConfig/Ipconfig.dart';
 import 'package:projetfinprepa/Providers/Chat.dart';
 import 'package:provider/provider.dart';
 
@@ -19,6 +18,8 @@ class _ChatPAgeState extends State<ChatPAge> {
   @override
   void initState() {
     Provider.of<ChatProvider>(context, listen: false).GetChat();
+    print(
+        "aaaaaaaaaaaaaaaaaaaqqqqqqqqqqqqqqqq ${Provider.of<ChatProvider>(context, listen: false).chat}");
     super.initState();
   }
 
@@ -34,12 +35,7 @@ class _ChatPAgeState extends State<ChatPAge> {
           shadowColor: Colors.black,
           backgroundColor: Color(0xFFFCF9F6),
           leadingWidth: 120,
-          title: Provider.of<ChatProvider>(context, listen: false).chat!.tailor.name == null
-              ? Text("uuuu")
-              : Text(Provider.of<ChatProvider>(context, listen: false)
-                  .chat!
-                  .tailor
-                  .name),
+          title: Text("sss"),
           centerTitle: false,
           actions: [
             IconButton(
@@ -60,19 +56,18 @@ class _ChatPAgeState extends State<ChatPAge> {
                     Navigator.pop(context);
                   },
                   icon: Icon(Icons.arrow_back_ios)),
-              Provider.of<ChatProvider>(context, listen: false).chat == null
-                  ? CircleAvatar(
-                      radius: 25,
-                    )
-                  : CircleAvatar(
-                      radius: 25,
-                      backgroundImage: MemoryImage(base64Decode(
-                          Provider.of<ChatProvider>(context, listen: false)
-                              .chat!
-                              .tailor
-                              .profilePicture
-                              .substring(23))),
-                    ),
+              CircleAvatar(
+                radius: 25,
+              )
+              // : CircleAvatar(
+              //     radius: 25,
+              //     backgroundImage: MemoryImage(base64Decode(
+              //         Provider.of<ChatProvider>(context, listen: false)
+              //             .chat!
+              //             .tailor
+              //             .profilePicture
+              //             .substring(23))),
+              //   ),
             ],
           ),
           toolbarHeight: 70,
@@ -141,7 +136,7 @@ class _ChatPAgeState extends State<ChatPAge> {
                           onPressed: () {
                             if (_controller.text.trim() != "") {
                               value.PostMessageInChat(
-                                      "66278875e654b5bc787bfe6b",
+                                      IPCONFIG.ClientId,
                                       "662eae3634b1ca8d98f2368d",
                                       _controller.text.trim())
                                   .then((value) => _controller.text = "");
@@ -166,7 +161,7 @@ class _ChatPAgeState extends State<ChatPAge> {
 class MessageUi extends StatelessWidget {
   Message message;
   MessageUi({super.key, required this.message});
-  String MYID = "66278875e654b5bc787bfe6b";
+  String MYID = IPCONFIG.ClientId;
 
   @override
   Widget build(BuildContext context) {

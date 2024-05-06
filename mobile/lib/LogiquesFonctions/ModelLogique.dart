@@ -3,13 +3,12 @@ import 'dart:convert' as convert;
 import 'package:http/http.dart' as http;
 import 'package:projetfinprepa/Data/Models_Class.dart';
 import 'package:projetfinprepa/Data/Tailor_Class.dart';
-import 'package:projetfinprepa/IpConfig/Ipconfig.dart';
 
 class ModelLogique {
   static Future<List<Model>> GetAllModels() async {
     List<Model> AllModel = [];
     print("in get modelssssssssssssssssssssssssssssssss");
-    var uri = "http://${IPCONFIG.iPCONFIG}:5001/post/getall";
+    var uri = "https://tailor-client-ps9z.onrender.com/post/getall";
     var res = await http.get(Uri.parse(uri));
     print("in get modelssssssssssssssssssssssssssssssss${res.statusCode}");
     if (res.statusCode == 200) {

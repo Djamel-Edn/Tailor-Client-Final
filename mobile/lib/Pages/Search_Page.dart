@@ -43,11 +43,14 @@ class _SearchPageState extends State<SearchPage> {
   bool _selectedSeg = false;
   bool startTransition = false;
   bool IsInitialSheet = true;
+  bool _nearest = false;
 
   bool Showseg = false;
   List<Tailor> ResultTilors = [];
   List<Tailor> Result = [];
   List<Model> ResultModels = [];
+  List<Model> ResultModelsWithFilter = [];
+
   List<Model> Result2 = [];
   List<String> ResultMatchSeg = [];
   int indexCategory = 0;
@@ -61,11 +64,12 @@ class _SearchPageState extends State<SearchPage> {
       EmptyResultModels = false;
     } else {
       Data = AllDataTailors.where((element) =>
-          element.name.toUpperCase().startsWith(query.toUpperCase())).toList();
+          element.name!.toUpperCase().startsWith(query.toUpperCase())).toList();
 
       Data2 = AllDataModels.where(
               (element) => element.speciality.startsWith(query.toUpperCase()))
           .toList();
+
       if ((Data.length == 0 || Data2.length == 0) && query == "") {
         EmptyResultTailors = false;
         Data = AllDataTailors;
@@ -111,7 +115,7 @@ class _SearchPageState extends State<SearchPage> {
       length: 2,
       child: Scaffold(
         body: Container(
-          color: Color(0xFFFCF9F6),
+          color: Color(0xFFFFF4DE),
           padding: EdgeInsets.symmetric(horizontal: 20, vertical: 30),
           child: Column(
             children: [
@@ -136,11 +140,13 @@ class _SearchPageState extends State<SearchPage> {
                           _FilterSlected[0] = _controller.text;
                         }
                         Showseg = false;
+
                         ResultModels = AllDataModels.where(
                           (element) =>
                               element.speciality.toUpperCase() ==
                               _FilterSlected[0].toUpperCase(),
                         ).toList();
+                        ResultModelsWithFilter = ResultModels;
                         if (!ResultModels.isEmpty) {
                           EmptyResultModels = false;
                         }
@@ -201,13 +207,11 @@ class _SearchPageState extends State<SearchPage> {
                         width: MediaQuery.of(context).size.width * 0.33,
                         duration: Duration(milliseconds: 700),
                         decoration: BoxDecoration(
-                            color: indexCategory == e.id
-                                ? Color(0xFF9E7B61)
-                                : null,
+                            color: indexCategory == e.id ? Colors.black : null,
                             border: indexCategory == e.id
-                                ? Border.all(color: Color(0xFF9E7B61))
-                                : Border.all(color: Color(0xFF9E7B61)),
-                            borderRadius: BorderRadius.circular(50)),
+                                ? Border.all(color: Colors.black)
+                                : Border.all(color: Colors.black),
+                            borderRadius: BorderRadius.circular(8)),
                         child: Center(
                           child: Text(
                             e.category,
@@ -226,7 +230,7 @@ class _SearchPageState extends State<SearchPage> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  "Not foundk",
+                                  "Not foundkjmm",
                                   style: TextStyle(
                                       fontSize: 28, color: Color(0xFFC0AF9A)),
                                 ),
@@ -267,10 +271,8 @@ class _SearchPageState extends State<SearchPage> {
                                           microseconds: 1200 + (index * 1000)),
                                       child: InkWell(
                                         onTap: () {
-                                          print(index);
-                                          print(AllDataModels[index]);
-
                                           showModalBottomSheet(
+                                            backgroundColor: Color(0xFFFFF4DE),
                                             isDismissible: true,
                                             context: context,
                                             builder: (context) {
@@ -280,12 +282,12 @@ class _SearchPageState extends State<SearchPage> {
                                                     children: [
                                                       Container(
                                                         decoration: BoxDecoration(
-                                                            color: Color(
-                                                                0xFFF5ECDD),
+                                                            color: Colors
+                                                                .transparent,
                                                             borderRadius:
                                                                 BorderRadius
                                                                     .circular(
-                                                                        20)),
+                                                                        10)),
                                                         margin:
                                                             EdgeInsets.all(10),
                                                         child: AspectRatio(
@@ -294,28 +296,39 @@ class _SearchPageState extends State<SearchPage> {
                                                               borderRadius:
                                                                   BorderRadius
                                                                       .circular(
-                                                                          20),
-                                                              child:
-                                                                  Image.memory(
-                                                                base64Decode(
-                                                                    ResultModels[
-                                                                            index]
-                                                                        .image),
-                                                                fit: BoxFit
-                                                                    .cover,
-                                                              )),
+                                                                          10),
+                                                              child: ResultModelsWithFilter
+                                                                          .length !=
+                                                                      0
+                                                                  ? Image
+                                                                      .memory(
+                                                                      base64Decode(
+                                                                          ResultModelsWithFilter[index]
+                                                                              .image),
+                                                                      fit: BoxFit
+                                                                          .cover,
+                                                                    )
+                                                                  : Image
+                                                                      .memory(
+                                                                      base64Decode(
+                                                                          ResultModels[index]
+                                                                              .image),
+                                                                      fit: BoxFit
+                                                                          .cover,
+                                                                    )),
                                                         ),
                                                       ),
                                                       Positioned(
                                                           top: 30,
                                                           right: 20,
-                                                          child: CircleAvatar(
-                                                            backgroundColor:
-                                                                Colors.white,
-                                                            child: IconButton(
-                                                              icon: Icon(Icons
-                                                                  .save_outlined),
-                                                              onPressed: () {},
+                                                          child: InkWell(
+                                                            onTap: () {},
+                                                            child: Container(
+                                                              height: 25,
+                                                              child:
+                                                                  Image.asset(
+                                                                "images/saveinst.png",
+                                                              ),
                                                             ),
                                                           )),
                                                     ],
@@ -330,7 +343,7 @@ class _SearchPageState extends State<SearchPage> {
                                                     decoration: BoxDecoration(
                                                         borderRadius:
                                                             BorderRadius
-                                                                .circular(15),
+                                                                .circular(10),
                                                         border: Border.all()),
                                                     child: Padding(
                                                       padding:
@@ -338,31 +351,83 @@ class _SearchPageState extends State<SearchPage> {
                                                               8.0),
                                                       child: Row(
                                                         children: [
-                                                          CircleAvatar(
-                                                            radius: 25,
-                                                            backgroundImage: MemoryImage(
-                                                                base64Decode(AllDataModels[
-                                                                        index]
-                                                                    .tailor
-                                                                    .profilePicture
-                                                                    .substring(
-                                                                        23))),
+                                                          InkWell(
+                                                            onTap: () {
+                                                              Navigator.push(
+                                                                  context,
+                                                                  MaterialPageRoute(
+                                                                    builder:
+                                                                        (context) =>
+                                                                            ProfilPage(
+                                                                      model:
+                                                                          null,
+                                                                      tailor: AllDataModels[
+                                                                              index]
+                                                                          .tailor!,
+                                                                      IsFoRead:
+                                                                          true,
+                                                                      IsFoOrder:
+                                                                          false,
+                                                                    ),
+                                                                  ));
+                                                            },
+                                                            child: CircleAvatar(
+                                                              radius: 25,
+                                                              backgroundImage: MemoryImage(base64Decode(
+                                                                  AllDataModels[
+                                                                          index]
+                                                                      .tailor!
+                                                                      .profilePicture!
+                                                                      .substring(
+                                                                          23))),
+                                                            ),
                                                           ),
                                                           SizedBox(
                                                             width: 6,
                                                           ),
                                                           Column(
                                                             children: [
-                                                              Text(
+                                                              InkWell(
+                                                                onTap: () {
+                                                                  Navigator.push(
+                                                                      context,
+                                                                      MaterialPageRoute(
+                                                                        builder:
+                                                                            (context) =>
+                                                                                ProfilPage(
+                                                                          model:
+                                                                              null,
+                                                                          tailor:
+                                                                              AllDataModels[index].tailor!,
+                                                                          IsFoRead:
+                                                                              true,
+                                                                          IsFoOrder:
+                                                                              false,
+                                                                        ),
+                                                                      ));
+                                                                },
+                                                                child: Text(
                                                                   AllDataModels[
                                                                           index]
-                                                                      .tailor
-                                                                      .name),
+                                                                      .tailor!
+                                                                      .name!,
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontFamily:
+                                                                        "Nanum_Myeongjo",
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                    fontSize:
+                                                                        20,
+                                                                  ),
+                                                                ),
+                                                              ),
                                                               RatingBar.builder(
                                                                 initialRating: double.parse(
                                                                     AllDataModels[
                                                                             index]
-                                                                        .tailor
+                                                                        .tailor!
                                                                         .rating),
                                                                 minRating: 1,
                                                                 itemSize: 15,
@@ -397,41 +462,6 @@ class _SearchPageState extends State<SearchPage> {
                                                                       () {},
                                                                   icon: Icon(Icons
                                                                       .favorite_border)),
-                                                              InkWell(
-                                                                onTap: () {
-                                                                  Navigator.push(
-                                                                      context,
-                                                                      MaterialPageRoute(
-                                                                        builder:
-                                                                            (context) =>
-                                                                                ProfilPage(tailor: AllDataModels[index].tailor),
-                                                                      ));
-                                                                },
-                                                                child:
-                                                                    Container(
-                                                                  decoration: BoxDecoration(
-                                                                      color: Color(
-                                                                          0xFF84643D),
-                                                                      border: Border
-                                                                          .all(),
-                                                                      borderRadius:
-                                                                          BorderRadius.circular(
-                                                                              12)),
-                                                                  child:
-                                                                      Padding(
-                                                                    padding:
-                                                                        const EdgeInsets
-                                                                            .all(
-                                                                            6.0),
-                                                                    child: Text(
-                                                                      "Voir Profil",
-                                                                      style: TextStyle(
-                                                                          color:
-                                                                              Colors.white),
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                              )
                                                             ],
                                                           )
                                                         ],
@@ -444,22 +474,57 @@ class _SearchPageState extends State<SearchPage> {
                                                       .symmetric(
                                                       horizontal: 20,
                                                       vertical: 15),
-                                                  child: Container(
-                                                    alignment: Alignment.center,
-                                                    height: 60,
-                                                    width: double.infinity,
-                                                    decoration: BoxDecoration(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(20),
-                                                        border: Border.all(),
-                                                        color:
-                                                            Color(0xFF84643D)),
-                                                    child: Text(
-                                                      "Order Now",
-                                                      style: TextStyle(
-                                                          fontSize: 21,
-                                                          color: Colors.white),
+                                                  child: InkWell(
+                                                    onTap: () {
+                                                      Model model;
+                                                      if (ResultModelsWithFilter
+                                                              .length ==
+                                                          0) {
+                                                        model =
+                                                            ResultModels[index];
+                                                      } else {
+                                                        model =
+                                                            ResultModelsWithFilter[
+                                                                index];
+                                                      }
+                                                      Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                            builder:
+                                                                (context) =>
+                                                                    ProfilPage(
+                                                              model: model,
+                                                              tailor:
+                                                                  AllDataModels[
+                                                                          index]
+                                                                      .tailor!,
+                                                              IsFoRead: false,
+                                                              IsFoOrder: true,
+                                                            ),
+                                                          ));
+                                                    },
+                                                    child: Container(
+                                                      alignment:
+                                                          Alignment.center,
+                                                      height: 60,
+                                                      width: double.infinity,
+                                                      decoration: BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(12),
+                                                          border: Border.all(),
+                                                          color: Colors.black),
+                                                      child: Text(
+                                                        "Order Now",
+                                                        style: TextStyle(
+                                                            fontFamily:
+                                                                "Nanum_Myeongjo",
+                                                            fontSize: 21,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            color:
+                                                                Colors.white),
+                                                      ),
                                                     ),
                                                   ),
                                                 )
@@ -539,66 +604,209 @@ class _SearchPageState extends State<SearchPage> {
                           ],
                         ),
                       )
-                    : GridView.builder(
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2, childAspectRatio: 0.87),
-                        itemCount: ResultTilors.length,
-                        itemBuilder: (context, index) {
-                          return AnimatedContainer(
-                            duration:
-                                Duration(milliseconds: 600 + (index * 100)),
-                            padding: EdgeInsets.all(20),
-                            margin: EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 12),
-                            decoration: BoxDecoration(
-                                boxShadow: [],
-                                border: Border.all(color: Colors.black),
-                                color: Color(0xFFD9D9D9).withAlpha(60),
-                                borderRadius: BorderRadius.circular(20)),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                ResultTilors[index].profilePicture.toString() !=
-                                        "../utils/pp.png"
-                                    ? CircleAvatar(
-                                        radius: 40,
-                                        foregroundImage: MemoryImage(
-                                          base64Decode(ResultTilors[index]
-                                              .profilePicture
-                                              .toString()
-                                              .substring(23)),
+                    : Column(
+                        children: [
+                          CheckboxListTile(
+                            shape: CircleBorder(),
+                            side: BorderSide(color: Colors.black),
+                            checkColor: Colors.white,
+                            activeColor: Colors.black,
+                            title: Text("Nearst ?"),
+                            value: _nearest,
+                            onChanged: (value) {
+                              setState(() {
+                                _nearest = value!;
+                              });
+                            },
+                          ),
+                          Expanded(
+                            child: !_nearest
+                                ? GridView.builder(
+                                    gridDelegate:
+                                        SliverGridDelegateWithFixedCrossAxisCount(
+                                            crossAxisCount: 2,
+                                            childAspectRatio: 0.87),
+                                    itemCount: ResultTilors.length,
+                                    itemBuilder: (context, index) {
+                                      return InkWell(
+                                        onTap: () {
+                                          print(ResultTilors[index]
+                                              .profilePicture);
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    ProfilPage(
+                                                        model: null,
+                                                        tailor:
+                                                            ResultTilors[index],
+                                                        IsFoRead: true,
+                                                        IsFoOrder: false),
+                                              ));
+                                        },
+                                        child: AnimatedContainer(
+                                          duration: Duration(
+                                              milliseconds:
+                                                  600 + (index * 100)),
+                                          padding: EdgeInsets.all(20),
+                                          margin: EdgeInsets.symmetric(
+                                              horizontal: 10, vertical: 12),
+                                          decoration: BoxDecoration(
+                                              boxShadow: [],
+                                              border: Border.all(
+                                                  color: Colors.black),
+                                              color: Color(0xFFD9D9D9)
+                                                  .withAlpha(60),
+                                              borderRadius:
+                                                  BorderRadius.circular(10)),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              ResultTilors[index]
+                                                          .profilePicture
+                                                          .toString() !=
+                                                      "../utils/pp.png"
+                                                  ? CircleAvatar(
+                                                      radius: 40,
+                                                      foregroundImage:
+                                                          MemoryImage(
+                                                        base64Decode(
+                                                            ResultTilors[index]
+                                                                .profilePicture
+                                                                .toString()
+                                                                .substring(23)),
+                                                      ),
+                                                    )
+                                                  : CircleAvatar(
+                                                      radius: 40,
+                                                      foregroundImage:
+                                                          AssetImage(
+                                                        "images/DefaultProfileWomen.png",
+                                                      ),
+                                                    ),
+                                              Text(
+                                                ResultTilors[index].name!,
+                                                style: TextStyle(fontSize: 18),
+                                              ),
+                                              RatingBar.builder(
+                                                initialRating: 3,
+                                                minRating: 1,
+                                                itemSize: 15,
+                                                direction: Axis.horizontal,
+                                                allowHalfRating: true,
+                                                itemCount: 5,
+                                                itemBuilder: (context, _) =>
+                                                    Icon(
+                                                  Icons.star,
+                                                  size: 1,
+                                                  color: Colors.amber,
+                                                ),
+                                                onRatingUpdate: (rating) {},
+                                                ignoreGestures: true,
+                                              )
+                                            ],
+                                          ),
                                         ),
-                                      )
-                                    : CircleAvatar(
-                                        radius: 40,
-                                        foregroundImage: AssetImage(
-                                          "images/DefaultProfileWomen.png",
+                                      );
+                                    },
+                                  )
+                                : GridView.builder(
+                                    gridDelegate:
+                                        SliverGridDelegateWithFixedCrossAxisCount(
+                                            crossAxisCount: 2,
+                                            childAspectRatio: 0.87),
+                                    itemCount: ResultTilors.length - 2,
+                                    itemBuilder: (context, index) {
+                                      return InkWell(
+                                        onTap: () {
+                                          print(ResultTilors[index]
+                                              .profilePicture);
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    ProfilPage(
+                                                        model: null,
+                                                        tailor:
+                                                            ResultTilors[index],
+                                                        IsFoRead: true,
+                                                        IsFoOrder: false),
+                                              ));
+                                        },
+                                        child: AnimatedContainer(
+                                          duration: Duration(
+                                              milliseconds:
+                                                  600 + (index * 100)),
+                                          padding: EdgeInsets.all(20),
+                                          margin: EdgeInsets.symmetric(
+                                              horizontal: 10, vertical: 12),
+                                          decoration: BoxDecoration(
+                                              boxShadow: [],
+                                              border: Border.all(
+                                                  color: Colors.black),
+                                              color: Color(0xFFD9D9D9)
+                                                  .withAlpha(60),
+                                              borderRadius:
+                                                  BorderRadius.circular(10)),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              ResultTilors[index]
+                                                          .profilePicture
+                                                          .toString() !=
+                                                      "../utils/pp.png"
+                                                  ? CircleAvatar(
+                                                      radius: 40,
+                                                      foregroundImage:
+                                                          MemoryImage(
+                                                        base64Decode(
+                                                            ResultTilors[index]
+                                                                .profilePicture
+                                                                .toString()
+                                                                .substring(23)),
+                                                      ),
+                                                    )
+                                                  : CircleAvatar(
+                                                      radius: 40,
+                                                      foregroundImage:
+                                                          AssetImage(
+                                                        "images/DefaultProfileWomen.png",
+                                                      ),
+                                                    ),
+                                              Text(
+                                                ResultTilors[index].name!,
+                                                style: TextStyle(fontSize: 18),
+                                              ),
+                                              RatingBar.builder(
+                                                initialRating: 3,
+                                                minRating: 1,
+                                                itemSize: 15,
+                                                direction: Axis.horizontal,
+                                                allowHalfRating: true,
+                                                itemCount: 5,
+                                                itemBuilder: (context, _) =>
+                                                    Icon(
+                                                  Icons.star,
+                                                  size: 1,
+                                                  color: Colors.amber,
+                                                ),
+                                                onRatingUpdate: (rating) {},
+                                                ignoreGestures: true,
+                                              )
+                                            ],
+                                          ),
                                         ),
-                                      ),
-                                Text(
-                                  ResultTilors[index].name,
-                                  style: TextStyle(fontSize: 18),
-                                ),
-                                RatingBar.builder(
-                                  initialRating: 3,
-                                  minRating: 1,
-                                  itemSize: 15,
-                                  direction: Axis.horizontal,
-                                  allowHalfRating: true,
-                                  itemCount: 5,
-                                  itemBuilder: (context, _) => Icon(
-                                    Icons.star,
-                                    size: 1,
-                                    color: Colors.amber,
+                                      );
+                                    },
                                   ),
-                                  onRatingUpdate: (rating) {},
-                                  ignoreGestures: true,
-                                )
-                              ],
-                            ),
-                          );
-                        },
+                          ),
+                        ],
                       ),
               ]))
             ],

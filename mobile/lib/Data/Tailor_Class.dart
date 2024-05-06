@@ -4,13 +4,13 @@ class Tailor {
   String? Speciality;
   String? description;
 
-  String id, name, email, password, city, gender, profilePicture;
-  int phone;
+  String? id, name, email, password, city, gender, profilePicture;
+  int? phone;
   var rating;
   List<dynamic>? orders;
   List<dynamic>? reviews;
   List<dynamic>? models;
-  bool verified;
+  bool? verified;
 
   Tailor(
       {required this.name,

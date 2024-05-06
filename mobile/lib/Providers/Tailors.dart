@@ -3,7 +3,6 @@ import 'dart:convert' as convert;
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:projetfinprepa/Data/Tailor_Class.dart';
-import 'package:projetfinprepa/IpConfig/Ipconfig.dart';
 
 class TailorsProvider extends ChangeNotifier {
   List<Tailor> _AllTailors = [];
@@ -11,7 +10,7 @@ class TailorsProvider extends ChangeNotifier {
 
   Future<void> GetAllTailors() async {
     _AllTailors = [];
-    var uri = "http://${IPCONFIG.iPCONFIG}:5001/getallTailors";
+    var uri = "https://tailor-client-ps9z.onrender.com/getallTailors";
     var res = await http.get(Uri.parse(uri));
     if (res.statusCode == 200) {
       var jsonres = convert.jsonDecode(res.body);

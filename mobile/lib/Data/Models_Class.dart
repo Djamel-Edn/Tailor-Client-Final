@@ -2,7 +2,7 @@ import 'package:projetfinprepa/Data/Tailor_Class.dart';
 
 class Model {
   String id, titel, image, description, category, speciality;
-  Tailor tailor;
+  Tailor? tailor;
   int price;
   String CreatedAt;
   Model(
