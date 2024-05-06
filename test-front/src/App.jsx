@@ -8,6 +8,7 @@ import Home from './pages/home';
 import Recherche from './pages/recherche';
 import LandingPage from './pages/LandingPage';
 import CreateStyle from './pages/createYourStyle';
+import Customizer from './pages/Customizer';
 
 function App() {
 
@@ -24,6 +25,8 @@ function App() {
         <Route path="/profile" element={<Profile/>} />
         <Route path="/home" element={<Home/>} />
         <Route path="/createYourStyle" element={<CreateStyle/>} />
+        <Route path="/Customize" element={<Customizer/>} />
+
         <Route path="/recherche" element={<Recherche/>} />
         <Route path="/*" element={<Recherche/>} />
         <Route path='*' element={<Navigate  to='/'/>}/>

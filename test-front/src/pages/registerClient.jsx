@@ -6,6 +6,7 @@ function RegisterClient() {
   const [email, setEmail] = useState('');
   const [gender, setGender] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
+  const [city, setCity] = useState('');
 
   localStorage.setItem('user', {name,email,gender});
   const processResponse = (data) => {
@@ -30,7 +31,7 @@ function RegisterClient() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email, name, password, gender }),
+        body: JSON.stringify({ email, name, password, gender,city }),
       });
       const data = await response.json();
       
@@ -66,6 +67,10 @@ function RegisterClient() {
             <option value="Male">Male</option>
             <option value="Female">Female</option>
           </select>
+        </label>
+        <label htmlFor="">
+      <input type="text" value={city} onChange={(e)=>{setCity(e.target.value)}} />
+
         </label>
         <button type="submit">Register</button>
       </form>

@@ -42,27 +42,27 @@ const Style = [
         subCategories: [
             {
                 name: 'Blouse',
-                images: ['https://i.ibb.co/7vJ7Y1V/blouse.jpg', 'https://i.ibb.co/7vJ7Y1V/blouse.jpg', 'https://i.ibb.co/7vJ7Y1V/blouse.jpg']
+                images: ['../styles/blouse 1.jpg', '../styles/blouse 2.jpg', '../styles/blouse 3.jpg', '../styles/blouse 4.jpg', '../styles/blouse 5.jpg']
             },
             {
                 name: 'Cardigan',
-                images: ['https://i.ibb.co/7vJ7Y1V/blouse.jpg', 'https://i.ibb.co/7vJ7Y1V/blouse.jpg', 'https://i.ibb.co/7vJ7Y1V/blouse.jpg']
+                images: ['../styles/cardigan 1.jpg', '../styles/cardigan 2.jpg', '../styles/cardigan 3.jpg', '../styles/cardigan 4.jpg', '../styles/cardigan 5.jpg']
             },
             {
                 name: 'Hoodie',
-                images: ['https://i.ibb.co/7vJ7Y1V/blouse.jpg', 'https://i.ibb.co/7vJ7Y1V/blouse.jpg', 'https://i.ibb.co/7vJ7Y1V/blouse.jpg']
+                images: ['../styles/hoodie 1.jpg', '../styles/hoodie 2.jpg', '../styles/hoodie 3.jpg', '../styles/hoodie 4.jpg', '../styles/hoodie 5.jpg']
             },
             {
                 name: 'Shirt',
-                images: ['https://i.ibb.co/7vJ7Y1V/blouse.jpg', 'https://i.ibb.co/7vJ7Y1V/blouse.jpg', 'https://i.ibb.co/7vJ7Y1V/blouse.jpg']
+                images: ['../styles/shirt 1.jpg', '../styles/shirt 2.jpg', '../styles/shirt 3.jpg', '../styles/shirt 4.jpg', '../styles/shirt 5.jpg']
             },
             {
                 name: 'Sweatshirt',
-                images: ['https://i.ibb.co/7vJ7Y1V/blouse.jpg', 'https://i.ibb.co/7vJ7Y1V/blouse.jpg', 'https://i.ibb.co/7vJ7Y1V/blouse.jpg']
+                images: ['../styles/sweatshirt 1.jpg', '../styles/sweatshirt 2.jpg', '../styles/sweatshirt 3.jpg', '../styles/sweatshirt 4.jpg', '../styles/sweatshirt 5.jpg']
             },
             {
                 name: 'T-shirt',
-                images: ['https://i.ibb.co/7vJ7Y1V/blouse.jpg', 'https://i.ibb.co/7vJ7Y1V/blouse.jpg', 'https://i.ibb.co/7vJ7Y1V/blouse.jpg']
+                images: ['../styles/tshirt 1.jpg', '../styles/tshirt 2.jpg', '../styles/tshirt 3.jpg', '../styles/tshirt 4.jpg', '../styles/tshirt 5.jpg']
             }
         ]
     },
@@ -77,27 +77,27 @@ const Style = [
         subCategories: [
             {
                 name: 'Bermuda shorts',
-                images: ['https://i.ibb.co/7vJ7Y1V/blouse.jpg', 'https://i.ibb.co/7vJ7Y1V/blouse.jpg', 'https://i.ibb.co/7vJ7Y1V/blouse.jpg']
+                images: ['bermuda shorts 1.jpg', 'bermuda shorts 2.jpg', 'bermuda shorts 3.jpg', 'bermuda shorts 4.jpg', 'bermuda shorts 5.jpg']
             },
             {
                 name: 'Jogging pants',
-                images: ['https://i.ibb.co/7vJ7Y1V/blouse.jpg', 'https://i.ibb.co/7vJ7Y1V/blouse.jpg', 'https://i.ibb.co/7vJ7Y1V/blouse.jpg']
+                images: ['jogging pants 1.jpg', 'jogging pants 2.jpg', 'jogging pants 3.jpg', 'jogging pants 4.jpg', 'jogging pants 5.jpg']
             },
             {
                 name: 'Leggings',
-                images: ['https://i.ibb.co/7vJ7Y1V/blouse.jpg', 'https://i.ibb.co/7vJ7Y1V/blouse.jpg', 'https://i.ibb.co/7vJ7Y1V/blouse.jpg']
+                images: ['leggings 1.jpg', 'leggings 2.jpg', 'leggings 3.jpg', 'leggings 4.jpg', 'leggings 5.jpg']
             },
             {
                 name: 'Pants',
-                images: ['https://i.ibb.co/7vJ7Y1V/blouse.jpg', 'https://i.ibb.co/7vJ7Y1V/blouse.jpg', 'https://i.ibb.co/7vJ7Y1V/blouse.jpg']
+                images: ['pants 1.jpg', 'pants 2.jpg', 'pants 3.jpg', 'pants 4.jpg', 'pants 5.jpg']
             },
             {
                 name: 'Skirt',
-                images: ['https://i.ibb.co/7vJ7Y1V/blouse.jpg', 'https://i.ibb.co/7vJ7Y1V/blouse.jpg', 'https://i.ibb.co/7vJ7Y1V/blouse.jpg']
+                images: ['skirt 1.jpg', 'skirt 2.jpg', 'skirt 3.jpg', 'skirt 4.jpg', 'skirt 5.jpg']
             },
             {
                 name: 'Trousers',
-                images: ['https://i.ibb.co/7vJ7Y1V/blouse.jpg', 'https://i.ibb.co/7vJ7Y1V/blouse.jpg', 'https://i.ibb.co/7vJ7Y1V/blouse.jpg']
+                images: ['trousers 1.jpg', 'trousers 2.jpg', 'trousers 3.jpg', 'trousers 4.jpg', 'trousers 5.jpg']
             }
         ]
     },
@@ -112,11 +112,15 @@ const Style = [
         subCategories: [
             {
                 name: 'Dress',
-                images: ['https://i.ibb.co/7vJ7Y1V/blouse.jpg', 'https://i.ibb.co/7vJ7Y1V/blouse.jpg', 'https://i.ibb.co/7vJ7Y1V/blouse.jpg']
+                images: ['dress 1.jpg', 'dress 2.jpg', 'dress 3.jpg', 'dress 4.jpg', 'dress 5.jpg']
+            },
+            {
+                name: 'Skirts',
+                images: ['skirts 1.jpg', 'skirts 2.jpg', 'skirts 3.jpg', 'skirts 4.jpg', 'skirts 5.jpg']
             },
             {
                 name: 'Jumpsuit',
-                images: ['https://i.ibb.co/7vJ7Y1V/blouse.jpg', 'https://i.ibb.co/7vJ7Y1V/blouse.jpg', 'https://i.ibb.co/7vJ7Y1V/blouse.jpg']
+                images: ['jumpsuit 1.jpg', 'jumpsuit 2.jpg', 'jumpsuit 3.jpg', 'jumpsuit 4.jpg', 'jumpsuit 5.jpg']
             }
         ]
     },
@@ -131,15 +135,15 @@ const Style = [
         subCategories: [
             {
                 name: 'Suits',
-                images: ['https://i.ibb.co/7vJ7Y1V/blouse.jpg', 'https://i.ibb.co/7vJ7Y1V/blouse.jpg', 'https://i.ibb.co/7vJ7Y1V/blouse.jpg']
+                images: ['suits 1.jpg', 'suits 2.jpg', 'suits 3.jpg', 'suits 4.jpg', 'suits 5.jpg']
             },
             {
                 name: 'Tailleur',
-                images: ['https://i.ibb.co/7vJ7Y1V/blouse.jpg', 'https://i.ibb.co/7vJ7Y1V/blouse.jpg', 'https://i.ibb.co/7vJ7Y1V/blouse.jpg']
+                images: ['tailleur 1.jpg', 'tailleur 2.jpg', 'tailleur 3.jpg', 'tailleur 4.jpg', 'tailleur 5.jpg']
             },
             {
                 name: 'Uniform',
-                images: ['https://i.ibb.co/7vJ7Y1V/blouse.jpg', 'https://i.ibb.co/7vJ7Y1V/blouse.jpg', 'https://i.ibb.co/7vJ7Y1V/blouse.jpg']
+                images: ['uniform 1.jpg', 'uniform 2.jpg', 'uniform 3.jpg', 'uniform 4.jpg', 'uniform 5.jpg']
             }
         ]
     },
@@ -154,31 +158,31 @@ const Style = [
         subCategories: [
             {
                 name: 'Blazer',
-                images: ['https://i.ibb.co/7vJ7Y1V/blouse.jpg', 'https://i.ibb.co/7vJ7Y1V/blouse.jpg', 'https://i.ibb.co/7vJ7Y1V/blouse.jpg']
+                images: ['blazer 1.jpg', 'blazer 2.jpg', 'blazer 3.jpg', 'blazer 4.jpg', 'blazer 5.jpg']
             },
             {
                 name: 'Coat',
-                images: ['https://i.ibb.co/7vJ7Y1V/blouse.jpg', 'https://i.ibb.co/7vJ7Y1V/blouse.jpg', 'https://i.ibb.co/7vJ7Y1V/blouse.jpg']
+                images: ['coat 1.jpg', 'coat 2.jpg', 'coat 3.jpg', 'coat 4.jpg', 'coat 5.jpg']
             },
             {
                 name: 'Jacket',
-                images: ['https://i.ibb.co/7vJ7Y1V/blouse.jpg', 'https://i.ibb.co/7vJ7Y1V/blouse.jpg', 'https://i.ibb.co/7vJ7Y1V/blouse.jpg']
+                images: ['jacket 1.jpg', 'jacket 2.jpg', 'jacket 3.jpg', 'jacket 4.jpg', 'jacket 5.jpg']
             },
             {
                 name: 'Parka',
-                images: ['https://i.ibb.co/7vJ7Y1V/blouse.jpg', 'https://i.ibb.co/7vJ7Y1V/blouse.jpg', 'https://i.ibb.co/7vJ7Y1V/blouse.jpg']
+                images: ['parka 1.jpg', 'parka 2.jpg', 'parka 3.jpg', 'parka 4.jpg', 'parka 5.jpg']
             },
             {
                 name: 'Poncho',
-                images: ['https://i.ibb.co/7vJ7Y1V/blouse.jpg', 'https://i.ibb.co/7vJ7Y1V/blouse.jpg', 'https://i.ibb.co/7vJ7Y1V/blouse.jpg']
+                images: ['poncho 1.jpg', 'poncho 2.jpg', 'poncho 3.jpg', 'poncho 4.jpg', 'poncho 5.jpg']
             },
             {
                 name: 'Trench coat',
-                images: ['https://i.ibb.co/7vJ7Y1V/blouse.jpg', 'https://i.ibb.co/7vJ7Y1V/blouse.jpg', 'https://i.ibb.co/7vJ7Y1V/blouse.jpg']
+                images: ['trench coat 1.jpg', 'trench coat 2.jpg', 'trench coat 3.jpg', 'trench coat 4.jpg', 'trench coat 5.jpg']
             },
             {
                 name: 'Vest',
-                images: ['https://i.ibb.co/7vJ7Y1V/blouse.jpg', 'https://i.ibb.co/7vJ7Y1V/blouse.jpg', 'https://i.ibb.co/7vJ7Y1V/blouse.jpg']
+                images: ['vest 1.jpg', 'vest 2.jpg', 'vest 3.jpg', 'vest 4.jpg', 'vest 5.jpg']
             }
         ]
     },
@@ -193,23 +197,23 @@ const Style = [
         subCategories: [
             {
                 name: 'Athletic shorts',
-                images: ['https://i.ibb.co/7vJ7Y1V/blouse.jpg', 'https://i.ibb.co/7vJ7Y1V/blouse.jpg', 'https://i.ibb.co/7vJ7Y1V/blouse.jpg']
+                images: ['athletic shorts 1.jpg', 'athletic shorts 2.jpg', 'athletic shorts 3.jpg', 'athletic shorts 4.jpg', 'athletic shorts 5.jpg']
             },
             {
                 name: 'Tracksuits',
-                images: ['https://i.ibb.co/7vJ7Y1V/blouse.jpg', 'https://i.ibb.co/7vJ7Y1V/blouse.jpg', 'https://i.ibb.co/7vJ7Y1V/blouse.jpg']
+                images: ['tracksuits 1.jpg', 'tracksuits 2.jpg', 'tracksuits 3.jpg', 'tracksuits 4.jpg', 'tracksuits 5.jpg']
             },
             {
                 name: 'Leggings',
-                images: ['https://i.ibb.co/7vJ7Y1V/blouse.jpg', 'https://i.ibb.co/7vJ7Y1V/blouse.jpg', 'https://i.ibb.co/7vJ7Y1V/blouse.jpg']
+                images: ['leggings 1.jpg', 'leggings 2.jpg', 'leggings 3.jpg', 'leggings 4.jpg', 'leggings 5.jpg']
             },
             {
                 name: 'Performance tops',
-                images: ['https://i.ibb.co/7vJ7Y1V/blouse.jpg', 'https://i.ibb.co/7vJ7Y1V/blouse.jpg', 'https://i.ibb.co/7vJ7Y1V/blouse.jpg']
+                images: ['performance tops 1.jpg', 'performance tops 2.jpg', 'performance tops 3.jpg', 'performance tops 4.jpg', 'performance tops 5.jpg']
             },
             {
                 name: 'Compression wear',
-                images: ['https://i.ibb.co/7vJ7Y1V/blouse.jpg', 'https://i.ibb.co/7vJ7Y1V/blouse.jpg', 'https://i.ibb.co/7vJ7Y1V/blouse.jpg']
+                images: ['compression wear 1.jpg', 'compression wear 2.jpg', 'compression wear 3.jpg', 'compression wear 4.jpg', 'compression wear 5.jpg']
             }
         ]
     },
@@ -224,19 +228,19 @@ const Style = [
         subCategories: [
             {
                 name: 'Belt',
-                images: ['https://i.ibb.co/7vJ7Y1V/blouse.jpg', 'https://i.ibb.co/7vJ7Y1V/blouse.jpg', 'https://i.ibb.co/7vJ7Y1V/blouse.jpg']
+                images: ['belt 1.jpg', 'belt 2.jpg', 'belt 3.jpg', 'belt 4.jpg', 'belt 5.jpg']
             },
             {
                 name: 'Cap',
-                images: ['https://i.ibb.co/7vJ7Y1V/blouse.jpg', 'https://i.ibb.co/7vJ7Y1V/blouse.jpg', 'https://i.ibb.co/7vJ7Y1V/blouse.jpg']
+                images: ['cap 1.jpg', 'cap 2.jpg', 'cap 3.jpg', 'cap 4.jpg', 'cap 5.jpg']
             },
             {
                 name: 'Hat',
-                images: ['https://i.ibb.co/7vJ7Y1V/blouse.jpg', 'https://i.ibb.co/7vJ7Y1V/blouse.jpg', 'https://i.ibb.co/7vJ7Y1V/blouse.jpg']
+                images: ['hat 1.jpg', 'hat 2.jpg', 'hat 3.jpg', 'hat 4.jpg', 'hat 5.jpg']
             },
             {
                 name: 'Scarf',
-                images: ['https://i.ibb.co/7vJ7Y1V/blouse.jpg', 'https://i.ibb.co/7vJ7Y1V/blouse.jpg', 'https://i.ibb.co/7vJ7Y1V/blouse.jpg']
+                images: ['scarf 1.jpg', 'scarf 2.jpg', 'scarf 3.jpg', 'scarf 4.jpg', 'scarf 5.jpg']
             }
         ]
     }
