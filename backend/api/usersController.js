@@ -439,6 +439,7 @@ const verifyEmail = async (req, res) => {
                 }
             })
             .populate('posts')
+            .populate('reviews');
 
             userType="Tailor";
         
