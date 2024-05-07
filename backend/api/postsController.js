@@ -77,20 +77,25 @@ const deletePost = async (req, res) => {
 const getallPosts = async (req, res) => {
     try {
         const posts = await Post.find().populate('tailor')
-        .populate({
-            path: 'tailor',
-            populate: {
-                path: 'reviews',
-                model: 'Review'
-            }
-        })
-        .sort({createdAt:-1});
+            .populate({
+                path: 'tailor',
+                populate: {
+                    path: 'reviews',
+                    model: 'Review',
+                    populate: {
+                        path: 'client', // Populate the client object in the Review
+                        model: 'Client'
+                    }
+                }
+            })
+            .sort({ createdAt: -1 });
         res.status(200).json(posts);
     } catch (error) {
         console.error('Error fetching all posts:', error);
         res.status(500).json({ error: 'Server error' });
     }
 };
+
 
 const getNewestPosts = async (req, res) => {
     try {
