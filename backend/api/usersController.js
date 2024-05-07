@@ -301,52 +301,25 @@ const verifyEmail = async (req, res) => {
     const updatePassword = async (req, res) => {
         try {
             const { userId } = req.params;
-            const { uniqueString,newPassword } = req.body;
-            
-            let user = await clientModel.findById(userId);
-            let userType = 'client';
-            
-            if (!user) {
-                user = await tailorModel.findById(userId);
-                userType = 'tailor';
-            }
-            
+            const { newPassword } = req.body;
+    
+            let user = await clientModel.findById(userId) || await tailorModel.findById(userId);
+    
             if (!user) {
                 return res.status(404).json('User not found');
             }
-            
-            const userVerificationEntry = await userVerification.findOne({ userId });
-            
-            if (!userVerificationEntry) {
-                return res.status(404).json('User verification entry not found');
-            }
-            
-            bcrypt.compare(uniqueString, userVerificationEntry.uniqueString)
-            .then(async (isMatch) => {
-                if (isMatch) {
-                    if (userType === 'client') {
-                        await clientModel.findByIdAndUpdate(userId, { verified: true });
-                    } else {
-                        await tailorModel.findByIdAndUpdate(userId, { verified: true });
-                    }
-                    
-                    await userVerification.findByIdAndDelete(userVerificationEntry._id);
-                    user.password=await bcrypt.hash(newPassword, 10);
-                    user.save();
-                    res.status(200).json('Password update succesfully');
-                } else {
-                    res.status(400).json('Invalid verification code');
-                }
-            })
-                .catch((err) => {
-                    console.log(err);
-                    res.status(500).json('Server error');
-                });
-            } catch (error) {
-                console.log(error);
-                res.status(500).json('Server error');
-            }
-        };
+    
+            // Update the password directly
+            user.password = await bcrypt.hash(newPassword, 10);
+            await user.save();
+    
+            res.status(200).json('Password updated successfully');
+        } catch (error) {
+            console.log(error);
+            res.status(500).json('Server error');
+        }
+    };
+    
         
     const resetPassword = async (req, res) => {
         try {
