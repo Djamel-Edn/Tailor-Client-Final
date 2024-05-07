@@ -2,16 +2,17 @@ const reviewModel = require('../Models/reviewModel');
 const Tailor = require('../Models/tailorModel');
 
 const createReview = async (req, res) => {
-    const { client, text, rating } = req.body;
+    const { client, text, rating,tailorId } = req.body;
     const review = new reviewModel({
         client,
         text,
-        rating
+        rating,
+        tailorId
     });
     try {
         await review.save();
 
-        await Tailor.findByIdAndUpdate(client, { $push: { reviews: review._id } });
+        await Tailor.findByIdAndUpdate(tailorId, { $push: { reviews: review._id } });
 
         res.status(201).json(review);
     } catch (error) {
