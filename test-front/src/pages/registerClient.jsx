@@ -21,10 +21,10 @@ function RegisterClient() {
         console.error('Unexpected data type:', typeof data);
     }
   };
-  
+  console.log(city )
   async function handleSubmit(e) {
     e.preventDefault();
-    if (!name || !email || !password || !gender){setErrorMsg('Please fill all the fields'); return;}
+    if (!name || !email || !password || !gender ||!city){setErrorMsg('Please fill all the fields'); return;}
     try {
       const response = await fetch('https://tailor-client-ps9z.onrender.com/register/client', {
         method: 'POST',
@@ -33,6 +33,7 @@ function RegisterClient() {
         },
         body: JSON.stringify({ email, name, password, gender,city }),
       });
+      
       const data = await response.json();
       
       processResponse(data);
@@ -69,6 +70,7 @@ function RegisterClient() {
           </select>
         </label>
         <label htmlFor="">
+          City
       <input type="text" value={city} onChange={(e)=>{setCity(e.target.value)}} />
 
         </label>
