@@ -24,8 +24,8 @@ const orderSchema = new mongoose.Schema({
    }],
    
    questionnaire:[],
-    totalPrice: Number
-       
+    totalPrice: Number,
+    postStyle:String,
 
   
 });

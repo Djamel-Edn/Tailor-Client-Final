@@ -5,7 +5,7 @@ const Client = require('../Models/clientModel');
 
 
 const createOrder = async (req, res) => {
-    const { client, tailor, totalPrice, posts,questionnaire } = req.body;
+    const { client, tailor, totalPrice, posts,questionnaire,postStyle } = req.body;
     try {
         if (!mongoose.Types.ObjectId.isValid(client) || !mongoose.Types.ObjectId.isValid(tailor)) {
             return res.status(400).json({ error: 'Invalid client or tailor ID' });
@@ -16,7 +16,8 @@ const createOrder = async (req, res) => {
             tailor,
             totalPrice,
             posts,
-            questionnaire
+            questionnaire,
+            postStyle
         });
 
         await Tailor.findByIdAndUpdate(tailor, { $push: { orders: order._id } });
