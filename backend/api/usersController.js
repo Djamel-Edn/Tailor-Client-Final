@@ -388,7 +388,14 @@ const verifyEmail = async (req, res) => {
     
     const getallTailors=async (req,res)=>{
         try{
-            const tailors=await tailorModel.find();
+            const tailors=await tailorModel.find().populate({
+                path:'reviews',
+                model:'Review',
+                populate:{
+                    path:'client',
+                    model:'Client'
+                }
+            });
             res.status(200).json(tailors);
         }catch(error){
             res.status(500).json({error:'Server error'});
