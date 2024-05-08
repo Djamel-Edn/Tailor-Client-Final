@@ -333,6 +333,7 @@ const verifyEmail = async (req, res) => {
             
             if (user) {
                 sendVerificationEmail(user,res);
+                res.status(200).json(user._id)
             } else {
                 res.status(400).json('Email not found');
             }
