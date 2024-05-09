@@ -428,41 +428,40 @@ const verifyEmail = async (req, res) => {
             res.status(500).json({ error: 'Server error' });
         }
     }
-    const getTailor=async (req,res)=>{
-        const {tailorId}=req.params;
-        try{
-            user = await tailorModel.findOne({ _id: tailorId})
-        .populate({
-            path: 'orders',
-            populate: {
-                path: 'client',
-                model: 'Client'
-            }
-        })
-        .populate({
-            path: 'orders',
-            populate: {
-                path: 'posts',
-                model: 'Post'
-            }
-        })
-        .populate('reviews')
-        .populate('posts')
-        
-        if (user) {
-            user = user.toObject(); 
-            delete user.password;
-        
-            res.status(200).json(userData);
+    const getTailor = async (req, res) => {
+        const { tailorId } = req.params;
+        try {
+            const user = await tailorModel.findOne({ _id: tailorId })
+                .populate({
+                    path: 'orders',
+                    populate: {
+                        path: 'client',
+                        model: 'Client'
+                    }
+                })
+                .populate({
+                    path: 'orders',
+                    populate: {
+                        path: 'posts',
+                        model: 'Post'
+                    }
+                })
+                .populate('reviews')
+                .populate('posts');
             
-        } else {
-            res.status(400).json('User not found');
+            if (user) {
+                const userData = user.toObject(); 
+                delete userData.password;
+            
+                res.status(200).json(userData);
+            } else {
+                res.status(404).json('User not found');
+            }
+        } catch (error) {
+            console.error("Error:", error);
+            res.status(500).json({ error: 'Server error' });
         }
-    }catch(error){
-        console.log("error",error)
-        res.status(400).json({error})
-    }
-        }
+    };
 
     
     module.exports = {getTailor,addLike,updatePassword, registerClient, registerTailor, login, verifyEmail, resetPassword, updateProfile,getallTailors,verifyEmail,addFavorite};
