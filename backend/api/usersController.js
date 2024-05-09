@@ -434,25 +434,18 @@ const verifyEmail = async (req, res) => {
             const user = await tailorModel.findOne({ _id: tailorId })
                 .populate({
                     path: 'orders',
-                    populate: {
-                        path: 'client',
-                        model: 'Client'
-                    }
-                })
-                .populate({
-                    path: 'orders',
-                    populate: {
-                        path: 'posts',
-                        model: 'Post'
-                    }
+                    populate: [
+                        { path: 'client', model: 'Client' },
+                        { path: 'posts', model: 'Post' }
+                    ]
                 })
                 .populate('reviews')
                 .populate('posts');
-            
+    
             if (user) {
-                const userData = user.toObject(); 
+                const userData = user.toObject();
                 delete userData.password;
-            
+    
                 res.status(200).json(userData);
             } else {
                 res.status(404).json('User not found');
@@ -462,7 +455,6 @@ const verifyEmail = async (req, res) => {
             res.status(500).json({ error: 'Server error' });
         }
     };
-
     
     module.exports = {getTailor,addLike,updatePassword, registerClient, registerTailor, login, verifyEmail, resetPassword, updateProfile,getallTailors,verifyEmail,addFavorite};
     

@@ -26,6 +26,10 @@ const orderSchema = new mongoose.Schema({
    questionnaire:[],
     totalPrice: Number,
     postStyle:String,
+    fabric:{
+        type:Boolean,
+        default:false
+    }
 
   
 });
