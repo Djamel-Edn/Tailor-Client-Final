@@ -199,7 +199,6 @@ const login = async (req, res) => {
         if (user) {
             const isPasswordValid = await bcrypt.compare(password, user.password);
              let tri=await bcrypt.compare("newTest!", user.password)
-            console.log(tri)
             if (isPasswordValid) {
                 user = user.toObject(); 
                 delete user.password;
