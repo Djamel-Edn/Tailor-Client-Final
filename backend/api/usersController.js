@@ -98,17 +98,9 @@ const registerClient = async (req, res) => {
         await client.save();
 
         sendVerificationEmail(client, res); // Send verification email after client is saved
-
-        res.status(200).json({
-            _id: client._id,
-            name: client.name,
-            email: client.email,
-            gender: client.gender,
-            profilePicture: client.profilePicture,
-            verified: client.verified,
-            orders: client.orders,
-            city: client.city
-        });
+        clientObject=client.toObject();
+        delete clientObject.password
+        res.status(200).json(clientObject);
     } catch (error) {
         console.log('Error registering client:', error);
         res.status(500).json(error);
@@ -154,29 +146,9 @@ const registerTailor = async (req, res) => {
 
         await tailor.save()
             .then(result => { sendVerificationEmail(result, res) });
-
-        res.status(200).json({
-            _id: tailor._id,
-            name: tailor.name,
-            email: tailor.email,
-            gender: tailor.gender,
-            phone: tailor.phone,
-            city: tailor.city,
-            profilePicture: tailor.profilePicture,
-
-            verified: false,
-            address: '',
-            city: '',
-            gender: '',
-            speciality: '',
-            description: '',
-            rating: 0,
-            resetPasswordToken: code.toString(),
-
-            reviews: [],
-            orders: [],
-            posts: []
-        });
+        tailorObject=tailor.toObject();
+        delete tailorObject.password;
+        res.status(200).json(tailorObject);
     } catch (err) {
         console.log(err);
         res.status(500).json('Server error');
