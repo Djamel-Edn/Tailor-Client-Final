@@ -429,55 +429,71 @@ const verifyEmail = async (req, res) => {
             res.status(500).json({ error: 'Server error' });
         }
     };
-    const getTailor=async (req,res)=>{
-        const {id}=req.params;
-        try{
-            const tailor=await tailorModel.findById(id).populate({
-                path: 'orders',
-                populate: {
-                    path: 'client',
-                    model: 'Client'
-                }
-            })
-            .populate({
-                path: 'orders',
-                populate: {
-                    path: 'posts',
-                    model: 'Post'
-                }
-            })
-            .populate('posts')
-            .populate('reviews');
 
-            userType="Tailor";
-        
-            delete tailor.password
-            res.status(200).json(tailor);
-    }catch(error){
-        console.log(error)
-    }}
-    const getClient=async (req,res)=>{
-        const {id}=req.params;
-        try{
-            const client=await clientModel.findById(id).populate({
-                path: 'orders',
-                populate: {
-                    path: 'tailor',
-                    model: 'Tailor'
-                }
-            }).populate({
-                path: 'orders',
-                populate: {
-                    path: 'posts',
-                    model: 'Post'
-                }
-            });
-            delete client.password
-            res.status(200).json(client);
-    }catch(error){
-        console.log(error)
-    }}
+    const addLike = async (req, res) => {
+        try {
+            const { userId } = req.params;
+            const { tailorId } = req.body;
     
-    module.exports = {updatePassword,getTailor,getClient, registerClient, registerTailor, login, verifyEmail, resetPassword, updateProfile,getallTailors,verifyEmail,addFavorite};
+            const user = await clientModel.findById(userId);
+    
+            if (!user) {
+                return res.status(404).json({ error: 'User not found' });
+            }
+    
+            const tailorIndex = user.likes.indexOf(tailorId);
+            if (tailorIndex !== -1) {
+                user.likes.splice(tailorIndex, 1);
+                await user.save();
+                return res.status(200).json( {likes: user.likes} );
+            } else {
+                user.likes.push(tailorId);
+                await user.save();
+                return res.status(200).json( {likes: user.likes} );
+            }
+    
+        } catch (error) {
+            console.error('Error:', error);
+            res.status(500).json({ error: 'Server error' });
+        }
+    }
+    const getTailor=async (req,res)=>{
+        const {tailorId}=req.params;
+        try{
+            user = await tailorModel.findOne({ _id: tailorId})
+        .populate({
+            path: 'orders',
+            populate: {
+                path: 'client',
+                model: 'Client'
+            }
+        })
+        .populate({
+            path: 'orders',
+            populate: {
+                path: 'posts',
+                model: 'Post'
+            }
+        })
+        .populate('reviews')
+        .populate('posts')
+        
+        if (user) {
+            user = user.toObject(); 
+            delete user.password;
+        
+            res.status(200).json(userData);
+            
+        } else {
+            res.status(400).json('User not found');
+        }
+    }catch(error){
+        console.log("error",error)
+        res.status(400).json({error})
+    }
+        }
+
+    
+    module.exports = {getTailor,addLike,updatePassword, registerClient, registerTailor, login, verifyEmail, resetPassword, updateProfile,getallTailors,verifyEmail,addFavorite};
     
     

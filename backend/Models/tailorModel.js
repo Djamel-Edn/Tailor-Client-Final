@@ -10,7 +10,7 @@ const tailorSchema = new mongoose.Schema({
     gender: String,
     speciality: String,
     description: String,
-    rating: String,
+    
     verified: Boolean,
     profilePicture: {
         type: String,

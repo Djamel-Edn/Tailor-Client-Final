@@ -17,6 +17,7 @@ const mongoose = require('mongoose');
             }
         ],
         favorites:[{ type: mongoose.Schema.Types.ObjectId, ref: 'Post' }],
+        likes:[{ type: mongoose.Schema.Types.ObjectId, ref: 'Tailor' }],
         city:String
 
     });
