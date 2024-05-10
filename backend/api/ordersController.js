@@ -50,9 +50,7 @@ const updateOrder = async (req, res) => {
         if (totalPrice) {
             order.totalPrice = totalPrice;
         }
-        if (posts) { 
-            order.posts = posts;
-        }
+        
         const updatedOrder = await order.save();
         res.json(updatedOrder);
     } catch (error) {
