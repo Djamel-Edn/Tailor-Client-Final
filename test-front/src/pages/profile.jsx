@@ -119,7 +119,7 @@ const Profile = () => {
             reader.readAsDataURL(file);
             reader.onload = function () {
                 const result = reader.result;
-                setImage(result);
+                setImage(result.substring(23));
             };
             reader.onerror = function (error) {
                 console.error('Error:', error);

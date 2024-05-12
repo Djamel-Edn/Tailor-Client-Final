@@ -68,7 +68,7 @@ const Home = () => {
                         <p>{post.description}</p>
                         <p>{post.tailor.name}</p>
                         <p>{post.price}</p>
-                        *
+                        
                         {post.image && (
                             <img src={convertBase64ToImage(post.image)} alt={post.title} style={{ maxWidth: '100%' }} />
                         )}
