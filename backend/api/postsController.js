@@ -31,7 +31,7 @@ const updatePost = async (req, res) => {
         const { title, image, description, price, category, postSpeciality:speciality } = req.body;
 
         if (!mongoose.Types.ObjectId.isValid(id)) {
-            return res.status(404).send('No post with that id');
+            return res.status(404).send({error :'No post with that id'});
         }
 
         const updatedPost = await Post.findByIdAndUpdate(id, {
@@ -46,7 +46,7 @@ const updatePost = async (req, res) => {
         res.json(updatedPost);
     } catch (error) {
         console.error('Error updating post:', error);
-        res.status(500).json('Server error');
+        res.status(500).json({error :'Server error'});
     }
 };
 
@@ -55,7 +55,7 @@ const deletePost = async (req, res) => {
         const { id } = req.params;
 
         if (!mongoose.Types.ObjectId.isValid(id)) {
-            return res.status(404).send('No post with that id');
+            return res.status(404).send({error :'No post with that id'});
         }
 
         // Get the tailor associated with the post

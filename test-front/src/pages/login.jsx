@@ -7,7 +7,7 @@ const Login = () => {
     const [errorMsg, setErrorMsg] = useState('');
     const [loggedIn, setLoggedIn] = useState(false);
     const [userData, setUserData] = useState(null); // Added to store user data
-
+    console.log(errorMsg)
     async function handleSubmit(e) {
         e.preventDefault();
         if (!email || !password) {
@@ -22,24 +22,25 @@ const Login = () => {
                 },
                 body: JSON.stringify({ email, password }),
             });
+            if (!response.ok){
+                throw  response.error;
+            }
             const data = await response.json();
             if (data.email) {
                 localStorage.setItem('user', JSON.stringify(data));
-                console.log(data);
                 setLoggedIn(true);
-                setUserData(data); // Set user data
+                setUserData(data); 
             } else {
                 setErrorMsg(data);
             }
         } catch (error) {
             console.error('Error:', error);
-            setErrorMsg('Server error');
+            setErrorMsg(error);
         }
     }
     
 
     if (loggedIn) {
-        // Redirect user to another page after successful login
         return <Navigate to="/profile" />;
     }
 

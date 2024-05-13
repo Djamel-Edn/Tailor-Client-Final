@@ -101,12 +101,12 @@ response{
   _id else "'Email not found'"
 }
 updatePassword:
-const response = await fetch('https://tailor-client-ps9z.onrender.com/updatePassword/:id', {
+const response = await fetch('https://tailor-client-ps9z.onrender.com/updatePassword/:userId', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ uniqueString,newPassword }),//2 String
+                body: JSON.stringify({ newPassword }),//String
             });
 response{
   "Password updated succesfully"
