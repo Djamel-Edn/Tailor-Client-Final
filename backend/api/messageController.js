@@ -27,6 +27,25 @@ const createMessage = async (req, res) => {
         res.status(500).json({ error: 'Server error' });
     }
 };
+const updateMessage=async (req,res)=>{
+    try {
+        const { id } = req.params;
+        const { text, image } = req.body;
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(404).send('No message with that id');
+        }
+        
+        const updatedMessage = await messageModel.findByIdAndUpdate(id, {
+            text,
+            image
+        }, { new: true });
+        res.json(updatedMessage);
+    } catch (error) {
+        console.error('Error updating message:', error);
+        res.status(500).json('Server error');
+    }
+
+}
 const getMessages = async (req, res) => {
   const { chatId } = req.params;
   try {
@@ -40,5 +59,6 @@ const getMessages = async (req, res) => {
 
 module.exports = {
   createMessage,
-  getMessages
+  getMessages,
+  updateMessage
 };

@@ -1,8 +1,8 @@
 import 'dart:io';
-import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:projetfinprepa/Pages/CreateStyle_Page.dart';
 import 'package:projetfinprepa/Pages/SousPages/FirstOfCreatStyle.dart';
 // import 'package:o3d/o3d.dart';
 
@@ -132,192 +132,177 @@ class _MyAppState extends State<parx> {
       debugShowCheckedModeBanner: false,
       home: SafeArea(
           child: Scaffold(
+              backgroundColor: Color(0xFFFFF4DE),
               body: ListView(
-        controller: pagecntrl,
-        children: [
-          Container(
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
-            decoration: BoxDecoration(),
-            clipBehavior: Clip.hardEdge,
-            child: Stack(
-              children: [
-                Container(
-                  transform: Matrix4.identity()
-                    ..translate(
-                        0.0,
-                        pagecntrl.hasClients
-                            ? (-(0 * MediaQuery.of(context).size.height) +
-                                    pagecntrl.position.pixels) /
-                                2
-                            : 0.0),
-                  height: MediaQuery.of(context).size.height,
-                  width: MediaQuery.of(context).size.width,
-                  child: Image.asset(
-                    images[0],
-                    fit: BoxFit.fill,
-                  ),
-                ),
-                Center(
-                    child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 5, sigmaY: 2),
-                  child: ListTile(
-                    title: Text(
-                      "Your turn to create!",
-                      style: TextStyle(
-                          fontSize: 35,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: "Nanum_Myeongjo"),
-                    ),
-                    subtitle: Text(
-                      "Choose between importing an image from your gallery or creating a brand new look.",
-                      style: TextStyle(
-                        fontFamily: "Nanum_Myeongjo",
-                        fontSize: 26,
-                        fontWeight: FontWeight.w400,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
-                )),
-              ],
-            ),
-          ),
-          Container(
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
-            decoration: BoxDecoration(),
-            clipBehavior: Clip.hardEdge,
-            child: Stack(
-              children: [
-                Container(
-                  transform: Matrix4.identity()
-                    ..translate(
-                        0.0,
-                        pagecntrl.hasClients
-                            ? (-(1 * MediaQuery.of(context).size.height) +
-                                    pagecntrl.position.pixels) /
-                                2
-                            : 0.0),
-                  height: MediaQuery.of(context).size.height,
-                  width: MediaQuery.of(context).size.width,
-                  child: Image.asset(
-                    images[1],
-                    fit: BoxFit.fill,
-                  ),
-                ),
-                Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                controller: pagecntrl,
+                children: [
+                  Stack(
+                    alignment: Alignment.center,
                     children: [
-                      InkWell(
-                        onTap: () async {
-                          File? image;
-                          final imagePicker = ImagePicker();
-                          var pickedimage = await imagePicker.pickImage(
-                              source: ImageSource.gallery);
-                          if (pickedimage != null) {
-                            image = File(pickedimage.path);
-                          }
-                        },
-                        child: Container(
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(color: Color(0xFF84643D))),
-                          height: 50,
-                          width: 200,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  "Import Image",
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                    color: Color(0xFF84643D),
-                                    fontFamily: "Nanum_Myeongjo",
-                                  ),
-                                )
-                              ],
-                            ),
+                      ClipRRect(
+                          borderRadius: BorderRadius.only(
+                              bottomRight: Radius.circular(120)),
+                          child: Image.asset(
+                            "images/im 2 (1).png",
+                            fit: BoxFit.fill,
+                            height: MediaQuery.of(context).size.height * 0.4,
+                            width: double.infinity,
+                          )),
+                      Positioned(
+                        bottom: 30,
+                        // right: MediaQuery.of(context).size.width * 0.19,
+                        child: Text(
+                          "Your turn to create!",
+                          style: TextStyle(
+                            fontSize: 32,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                            fontFamily: "Nanum_Myeongjo",
                           ),
                         ),
-                      ),
-                      SizedBox(
-                        height: 15,
-                      ),
-                      Container(
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                            color: Color(0xFF84643D),
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(color: Color(0xFF84643D))),
-                        height: 50,
-                        width: 200,
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: InkWell(
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        FirstCreationStylePge(),
-                                  ));
-                            },
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  "Create New Style",
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
-                                    fontFamily: "Nanum_Myeongjo",
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SizedBox(
-                            height: 20,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                top: 10, left: 20, right: 20),
-                            child: Text(
-                              "Explore our inspiring styles",
-                              style: TextStyle(
-                                  fontSize: 32,
-                                  fontWeight: FontWeight.w500,
-                                  fontFamily: "Nanum_Myeongjo"),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                          tstf(),
-                        ],
                       )
                     ],
                   ),
-                ),
-              ],
-            ),
-          ),
-        ],
-        // itemBuilder: (context, index) {
-        //   return
-        // },
-      ))),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 15, vertical: 20),
+                    child: Text(
+                      "Choose between importing an image from your gallery or creating a brand new look.",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                        fontFamily: "Nanum_Myeongjo",
+                      ),
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () async {
+                      File? image;
+                      final imagePicker = ImagePicker();
+                      var pickedimage = await imagePicker.pickImage(
+                          source: ImageSource.gallery);
+                      if (pickedimage != null) {
+                        image = File(pickedimage.path);
+                      }
+                    },
+                    child: Container(
+                      margin: EdgeInsets.symmetric(horizontal: 30),
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(color: Color(0xFF84643D))),
+                      height: 50,
+                      width: 200,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Import Image",
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFF84643D),
+                                fontFamily: "Nanum_Myeongjo",
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Container(
+                    margin: EdgeInsets.symmetric(horizontal: 30),
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                        color: Color(0xFF84643D),
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(color: Color(0xFF84643D))),
+                    height: 50,
+                    width: 200,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: InkWell(
+                        onTap: () {
+                          // Navigator.push(
+                          //     context,
+                          //     MaterialPageRoute(
+                          //       builder: (context) => FirstCreationStylePge(),
+                          //     ));
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => CreateStylePage(),
+                              ));
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Create New Style",
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                                fontFamily: "Nanum_Myeongjo",
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Container(
+                    margin: EdgeInsets.symmetric(horizontal: 30),
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                        color: Color(0xFF84643D),
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(color: Color(0xFF84643D))),
+                    height: 50,
+                    width: 200,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => FirstCreationStylePge(),
+                              ));
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Create New Style",
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                                fontFamily: "Nanum_Myeongjo",
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+                // itemBuilder: (context, index) {
+                //   return
+                // },
+              ))),
     );
   }
 }

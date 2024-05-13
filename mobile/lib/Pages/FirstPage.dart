@@ -21,6 +21,7 @@ class _FirstPageState extends State<FirstPage> {
   @override
   void initState() {
     Provider.of<ModelsProvider>(context, listen: false).GetAllModels();
+
     Provider.of<ClientProvider>(context, listen: false)
         .GetALlAboutCurrentUser();
     Provider.of<TailorsProvider>(context, listen: false).GetAllTailors();
@@ -34,6 +35,7 @@ class _FirstPageState extends State<FirstPage> {
       debugShowCheckedModeBanner: false,
       home: SafeArea(
           child: Scaffold(
+        resizeToAvoidBottomInset: false,
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         floatingActionButton: Container(
           margin: EdgeInsets.symmetric(horizontal: 20, vertical: 20),

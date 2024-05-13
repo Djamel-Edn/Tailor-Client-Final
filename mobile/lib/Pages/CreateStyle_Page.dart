@@ -12,6 +12,7 @@ class _SearchPageState extends State<CreateStylePage> {
   final advancedDrawerController = AdvancedDrawerController();
   // late O3DController controller;
   var CategorySelected;
+  int CategorySelectedIndex = 0;
   String TypeSelected = "";
   bool AnyTypeSelected = false;
   List<BasicTile> Data = [
@@ -36,10 +37,10 @@ class _SearchPageState extends State<CreateStylePage> {
       Tiles(tile: "Jumpsuit", isselected: false),
       Tiles(tile: "Skirts", isselected: false),
     ]),
-    BasicTile(title: "Sleepwear", tiles: [
-      Tiles(tile: "Pajama Sets", isselected: false),
-      Tiles(tile: "Robes", isselected: false),
-    ]),
+    // BasicTile(title: "Sleepwear", tiles: [
+    //   Tiles(tile: "Pajama Sets", isselected: false),
+    //   Tiles(tile: "Robes", isselected: false),
+    // ]),
     BasicTile(title: "Suits and Sets", tiles: [
       Tiles(tile: "Suit (jacket and pants)", isselected: false),
       Tiles(tile: "Tailleur (skirt and jacket)", isselected: false),
@@ -55,6 +56,7 @@ class _SearchPageState extends State<CreateStylePage> {
       Tiles(tile: "Vest", isselected: false),
     ]),
     BasicTile(title: "sportswear", tiles: [
+      Tiles(tile: "Athletic shorts", isselected: false),
       Tiles(tile: "Tracksuits", isselected: false),
       Tiles(tile: "Leggings", isselected: false),
       Tiles(tile: "Performance Tops", isselected: false),
@@ -160,7 +162,7 @@ class _SearchPageState extends State<CreateStylePage> {
                                           }
                                           tile.isselected = val!;
                                           // The key is tile.tile
-                                          print("ssssssss ${tile.tile}");
+
                                           TypeSelected = tile.tile;
                                           switch (TypeSelected) {
                                             case "Blouse" ||
@@ -170,15 +172,55 @@ class _SearchPageState extends State<CreateStylePage> {
                                                   "Sweatshirt" ||
                                                   "T-shirt":
                                               CategorySelected = "Tops";
+                                              CategorySelectedIndex = 0;
                                               break;
-                                            case "zz" || "zz":
-                                              CategorySelected = "k";
+                                            case "Bermuda shorts" ||
+                                                  "Jogging pants" ||
+                                                  "Leggings" ||
+                                                  "Pants" ||
+                                                  "Skirt" ||
+                                                  "Trousers":
+                                              CategorySelected = "Bottoms";
+                                              CategorySelectedIndex = 1;
                                               break;
+                                            case "Dress" ||
+                                                  "Skirt" ||
+                                                  "Jumpsuit":
+                                              CategorySelected = "Dresses";
+                                              CategorySelectedIndex = 2;
+                                              break;
+                                            case "Suit (jacket and pants)" ||
+                                                  "Tailleur (skirt and jacket)" ||
+                                                  "Uniform":
+                                              CategorySelected = "Suits";
+                                              CategorySelectedIndex = 3;
+                                              break;
+                                            case "Athletic shorts" ||
+                                                  "Tracksuits" ||
+                                                  "Compression Wear" ||
+                                                  "Leggings":
+                                              CategorySelected = "Sportswear";
+                                              CategorySelectedIndex = 5;
+                                              break;
+                                            case "Belt" ||
+                                                  "Cap" ||
+                                                  "Hat" ||
+                                                  "Scarf":
+                                              CategorySelected = "Accessories";
+                                              CategorySelectedIndex = 6;
+                                              break;
+
                                             default:
+                                              CategorySelected = "Outerwear";
+                                              CategorySelectedIndex = 4;
                                           }
+                                          setState(() {
+                                            AnyTypeSelected = true;
+                                          });
                                           StyleAfficher.clear();
                                           for (var type in Style
-                                              .styles[0].subCategories) {
+                                              .styles[CategorySelectedIndex]
+                                              .subCategories) {
                                             if (type["name"] == TypeSelected) {
                                               for (var image
                                                   in type["images"]) {
@@ -223,14 +265,16 @@ class _SearchPageState extends State<CreateStylePage> {
           backgroundColor: Color(0xFFFFF4DE),
           body: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
-            child: AnyTypeSelected
-                ? Text(
-                    textAlign: TextAlign.center,
-                    "Before you start choose the category and type of garment that resonate with you.",
-                    style: TextStyle(
-                      fontFamily: "Nanum_Myeongjo",
-                      fontWeight: FontWeight.bold,
-                      fontSize: 22,
+            child: !AnyTypeSelected
+                ? Center(
+                    child: Text(
+                      textAlign: TextAlign.center,
+                      "Before you start choose the category and type of garment that resonate with you.",
+                      style: TextStyle(
+                        fontFamily: "Nanum_Myeongjo",
+                        fontWeight: FontWeight.bold,
+                        fontSize: 22,
+                      ),
                     ),
                   )
                 : Container(

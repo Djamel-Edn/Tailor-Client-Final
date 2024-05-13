@@ -7,6 +7,8 @@ import 'package:projetfinprepa/Data/Tailor_Class.dart';
 class TailorsProvider extends ChangeNotifier {
   List<Tailor> _AllTailors = [];
   List<Tailor> get AllTailors => _AllTailors;
+  Tailor? _tailor;
+  Tailor? get tailor => _tailor;
 
   Future<void> GetAllTailors() async {
     _AllTailors = [];
@@ -36,5 +38,33 @@ class TailorsProvider extends ChangeNotifier {
         _AllTailors.add(tailor);
       }
     }
+  }
+
+  Future<void> GetTailor(IdTailor) async {
+    var uri = "https://tailor-client-ps9z.onrender.com/getTailor/$IdTailor";
+    var res = await http.get(Uri.parse(uri));
+    if (res.statusCode == 200) {
+      var jsonres = convert.jsonDecode(res.body);
+
+      _tailor = Tailor(
+          Speciality: jsonres["speciality"],
+          address: jsonres["address"],
+          models: jsonres["posts"],
+          rating: jsonres["rating"],
+          description: jsonres["description"],
+          resetPasswordToken: jsonres["resetPasswordToken"],
+          name: jsonres["name"],
+          id: jsonres["_id"],
+          email: jsonres["email"],
+          password: jsonres["password"],
+          phone: jsonres["phone"],
+          city: jsonres["city"],
+          gender: jsonres["gender"],
+          reviews: jsonres["reviews"],
+          verified: jsonres["verified"],
+          profilePicture: jsonres["profilePicture"],
+          orders: jsonres["orders"]);
+    }
+    notifyListeners();
   }
 }

@@ -7,13 +7,14 @@ class ChatProvider extends ChangeNotifier {
   Chat? _chat;
   Chat? get chat => _chat;
 
-  Future<void> GetChat() async {
-    _chat = await ChatLogique.GetChat("", "");
+  Future<void> GetChat(Idclient, IdTailor) async {
+    _chat = await ChatLogique.GetChat(Idclient, IdTailor);
     notifyListeners();
   }
 
-  Future<void> PostMessageInChat(IdClient, IdChat, text) async {
-    Message NewMessage = await ChatLogique.PostMessage(IdClient, IdChat, text);
+  Future<void> PostMessageInChat(IdSender, IdChat, text, images) async {
+    Message NewMessage =
+        await ChatLogique.PostMessage(IdSender, IdChat, text, images);
     _chat!.messages.add(NewMessage);
 
     notifyListeners();

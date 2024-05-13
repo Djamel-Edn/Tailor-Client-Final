@@ -2,9 +2,14 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:projetfinprepa/Data/Models_Class.dart';
+import 'package:projetfinprepa/Data/Tailor_Class.dart';
 import 'package:projetfinprepa/Data/category.dart';
-import 'package:projetfinprepa/LogiquesFonctions/ModelLogique.dart';
+import 'package:projetfinprepa/Pages/ProfiPage.dart';
+import 'package:projetfinprepa/Providers/Models.dart';
+import 'package:projetfinprepa/Styles/DataStyles.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   HomePage();
@@ -14,37 +19,32 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  List<Model> SavedData = [];
+
   int activateindex = 0;
   int indexCategory = 0;
   bool IsLoading = true;
-  List<List<Model>> AllModelsByCategory = [];
-  List<Model> AllModels = [];
-  List<Model> ManModels = [];
-  List<Model> WomanModels = [];
-  List<Model> KidModels = [];
+
   Future<Uint8List> DecodeIamge(image) async {
     return base64Decode(image);
   }
 
-  Future GetMAllModels() async {
-    ManModels = [];
-    WomanModels = [];
-    KidModels = [];
-    AllModels = [];
-    AllModelsByCategory = [];
-    AllModels = await ModelLogique.GetAllModels();
-    for (var model in AllModels) {
-      model.category == CategoryData.category[2].category
-          ? ManModels.add(model)
-          : model.category == CategoryData.category[3].category
-              ? WomanModels.add(model)
-              : KidModels.add(model);
+//////////////////////////////////////////////
+///////////////////////////////////////////
+  ///qllqllqlqsx dlc dkdkd oeozo zozo
+
+  double CalculRating(Tailor tailor) {
+    double totalrating = 0.0;
+
+    for (var e in tailor.reviews!) {
+      totalrating += double.parse(e["rating"].toString());
     }
-    AllModelsByCategory.add(AllModels);
-    AllModelsByCategory.add(AllModels);
-    AllModelsByCategory.add(ManModels);
-    AllModelsByCategory.add(WomanModels);
-    AllModelsByCategory.add(KidModels);
+    if (tailor.reviews!.isNotEmpty) {
+      totalrating = totalrating / tailor.reviews!.length;
+    } else {
+      totalrating = 0;
+    }
+    return totalrating;
   }
 
   @override
@@ -180,10 +180,10 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               ),
-              FutureBuilder(
-                future: GetMAllModels(),
-                builder: (context, snapshot) {
-                  return (snapshot.connectionState == ConnectionState.waiting)
+              Consumer<ModelsProvider>(
+                //
+                builder: (context, value, child) {
+                  return (value.IsLoading)
                       ? SliverGrid.builder(
                           itemCount: 4,
                           gridDelegate:
@@ -246,157 +246,443 @@ class _HomePageState extends State<HomePage> {
                                   crossAxisCount: 2,
                                   crossAxisSpacing: 1,
                                   childAspectRatio: 0.6),
-                          itemCount: AllModelsByCategory[indexCategory].length,
+                          itemCount:
+                              value.AllModelsByCategory[indexCategory].length,
                           itemBuilder: (context, index) {
-                            return Padding(
-                              padding: const EdgeInsets.only(right: 5, left: 4),
-                              child: Container(
-                                child: Column(
-                                  children: [
-                                    Container(
+                            return InkWell(
+                              onTap: () {
+                                showModalBottomSheet(
+                                  backgroundColor: Color(0xFFFFF4DE),
+                                  isDismissible: true,
+                                  context: context,
+                                  builder: (context) {
+                                    return StatefulBuilder(
+                                      builder: (context, setState) {
+                                        return Column(children: [
+                                          Expanded(
+                                            child: Stack(
+                                              children: [
+                                                Container(
+                                                  decoration: BoxDecoration(
+                                                      color: Colors.transparent,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10)),
+                                                  margin: EdgeInsets.all(10),
+                                                  child: AspectRatio(
+                                                    aspectRatio: 1,
+                                                    child: ClipRRect(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10),
+                                                        child: Image.memory(
+                                                            fit: BoxFit.cover,
+                                                            base64Decode(value
+                                                                .AllModelsByCategory[
+                                                                    indexCategory]
+                                                                    [index]
+                                                                .image))),
+                                                  ),
+                                                ),
+                                                Positioned(
+                                                    top: 30,
+                                                    right: 20,
+                                                    child: InkWell(
+                                                      onTap: () {
+                                                        setState(() {});
+
+                                                        /////
+                                                        if (SavedData.contains(
+                                                            value.AllModelsByCategory[
+                                                                    indexCategory]
+                                                                [index])) {
+                                                          SavedData.remove(value
+                                                                      .AllModelsByCategory[
+                                                                  indexCategory]
+                                                              [index]);
+                                                        } else {
+                                                          SavedData.add(value
+                                                                      .AllModelsByCategory[
+                                                                  indexCategory]
+                                                              [index]);
+                                                        }
+                                                      },
+                                                      child: Container(
+                                                        height: 25,
+                                                        child: !SavedData.contains(
+                                                                value.AllModelsByCategory[
+                                                                        indexCategory]
+                                                                    [index])
+                                                            ? Image.asset(
+                                                                "images/saveinst.png",
+                                                              )
+                                                            : Image.asset(
+                                                                "images/saveinst.png",
+                                                                color: Colors
+                                                                    .amber,
+                                                              ),
+                                                      ),
+                                                    )),
+                                              ],
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 20, vertical: 8),
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                  border: Border.all()),
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: Row(
+                                                  children: [
+                                                    InkWell(
+                                                      onTap: () {
+                                                        Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                              builder:
+                                                                  (context) =>
+                                                                      ProfilPage(
+                                                                model: value.AllModelsByCategory[
+                                                                        indexCategory]
+                                                                    [index],
+                                                                tailor: value
+                                                                    .AllModelsByCategory[
+                                                                        indexCategory]
+                                                                        [index]
+                                                                    .tailor!,
+                                                                IsFoRead: true,
+                                                                IsFoOrder:
+                                                                    false,
+                                                              ),
+                                                            ));
+                                                      },
+                                                      child: CircleAvatar(
+                                                        radius: 25,
+                                                        backgroundImage: MemoryImage(
+                                                            base64Decode(value
+                                                                .AllModelsByCategory[
+                                                                    indexCategory]
+                                                                    [index]
+                                                                .tailor!
+                                                                .profilePicture!
+                                                                .substring(
+                                                                    23))),
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      width: 6,
+                                                    ),
+                                                    Column(
+                                                      children: [
+                                                        InkWell(
+                                                          onTap: () {
+                                                            Navigator.push(
+                                                                context,
+                                                                MaterialPageRoute(
+                                                                  builder:
+                                                                      (context) =>
+                                                                          ProfilPage(
+                                                                    model: value
+                                                                            .AllModelsByCategory[indexCategory]
+                                                                        [index],
+                                                                    tailor: value
+                                                                        .AllModelsByCategory[
+                                                                            indexCategory]
+                                                                            [
+                                                                            index]
+                                                                        .tailor!,
+                                                                    IsFoRead:
+                                                                        true,
+                                                                    IsFoOrder:
+                                                                        false,
+                                                                  ),
+                                                                ));
+                                                          },
+                                                          child: Text(
+                                                            "${value.AllModelsByCategory[indexCategory][index].tailor!.name}",
+                                                            style: TextStyle(
+                                                              fontFamily:
+                                                                  "Nanum_Myeongjo",
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              fontSize: 20,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        RatingBar.builder(
+                                                          initialRating:
+                                                              CalculRating(value
+                                                                  .AllModelsByCategory[
+                                                                      indexCategory]
+                                                                      [index]
+                                                                  .tailor!),
+                                                          minRating: 1,
+                                                          itemSize: 15,
+                                                          direction:
+                                                              Axis.horizontal,
+                                                          allowHalfRating: true,
+                                                          itemCount: 5,
+                                                          itemBuilder:
+                                                              (context, _) =>
+                                                                  Icon(
+                                                            Icons.star,
+                                                            size: 1,
+                                                            color: Colors.amber,
+                                                          ),
+                                                          onRatingUpdate:
+                                                              (rating) {},
+                                                          ignoreGestures: true,
+                                                        )
+                                                      ],
+                                                    ),
+                                                    Expanded(child: SizedBox()),
+                                                    Row(
+                                                      children: [
+                                                        IconButton(
+                                                            onPressed: () {
+                                                              if (Style
+                                                                      .SavedTailroFav
+                                                                  .contains(value
+                                                                      .AllModelsByCategory[
+                                                                          indexCategory]
+                                                                          [
+                                                                          index]
+                                                                      .tailor!
+                                                                      .id)) {
+                                                                Style.SavedTailroFav
+                                                                    .remove(value
+                                                                        .AllModelsByCategory[
+                                                                            indexCategory]
+                                                                            [
+                                                                            index]
+                                                                        .tailor!
+                                                                        .id);
+                                                              } else {
+                                                                Style.SavedTailroFav.add(value
+                                                                    .AllModelsByCategory[
+                                                                        indexCategory]
+                                                                        [index]
+                                                                    .tailor!
+                                                                    .id!);
+                                                              }
+                                                              setState(() {});
+                                                            },
+                                                            icon: Style.SavedTailroFav
+                                                                    .contains(value
+                                                                        .AllModelsByCategory[
+                                                                            indexCategory]
+                                                                            [
+                                                                            index]
+                                                                        .tailor!
+                                                                        .id)
+                                                                ? Icon(Icons
+                                                                    .favorite_border)
+                                                                : Icon(
+                                                                    Icons
+                                                                        .favorite,
+                                                                    color: Colors
+                                                                        .red,
+                                                                  )),
+                                                      ],
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 20, vertical: 15),
+                                            child: InkWell(
+                                              onTap: () {
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          ProfilPage(
+                                                        model: value
+                                                                .AllModelsByCategory[
+                                                            indexCategory][index],
+                                                        tailor: value
+                                                            .AllModelsByCategory[
+                                                                indexCategory]
+                                                                [index]
+                                                            .tailor!,
+                                                        IsFoRead: false,
+                                                        IsFoOrder: true,
+                                                      ),
+                                                    ));
+                                              },
+                                              child: Container(
+                                                alignment: Alignment.center,
+                                                height: 60,
+                                                width: double.infinity,
+                                                decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            12),
+                                                    border: Border.all(),
+                                                    color: Colors.black),
+                                                child: Text(
+                                                  "Order Now",
+                                                  style: TextStyle(
+                                                      fontFamily:
+                                                          "Nanum_Myeongjo",
+                                                      fontSize: 21,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: Colors.white),
+                                                ),
+                                              ),
+                                            ),
+                                          )
+                                        ]);
+                                      },
+                                    );
+                                  },
+                                );
+                              },
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.only(right: 5, left: 4),
+                                child: Container(
+                                  child: Column(
+                                    children: [
+                                      Container(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.6,
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
+                                              0.25,
+                                          decoration: BoxDecoration(
+                                            boxShadow: [
+                                              BoxShadow(
+                                                  color: Color(0xFFFFDB93)
+                                                      .withAlpha(80),
+                                                  spreadRadius: 1,
+                                                  blurRadius: 1,
+                                                  offset: Offset(0, 1))
+                                            ],
+                                            border: Border.all(
+                                                color: Color(0xFFFFDB93)
+                                                    .withAlpha(30)),
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                          ),
+                                          child: Image.memory(
+                                            base64Decode(value
+                                                .AllModelsByCategory[
+                                                    indexCategory][index]
+                                                .image),
+                                            fit: BoxFit.cover,
+                                          )),
+                                      SizedBox(
+                                        height: 8,
+                                      ),
+                                      Container(
+                                        decoration: BoxDecoration(
+                                            boxShadow: [
+                                              BoxShadow(
+                                                  color: Color(0xFFFFDB93)
+                                                      .withAlpha(30),
+                                                  spreadRadius: 1,
+                                                  blurRadius: 1,
+                                                  offset: Offset(0, 1))
+                                            ],
+                                            border: Border.all(
+                                                color: Color(0xFFFFDB93)
+                                                    .withAlpha(80)),
+                                            borderRadius: BorderRadius.only(
+                                                topRight: Radius.circular(15),
+                                                bottomLeft:
+                                                    Radius.circular(15)),
+                                            color: Colors.white),
                                         width:
                                             MediaQuery.of(context).size.width *
                                                 0.6,
-                                        height:
-                                            MediaQuery.of(context).size.height *
-                                                0.25,
-                                        decoration: BoxDecoration(
-                                          boxShadow: [
-                                            BoxShadow(
-                                                color: Color(0xFFFFDB93)
-                                                    .withAlpha(80),
-                                                spreadRadius: 1,
-                                                blurRadius: 1,
-                                                offset: Offset(0, 1))
-                                          ],
-                                          border: Border.all(
-                                              color: Color(0xFFFFDB93)
-                                                  .withAlpha(30)),
-                                          borderRadius:
-                                              BorderRadius.circular(20),
-                                        ),
-                                        child: FutureBuilder(
-                                          future: DecodeIamge(
-                                              AllModelsByCategory[indexCategory]
-                                                      [index]
-                                                  .image),
-                                          builder: (context, snapshot) {
-                                            if (snapshot.connectionState ==
-                                                ConnectionState.waiting) {
-                                              return Skelton(
-                                                hight: 160,
-                                                width: 200,
-                                              );
-                                            } else if (snapshot.hasError) {
-                                              return Skelton(
-                                                hight: 160,
-                                                width: 200,
-                                              );
-                                            }
-                                            return ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(20),
-                                              child: Image.memory(
-                                                snapshot.data!,
-                                                fit: BoxFit.cover,
-                                              ),
-                                            );
-                                          },
-                                        )),
-                                    SizedBox(
-                                      height: 8,
-                                    ),
-                                    Container(
-                                      decoration: BoxDecoration(
-                                          boxShadow: [
-                                            BoxShadow(
-                                                color: Color(0xFFFFDB93)
-                                                    .withAlpha(30),
-                                                spreadRadius: 1,
-                                                blurRadius: 1,
-                                                offset: Offset(0, 1))
-                                          ],
-                                          border: Border.all(
-                                              color: Color(0xFFFFDB93)
-                                                  .withAlpha(80)),
-                                          borderRadius: BorderRadius.only(
-                                              topRight: Radius.circular(15),
-                                              bottomLeft: Radius.circular(15)),
-                                          color: Colors.white),
-                                      width: MediaQuery.of(context).size.width *
-                                          0.6,
-                                      child: ListTile(
-                                        titleAlignment:
-                                            ListTileTitleAlignment.center,
-                                        title: Text(
-                                          "${AllModelsByCategory[indexCategory][index].category}",
-                                          style: TextStyle(
-                                              decoration:
-                                                  TextDecoration.underline,
-                                              fontSize: 16,
-                                              color: Colors.black,
-                                              fontFamily: "Nanum_Myeongjo"),
-                                          textAlign: TextAlign.center,
-                                        ),
-                                        subtitle: Padding(
-                                          padding:
-                                              const EdgeInsets.only(top: 1),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceAround,
-                                            children: [
-                                              CircleAvatar(
-                                                  foregroundImage: MemoryImage(
-                                                      base64Decode(
-                                                          AllModelsByCategory[
-                                                                      indexCategory]
-                                                                  [index]
-                                                              .tailor!
-                                                              .profilePicture!
-                                                              .substring(23)))),
-                                              Text(
-                                                "${AllModelsByCategory[indexCategory][index].tailor!.name}",
-                                                style: TextStyle(
-                                                    fontFamily:
-                                                        "Nanum_Myeongjo",
-                                                    color: Colors.black,
-                                                    fontSize: 15,
-                                                    fontWeight:
-                                                        FontWeight.w300),
-                                              ),
-                                              SizedBox(
-                                                width: 8,
-                                              ),
-                                              Row(
-                                                children: [
-                                                  Icon(
-                                                    Icons.star,
-                                                    size: 30,
-                                                    color: Colors.yellow,
-                                                  ),
-                                                  Text(
-                                                    "${AllModelsByCategory[indexCategory][index].tailor!.rating}",
-                                                    style: TextStyle(
-                                                        color: Colors.black,
-                                                        fontWeight:
-                                                            FontWeight.w600,
-                                                        fontFamily:
-                                                            "Nanum_Myeongjo"),
-                                                  ),
-                                                ],
-                                              )
-                                            ],
+                                        child: ListTile(
+                                          titleAlignment:
+                                              ListTileTitleAlignment.center,
+                                          title: Text(
+                                            "${value.AllModelsByCategory[indexCategory][index].category}",
+                                            style: TextStyle(
+                                                decoration:
+                                                    TextDecoration.underline,
+                                                fontSize: 16,
+                                                color: Colors.black,
+                                                fontFamily: "Nanum_Myeongjo"),
+                                            textAlign: TextAlign.center,
+                                          ),
+                                          subtitle: Padding(
+                                            padding:
+                                                const EdgeInsets.only(top: 1),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceAround,
+                                              children: [
+                                                CircleAvatar(
+                                                    foregroundImage: MemoryImage(
+                                                        base64Decode(value
+                                                            .AllModelsByCategory[
+                                                                indexCategory]
+                                                                [index]
+                                                            .tailor!
+                                                            .profilePicture!
+                                                            .substring(23)))),
+                                                Text(
+                                                  "${value.AllModelsByCategory[indexCategory][index].tailor!.name}",
+                                                  style: TextStyle(
+                                                      fontFamily:
+                                                          "Nanum_Myeongjo",
+                                                      color: Colors.black,
+                                                      fontSize: 15,
+                                                      fontWeight:
+                                                          FontWeight.w300),
+                                                ),
+                                                SizedBox(
+                                                  width: 8,
+                                                ),
+                                                Row(
+                                                  children: [
+                                                    Icon(
+                                                      Icons.star,
+                                                      size: 30,
+                                                      color: Colors.yellow,
+                                                    ),
+                                                    Text(
+                                                      "${CalculRating(value.AllModelsByCategory[indexCategory][index].tailor!)}",
+                                                      style: TextStyle(
+                                                          color: Colors.black,
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                          fontFamily:
+                                                              "Nanum_Myeongjo"),
+                                                    ),
+                                                  ],
+                                                )
+                                              ],
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                    )
-                                  ],
+                                      )
+                                    ],
+                                  ),
                                 ),
                               ),
                             );
                           },
                         );
                 },
+//
               ),
               SliverAppBar(
                 backgroundColor: Color(0xFFFFF4DE),

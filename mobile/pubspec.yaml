@@ -56,12 +56,11 @@ dependencies:
   open_route_service: ^1.2.4
   latlong2: ^0.9.0
 
-  
+  iconsax: ^0.0.8
+  mailer: ^5.1.2
+  random_string: ^2.1.0
+  google_sign_in: ^6.2.1 
 
-  # flutter_polyline_points:
-  # google_maps_flutter:
-  # location:
-  # flutter_svg:
 
 
 
@@ -80,6 +79,12 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
+  cupertino_icons: ^1.0.2
+  email_auth: ^2.0.0
+  shared_preferences: ^2.2.3
+  otp_text_field: ^1.1.3
+  phone_numbers_parser: ^8.2.1
+  icons_plus: ^4.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -96,26 +101,37 @@ flutter:
   assets:
     - images/
     - images/styles/
-    - images/glbglbttled.glb
-    - images\ThreeDModels\bottomABAIA.glb
-    - images\ThreeDModels\bottomclassic.glb
-    - images\ThreeDModels\bottomlongueglb.glb
-    # - images\ThreeDModels\chemisemenlong.glb
-    - images\ThreeDModels\HodieManchelongue.glb
-    - images\ThreeDModels\shirtDemimen.glb
-    - images\ThreeDModels\shirtDemiWomenV2.glb
-    - images\ThreeDModels\shirtlongewithcoul.glb
-    - images\ThreeDModels\shirtlongmenlastiquefinmain.glb
-    - images\ThreeDModels\shirtlongrouvert.glb
-    - images\ThreeDModels\shirtlongwomen.glb
-    - images\ThreeDModels\shirtmanlong.glb
-    - images\ThreeDModels\shirtwomen.glb
-    # - images\ThreeDModels\shirtwomenblack.glb
-    - images\ThreeDModels\shirtwomencouper.glb
-    - images\ThreeDModels\shirtwomenlongmaincoupercorp.glb
-    # - images\ThreeDModels\Sweatmen.glb
-    # - images\ThreeDModels\sweatslim.glb 
-    - images\ThreeDModels\uploads_files_3704025_High+Neck+T-shirt.glb
+    # - images/glbglbttled.glb
+    # - images\ThreeDModels\bottomABAIA.glb
+    # - images\ThreeDModels\bottomclassic.glb
+    # - images\ThreeDModels\bottomlongueglb.glb
+    # # - images\ThreeDModels\chemisemenlong.glb
+    # - images\ThreeDModels\HodieManchelongue.glb
+    # - images\ThreeDModels\shirtDemimen.glb
+    # - images\ThreeDModels\shirtDemiWomenV2.glb
+    # - images\ThreeDModels\shirtlongewithcoul.glb
+    # - images\ThreeDModels\shirtlongmenlastiquefinmain.glb
+    # - images\ThreeDModels\shirtlongrouvert.glb
+    # - images\ThreeDModels\shirtlongwomen.glb
+    # - images\ThreeDModels\shirtmanlong.glb
+    # - images\ThreeDModels\shirtwomen.glb
+    # # - images\ThreeDModels\shirtwomenblack.glb
+    # - images\ThreeDModels\shirtwomencouper.glb
+    # - images\ThreeDModels\shirtwomenlongmaincoupercorp.glb
+    # # - images\ThreeDModels\Sweatmen.glb
+    # # - images\ThreeDModels\sweatslim.glb 
+    # - images\ThreeDModels\uploads_files_3704025_High+Neck+T-shirt.glb
+    # - images/HomeIcon.png
+    # - images/SearchIcon.png
+    # - images/bra.png
+    # - images/shad.png
+    # - images/mimi.png
+    # - images/Group.png
+    # - images/Background.png
+    # - images/lbsa.png
+    # - images/khit.png
+    # - images/Background.png
+  #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

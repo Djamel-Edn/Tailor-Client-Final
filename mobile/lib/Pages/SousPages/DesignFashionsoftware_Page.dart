@@ -17,7 +17,7 @@ class _DesignFashinSoftState extends State<DesignFashinSoft> {
     controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setBackgroundColor(const Color(0x00000000))
-      ..enableZoom(false)
+      ..enableZoom(true)
       ..getScrollPosition()
       ..scrollBy(8, 180)
       ..setNavigationDelegate(

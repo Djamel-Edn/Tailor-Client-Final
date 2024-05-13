@@ -22,6 +22,7 @@ class _CommandItemState extends State<CommandItem> {
     controller.addListener(() {});
     // for (var spe in widget.order.models!) {
     //   AllSpeciallite.add(spe.speciality);
+
     // }
 
     super.initState();
@@ -35,11 +36,8 @@ class _CommandItemState extends State<CommandItem> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.order.models!.length == 1) {
-      print("one model,in order");
-    } else {
-      print("bff model");
-    }
+    print("objectaaaaaa ${widget.order.questionnaire}");
+
     return Container(
         height: 200,
         width: 400,
@@ -55,29 +53,43 @@ class _CommandItemState extends State<CommandItem> {
               const SizedBox(
                 width: double.infinity,
               ),
-              Container(
-                width: 120,
-                height: 150,
-                decoration: BoxDecoration(
-                    border: Border.all(),
-                    borderRadius: BorderRadius.circular(20)),
-                child: AppinioSwiper(
-                  controller: controller,
-                  cardCount: widget.order.models!.length,
-                  duration: Duration(milliseconds: 120),
-                  loop: true,
-                  backgroundCardOffset: Offset(0, 0),
-                  cardBuilder: (context, index) {
-                    return ClipRRect(
-                        borderRadius: BorderRadius.circular(20),
-                        child: Image.memory(
-                          base64Decode(
-                              widget.order.models![index].image.substring(23)),
-                          fit: BoxFit.cover,
-                        ));
-                  },
-                ),
-              ),
+              widget.order.models!.length != 0
+                  ? Container(
+                      width: 120,
+                      height: 150,
+                      decoration: BoxDecoration(
+                          border: Border.all(),
+                          borderRadius: BorderRadius.circular(20)),
+                      child: AppinioSwiper(
+                        controller: controller,
+                        cardCount: widget.order.models!.length,
+                        duration: Duration(milliseconds: 120),
+                        loop: true,
+                        backgroundCardOffset: Offset(0, 0),
+                        cardBuilder: (context, index) {
+                          return ClipRRect(
+                              borderRadius: BorderRadius.circular(20),
+                              child: Image.memory(
+                                base64Decode(widget.order.models![index].image
+                                    .substring(23)),
+                                fit: BoxFit.cover,
+                              ));
+                        },
+                      ),
+                    )
+                  : Container(
+                      width: 120,
+                      height: 150,
+                      decoration: BoxDecoration(
+                          border: Border.all(),
+                          borderRadius: BorderRadius.circular(20)),
+                      child: ClipRRect(
+                          borderRadius: BorderRadius.circular(20),
+                          child: Image.asset(
+                            widget.order.postStyle!,
+                            fit: BoxFit.cover,
+                          )),
+                    ),
               SizedBox(
                 width: 10,
               ),
@@ -149,7 +161,7 @@ class _CommandItemState extends State<CommandItem> {
                   ],
                 ),
               ),
-              widget.order.models!.length != 1
+              widget.order.models!.length > 1
                   ? InkWell(
                       onTap: () {
                         controller.swipeLeft();

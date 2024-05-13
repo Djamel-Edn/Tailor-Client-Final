@@ -10,6 +10,7 @@ import 'package:projetfinprepa/Data/category.dart';
 import 'package:projetfinprepa/Pages/ProfiPage.dart';
 import 'package:projetfinprepa/Providers/Models.dart';
 import 'package:projetfinprepa/Providers/Tailors.dart';
+import 'package:projetfinprepa/Styles/DataStyles.dart';
 import 'package:provider/provider.dart';
 
 class SearchPage extends StatefulWidget {
@@ -21,6 +22,8 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> {
   @override
+  List<Model> SavedData = [];
+
   int currentpage = 0;
   TextEditingController _controller = TextEditingController();
   List<Tailor> AllDataTailors = [];
@@ -47,6 +50,8 @@ class _SearchPageState extends State<SearchPage> {
 
   bool Showseg = false;
   List<Tailor> ResultTilors = [];
+  List<Tailor> ResultTilorsNearest = [];
+
   List<Tailor> Result = [];
   List<Model> ResultModels = [];
   List<Model> ResultModelsWithFilter = [];
@@ -54,39 +59,75 @@ class _SearchPageState extends State<SearchPage> {
   List<Model> Result2 = [];
   List<String> ResultMatchSeg = [];
   int indexCategory = 0;
+
   void _ShowResult(String query) {
     List<Tailor> Data;
     List<Model> Data2;
-    if (query == "") {
-      Data = AllDataTailors;
-      Data2 = AllDataModels;
-      EmptyResultTailors = false;
-      EmptyResultModels = false;
-    } else {
-      Data = AllDataTailors.where((element) =>
-          element.name!.toUpperCase().startsWith(query.toUpperCase())).toList();
-
-      Data2 = AllDataModels.where(
-              (element) => element.speciality.startsWith(query.toUpperCase()))
-          .toList();
-
-      if ((Data.length == 0 || Data2.length == 0) && query == "") {
-        EmptyResultTailors = false;
+    if (!_nearest) {
+      if (query == "") {
         Data = AllDataTailors;
-        EmptyResultModels = false;
         Data2 = AllDataModels;
-      } else if ((Data.length == 0 && Data2.length == 0) && query != "") {
-        EmptyResultTailors = true;
-        EmptyResultModels = true;
-      } else {
-        EmptyResultModels = false;
         EmptyResultTailors = false;
+        EmptyResultModels = false;
+      } else {
+        Data = AllDataTailors.where((element) =>
+                element.name!.toUpperCase().startsWith(query.toUpperCase()))
+            .toList();
+
+        Data2 = AllDataModels.where(
+                (element) => element.speciality.startsWith(query.toUpperCase()))
+            .toList();
+
+        if ((Data.length == 0 || Data2.length == 0) && query == "") {
+          EmptyResultTailors = false;
+          Data = AllDataTailors;
+          EmptyResultModels = false;
+          Data2 = AllDataModels;
+        } else if ((Data.length == 0 && Data2.length == 0) && query != "") {
+          EmptyResultTailors = true;
+          EmptyResultModels = true;
+        } else {
+          EmptyResultModels = false;
+          EmptyResultTailors = false;
+        }
       }
+      setState(() {
+        ResultTilors = Data;
+        ResultModels = Data2;
+      });
+    } else {
+      if (query == "") {
+        Data = AllDataTailors;
+        Data2 = AllDataModels;
+        EmptyResultTailors = false;
+        EmptyResultModels = false;
+      } else {
+        Data = AllDataTailors.where((element) =>
+                element.name!.toUpperCase().startsWith(query.toUpperCase()))
+            .toList();
+
+        Data2 = AllDataModels.where(
+                (element) => element.speciality.startsWith(query.toUpperCase()))
+            .toList();
+
+        if ((Data.length == 0 || Data2.length == 0) && query == "") {
+          EmptyResultTailors = false;
+          Data = AllDataTailors;
+          EmptyResultModels = false;
+          Data2 = AllDataModels;
+        } else if ((Data.length == 0 && Data2.length == 0) && query != "") {
+          EmptyResultTailors = true;
+          EmptyResultModels = true;
+        } else {
+          EmptyResultModels = false;
+          EmptyResultTailors = false;
+        }
+      }
+      setState(() {
+        ResultTilorsNearest = Data;
+        ResultModels = Data2;
+      });
     }
-    setState(() {
-      ResultTilors = Data;
-      ResultModels = Data2;
-    });
   }
 
   void _ShowMatchSeg(String query) {
@@ -95,10 +136,22 @@ class _SearchPageState extends State<SearchPage> {
     setState(() {});
   }
 
+  double CalculRating(Tailor tailor) {
+    double totalrating = 0.0;
+
+    for (var e in tailor.reviews!) {
+      totalrating += double.parse(e["rating"].toString());
+    }
+    if (tailor.reviews!.isNotEmpty) {
+      totalrating = totalrating / tailor.reviews!.length;
+    } else {
+      totalrating = 0;
+    }
+    return totalrating;
+  }
+
   @override
   void initState() {
-    // TODO: implement initState
-    super.initState();
     AllDataTailors =
         Provider.of<TailorsProvider>(context, listen: false).AllTailors;
     AllDataModels =
@@ -107,6 +160,7 @@ class _SearchPageState extends State<SearchPage> {
     ResultTilors = AllDataTailors;
     ResultModels = AllDataModels;
     ResultMatchSeg = FilterTypes;
+    super.initState();
   }
 
   Widget build(BuildContext context) {
@@ -276,116 +330,145 @@ class _SearchPageState extends State<SearchPage> {
                                             isDismissible: true,
                                             context: context,
                                             builder: (context) {
-                                              return Column(children: [
-                                                Expanded(
-                                                  child: Stack(
-                                                    children: [
-                                                      Container(
+                                              return StatefulBuilder(
+                                                builder: (context, setState) {
+                                                  return Column(children: [
+                                                    Expanded(
+                                                      child: Stack(
+                                                        children: [
+                                                          Container(
+                                                            decoration: BoxDecoration(
+                                                                color: Colors
+                                                                    .transparent,
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            10)),
+                                                            margin:
+                                                                EdgeInsets.all(
+                                                                    10),
+                                                            child: AspectRatio(
+                                                              aspectRatio: 1,
+                                                              child: ClipRRect(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              10),
+                                                                  child: ResultModelsWithFilter
+                                                                              .length !=
+                                                                          0
+                                                                      ? Image
+                                                                          .memory(
+                                                                          base64Decode(
+                                                                              ResultModelsWithFilter[index].image),
+                                                                          fit: BoxFit
+                                                                              .cover,
+                                                                        )
+                                                                      : Image
+                                                                          .memory(
+                                                                          base64Decode(
+                                                                              ResultModels[index].image),
+                                                                          fit: BoxFit
+                                                                              .cover,
+                                                                        )),
+                                                            ),
+                                                          ),
+                                                          Positioned(
+                                                              top: 30,
+                                                              right: 20,
+                                                              child: InkWell(
+                                                                onTap: () {
+                                                                  setState(
+                                                                      () {});
+                                                                  print(
+                                                                      "save post");
+                                                                  if (ResultModelsWithFilter
+                                                                          .length !=
+                                                                      0) {
+                                                                    print(ResultModelsWithFilter[
+                                                                            index]
+                                                                        .titel);
+                                                                    if (SavedData
+                                                                        .contains(
+                                                                            ResultModelsWithFilter[index])) {
+                                                                      SavedData.remove(
+                                                                          ResultModelsWithFilter[
+                                                                              index]);
+                                                                    } else {
+                                                                      SavedData.add(
+                                                                          ResultModelsWithFilter[
+                                                                              index]);
+                                                                    }
+                                                                  } else {
+                                                                    print(ResultModels[
+                                                                            index]
+                                                                        .titel);
+                                                                    if (SavedData
+                                                                        .contains(
+                                                                            ResultModels[index])) {
+                                                                      SavedData.remove(
+                                                                          ResultModels[
+                                                                              index]);
+                                                                    } else {
+                                                                      SavedData.add(
+                                                                          ResultModels[
+                                                                              index]);
+                                                                    }
+                                                                  }
+                                                                  print(
+                                                                      SavedData);
+                                                                },
+                                                                child:
+                                                                    Container(
+                                                                  height: 25,
+                                                                  child: ResultModelsWithFilter
+                                                                              .length ==
+                                                                          0
+                                                                      ? !SavedData.contains(ResultModels[
+                                                                              index])
+                                                                          ? Image
+                                                                              .asset(
+                                                                              "images/saveinst.png",
+                                                                            )
+                                                                          : Image
+                                                                              .asset(
+                                                                              "images/saveinst.png",
+                                                                              color: Colors.amber,
+                                                                            )
+                                                                      : !SavedData.contains(ResultModelsWithFilter[
+                                                                              index])
+                                                                          ? Image
+                                                                              .asset(
+                                                                              "images/saveinst.png",
+                                                                            )
+                                                                          : Image
+                                                                              .asset(
+                                                                              "images/saveinst.png",
+                                                                              color: Colors.amber,
+                                                                            ),
+                                                                ),
+                                                              )),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    Padding(
+                                                      padding: const EdgeInsets
+                                                          .symmetric(
+                                                          horizontal: 20,
+                                                          vertical: 8),
+                                                      child: Container(
                                                         decoration: BoxDecoration(
-                                                            color: Colors
-                                                                .transparent,
                                                             borderRadius:
                                                                 BorderRadius
                                                                     .circular(
-                                                                        10)),
-                                                        margin:
-                                                            EdgeInsets.all(10),
-                                                        child: AspectRatio(
-                                                          aspectRatio: 1,
-                                                          child: ClipRRect(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          10),
-                                                              child: ResultModelsWithFilter
-                                                                          .length !=
-                                                                      0
-                                                                  ? Image
-                                                                      .memory(
-                                                                      base64Decode(
-                                                                          ResultModelsWithFilter[index]
-                                                                              .image),
-                                                                      fit: BoxFit
-                                                                          .cover,
-                                                                    )
-                                                                  : Image
-                                                                      .memory(
-                                                                      base64Decode(
-                                                                          ResultModels[index]
-                                                                              .image),
-                                                                      fit: BoxFit
-                                                                          .cover,
-                                                                    )),
-                                                        ),
-                                                      ),
-                                                      Positioned(
-                                                          top: 30,
-                                                          right: 20,
-                                                          child: InkWell(
-                                                            onTap: () {},
-                                                            child: Container(
-                                                              height: 25,
-                                                              child:
-                                                                  Image.asset(
-                                                                "images/saveinst.png",
-                                                              ),
-                                                            ),
-                                                          )),
-                                                    ],
-                                                  ),
-                                                ),
-                                                Padding(
-                                                  padding: const EdgeInsets
-                                                      .symmetric(
-                                                      horizontal: 20,
-                                                      vertical: 8),
-                                                  child: Container(
-                                                    decoration: BoxDecoration(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(10),
-                                                        border: Border.all()),
-                                                    child: Padding(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              8.0),
-                                                      child: Row(
-                                                        children: [
-                                                          InkWell(
-                                                            onTap: () {
-                                                              Navigator.push(
-                                                                  context,
-                                                                  MaterialPageRoute(
-                                                                    builder:
-                                                                        (context) =>
-                                                                            ProfilPage(
-                                                                      model:
-                                                                          null,
-                                                                      tailor: AllDataModels[
-                                                                              index]
-                                                                          .tailor!,
-                                                                      IsFoRead:
-                                                                          true,
-                                                                      IsFoOrder:
-                                                                          false,
-                                                                    ),
-                                                                  ));
-                                                            },
-                                                            child: CircleAvatar(
-                                                              radius: 25,
-                                                              backgroundImage: MemoryImage(base64Decode(
-                                                                  AllDataModels[
-                                                                          index]
-                                                                      .tailor!
-                                                                      .profilePicture!
-                                                                      .substring(
-                                                                          23))),
-                                                            ),
-                                                          ),
-                                                          SizedBox(
-                                                            width: 6,
-                                                          ),
-                                                          Column(
+                                                                        10),
+                                                            border:
+                                                                Border.all()),
+                                                        child: Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .all(8.0),
+                                                          child: Row(
                                                             children: [
                                                               InkWell(
                                                                 onTap: () {
@@ -406,129 +489,192 @@ class _SearchPageState extends State<SearchPage> {
                                                                         ),
                                                                       ));
                                                                 },
-                                                                child: Text(
-                                                                  AllDataModels[
+                                                                child:
+                                                                    CircleAvatar(
+                                                                  radius: 25,
+                                                                  backgroundImage: MemoryImage(base64Decode(AllDataModels[
                                                                           index]
                                                                       .tailor!
-                                                                      .name!,
-                                                                  style:
-                                                                      TextStyle(
-                                                                    fontFamily:
-                                                                        "Nanum_Myeongjo",
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold,
-                                                                    fontSize:
-                                                                        20,
-                                                                  ),
+                                                                      .profilePicture!
+                                                                      .substring(
+                                                                          23))),
                                                                 ),
                                                               ),
-                                                              RatingBar.builder(
-                                                                initialRating: double.parse(
-                                                                    AllDataModels[
-                                                                            index]
-                                                                        .tailor!
-                                                                        .rating),
-                                                                minRating: 1,
-                                                                itemSize: 15,
-                                                                direction: Axis
-                                                                    .horizontal,
-                                                                allowHalfRating:
-                                                                    true,
-                                                                itemCount: 5,
-                                                                itemBuilder:
-                                                                    (context,
-                                                                            _) =>
-                                                                        Icon(
-                                                                  Icons.star,
-                                                                  size: 1,
-                                                                  color: Colors
-                                                                      .amber,
-                                                                ),
-                                                                onRatingUpdate:
-                                                                    (rating) {},
-                                                                ignoreGestures:
-                                                                    true,
+                                                              SizedBox(
+                                                                width: 6,
+                                                              ),
+                                                              Column(
+                                                                children: [
+                                                                  InkWell(
+                                                                    onTap: () {
+                                                                      Navigator.push(
+                                                                          context,
+                                                                          MaterialPageRoute(
+                                                                            builder: (context) =>
+                                                                                ProfilPage(
+                                                                              model: null,
+                                                                              tailor: AllDataModels[index].tailor!,
+                                                                              IsFoRead: true,
+                                                                              IsFoOrder: false,
+                                                                            ),
+                                                                          ));
+                                                                    },
+                                                                    child: Text(
+                                                                      AllDataModels[
+                                                                              index]
+                                                                          .tailor!
+                                                                          .name!,
+                                                                      style:
+                                                                          TextStyle(
+                                                                        fontFamily:
+                                                                            "Nanum_Myeongjo",
+                                                                        fontWeight:
+                                                                            FontWeight.bold,
+                                                                        fontSize:
+                                                                            20,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                  RatingBar
+                                                                      .builder(
+                                                                    initialRating:
+                                                                        CalculRating(
+                                                                            AllDataModels[index].tailor!),
+                                                                    itemSize:
+                                                                        15,
+                                                                    direction: Axis
+                                                                        .horizontal,
+                                                                    allowHalfRating:
+                                                                        true,
+                                                                    itemCount:
+                                                                        5,
+                                                                    itemBuilder:
+                                                                        (context,
+                                                                                _) =>
+                                                                            const Icon(
+                                                                      Icons
+                                                                          .star,
+                                                                      size: 1,
+                                                                      color: Colors
+                                                                          .amber,
+                                                                    ),
+                                                                    onRatingUpdate:
+                                                                        (rating) {},
+                                                                    ignoreGestures:
+                                                                        true,
+                                                                  )
+                                                                ],
+                                                              ),
+                                                              Expanded(
+                                                                  child:
+                                                                      SizedBox()),
+                                                              Row(
+                                                                children: [
+                                                                  IconButton(
+                                                                      onPressed:
+                                                                          () {
+                                                                        if (Style
+                                                                            .SavedTailroFav.contains(AllDataModels[
+                                                                                index]
+                                                                            .tailor!
+                                                                            .id)) {
+                                                                          Style.SavedTailroFav.remove(AllDataModels[index]
+                                                                              .tailor!
+                                                                              .id);
+                                                                        } else {
+                                                                          Style.SavedTailroFav.add(AllDataModels[index]
+                                                                              .tailor!
+                                                                              .id!);
+                                                                        }
+                                                                        setState(
+                                                                            () {});
+                                                                        // SavedTailroFav.add(value)
+                                                                      },
+                                                                      icon: Style.SavedTailroFav.contains(AllDataModels[index]
+                                                                              .tailor!
+                                                                              .id)
+                                                                          ? Icon(
+                                                                              Icons.favorite_border)
+                                                                          : Icon(
+                                                                              Icons.favorite,
+                                                                              color: Colors.red,
+                                                                            )),
+                                                                ],
                                                               )
                                                             ],
                                                           ),
-                                                          Expanded(
-                                                              child:
-                                                                  SizedBox()),
-                                                          Row(
-                                                            children: [
-                                                              IconButton(
-                                                                  onPressed:
-                                                                      () {},
-                                                                  icon: Icon(Icons
-                                                                      .favorite_border)),
-                                                            ],
-                                                          )
-                                                        ],
+                                                        ),
                                                       ),
                                                     ),
-                                                  ),
-                                                ),
-                                                Padding(
-                                                  padding: const EdgeInsets
-                                                      .symmetric(
-                                                      horizontal: 20,
-                                                      vertical: 15),
-                                                  child: InkWell(
-                                                    onTap: () {
-                                                      Model model;
-                                                      if (ResultModelsWithFilter
-                                                              .length ==
-                                                          0) {
-                                                        model =
-                                                            ResultModels[index];
-                                                      } else {
-                                                        model =
-                                                            ResultModelsWithFilter[
-                                                                index];
-                                                      }
-                                                      Navigator.push(
-                                                          context,
-                                                          MaterialPageRoute(
-                                                            builder:
-                                                                (context) =>
-                                                                    ProfilPage(
-                                                              model: model,
-                                                              tailor:
-                                                                  AllDataModels[
+                                                    Padding(
+                                                      padding: const EdgeInsets
+                                                          .symmetric(
+                                                          horizontal: 20,
+                                                          vertical: 15),
+                                                      child: InkWell(
+                                                        onTap: () {
+                                                          Model model;
+                                                          if (ResultModelsWithFilter
+                                                                  .length ==
+                                                              0) {
+                                                            model =
+                                                                ResultModels[
+                                                                    index];
+                                                          } else {
+                                                            model =
+                                                                ResultModelsWithFilter[
+                                                                    index];
+                                                          }
+                                                          Navigator.push(
+                                                              context,
+                                                              MaterialPageRoute(
+                                                                builder:
+                                                                    (context) =>
+                                                                        ProfilPage(
+                                                                  model: model,
+                                                                  tailor: AllDataModels[
                                                                           index]
                                                                       .tailor!,
-                                                              IsFoRead: false,
-                                                              IsFoOrder: true,
-                                                            ),
-                                                          ));
-                                                    },
-                                                    child: Container(
-                                                      alignment:
-                                                          Alignment.center,
-                                                      height: 60,
-                                                      width: double.infinity,
-                                                      decoration: BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(12),
-                                                          border: Border.all(),
-                                                          color: Colors.black),
-                                                      child: Text(
-                                                        "Order Now",
-                                                        style: TextStyle(
-                                                            fontFamily:
-                                                                "Nanum_Myeongjo",
-                                                            fontSize: 21,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            color:
-                                                                Colors.white),
+                                                                  IsFoRead:
+                                                                      false,
+                                                                  IsFoOrder:
+                                                                      true,
+                                                                ),
+                                                              ));
+                                                        },
+                                                        child: Container(
+                                                          alignment:
+                                                              Alignment.center,
+                                                          height: 60,
+                                                          width:
+                                                              double.infinity,
+                                                          decoration: BoxDecoration(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          12),
+                                                              border:
+                                                                  Border.all(),
+                                                              color:
+                                                                  Colors.black),
+                                                          child: Text(
+                                                            "Order Now",
+                                                            style: TextStyle(
+                                                                fontFamily:
+                                                                    "Nanum_Myeongjo",
+                                                                fontSize: 21,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                color: Colors
+                                                                    .white),
+                                                          ),
+                                                        ),
                                                       ),
-                                                    ),
-                                                  ),
-                                                )
-                                              ]);
+                                                    )
+                                                  ]);
+                                                },
+                                              );
                                             },
                                           );
                                         },
@@ -611,13 +757,39 @@ class _SearchPageState extends State<SearchPage> {
                             side: BorderSide(color: Colors.black),
                             checkColor: Colors.white,
                             activeColor: Colors.black,
-                            title: Text("Nearst ?"),
+                            title: Row(
+                              children: [
+                                Container(
+                                    height: 21,
+                                    child: Image.asset("images/adress.png")),
+                                SizedBox(
+                                  width: 4,
+                                ),
+                                Text(
+                                  "Nearest",
+                                  style: TextStyle(
+                                    fontFamily: "Nanum_Myeongjo",
+                                    // fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
                             value: _nearest,
                             onChanged: (value) {
                               setState(() {
                                 _nearest = value!;
+                                if (value) {
+                                  ResultTilorsNearest = ResultTilors.where(
+                                      (element) =>
+                                          element.name == "Rajaa" ||
+                                          element.name == "Nour").toList();
+                                }
                               });
                             },
+                          ),
+                          Divider(
+                            thickness: 1,
+                            color: Colors.black,
                           ),
                           Expanded(
                             child: !_nearest
@@ -630,8 +802,7 @@ class _SearchPageState extends State<SearchPage> {
                                     itemBuilder: (context, index) {
                                       return InkWell(
                                         onTap: () {
-                                          print(ResultTilors[index]
-                                              .profilePicture);
+                                          print(ResultTilors[index]);
                                           Navigator.push(
                                               context,
                                               MaterialPageRoute(
@@ -652,7 +823,6 @@ class _SearchPageState extends State<SearchPage> {
                                           margin: EdgeInsets.symmetric(
                                               horizontal: 10, vertical: 12),
                                           decoration: BoxDecoration(
-                                              boxShadow: [],
                                               border: Border.all(
                                                   color: Colors.black),
                                               color: Color(0xFFD9D9D9)
@@ -718,12 +888,11 @@ class _SearchPageState extends State<SearchPage> {
                                         SliverGridDelegateWithFixedCrossAxisCount(
                                             crossAxisCount: 2,
                                             childAspectRatio: 0.87),
-                                    itemCount: ResultTilors.length - 2,
+                                    itemCount: ResultTilorsNearest.length,
                                     itemBuilder: (context, index) {
                                       return InkWell(
                                         onTap: () {
-                                          print(ResultTilors[index]
-                                              .profilePicture);
+                                          print(ResultTilors.length);
                                           Navigator.push(
                                               context,
                                               MaterialPageRoute(
@@ -731,7 +900,8 @@ class _SearchPageState extends State<SearchPage> {
                                                     ProfilPage(
                                                         model: null,
                                                         tailor:
-                                                            ResultTilors[index],
+                                                            ResultTilorsNearest[
+                                                                index],
                                                         IsFoRead: true,
                                                         IsFoOrder: false),
                                               ));
@@ -757,7 +927,7 @@ class _SearchPageState extends State<SearchPage> {
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
-                                              ResultTilors[index]
+                                              ResultTilorsNearest[index]
                                                           .profilePicture
                                                           .toString() !=
                                                       "../utils/pp.png"
@@ -766,7 +936,8 @@ class _SearchPageState extends State<SearchPage> {
                                                       foregroundImage:
                                                           MemoryImage(
                                                         base64Decode(
-                                                            ResultTilors[index]
+                                                            ResultTilorsNearest[
+                                                                    index]
                                                                 .profilePicture
                                                                 .toString()
                                                                 .substring(23)),
@@ -780,7 +951,8 @@ class _SearchPageState extends State<SearchPage> {
                                                       ),
                                                     ),
                                               Text(
-                                                ResultTilors[index].name!,
+                                                ResultTilorsNearest[index]
+                                                    .name!,
                                                 style: TextStyle(fontSize: 18),
                                               ),
                                               RatingBar.builder(

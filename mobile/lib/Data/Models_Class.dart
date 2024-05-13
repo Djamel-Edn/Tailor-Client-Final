@@ -3,7 +3,9 @@ import 'package:projetfinprepa/Data/Tailor_Class.dart';
 class Model {
   String id, titel, image, description, category, speciality;
   Tailor? tailor;
+  // String? postStyle;
   int price;
+  // List<Map<String, dynamic>>? questionnaire;
   String CreatedAt;
   Model(
       {required this.category,

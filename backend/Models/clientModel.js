@@ -6,7 +6,6 @@ const mongoose = require('mongoose');
         email:String,
         verified:Boolean,
         password:String,
-        resetPasswordToken:String,
         profilePicture: {
             type: String,
             default: '/../utils/pp.png' 
@@ -17,7 +16,8 @@ const mongoose = require('mongoose');
                 ref: 'Order'
             }
         ],
-        favorites:[{ type: mongoose.Schema.Types.ObjectId, ref: 'Post' }]
+        favorites:[{ type: mongoose.Schema.Types.ObjectId, ref: 'Post' }],
+        city:String,
 
     });
 module.exports = mongoose.model('Client', clientSchema);

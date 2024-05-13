@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:projetfinprepa/Data/ANSQST.dart';
+import 'package:projetfinprepa/Pages/SelectedTailor.dart';
 import 'package:projetfinprepa/Styles/DataStyles.dart';
 
 class CustomDesignPAge extends StatefulWidget {
@@ -22,6 +23,8 @@ class _CustomDesignPAgeState extends State<CustomDesignPAge> {
   Color mainColor = Colors.black;
   Color SecondColor = Colors.black;
   List<QSTANSRSELECTED> qstsansrs = [];
+  var SiSrCntrl = TextEditingController();
+  var AddCntrl = TextEditingController();
 
   @override
   void initState() {
@@ -29,6 +32,24 @@ class _CustomDesignPAgeState extends State<CustomDesignPAge> {
     switch (widget.QStOF) {
       case "Tops":
         indexOfCategoty = 0;
+        break;
+      case "Bottoms":
+        indexOfCategoty = 1;
+        break;
+      case "Dresses":
+        indexOfCategoty = 2;
+        break;
+      case "Suits":
+        indexOfCategoty = 3;
+        break;
+      case "Outerwear":
+        indexOfCategoty = 4;
+        break;
+      case "Sportswear":
+        indexOfCategoty = 5;
+        break;
+      case "Accessories":
+        indexOfCategoty = 6;
         break;
       default:
     }
@@ -39,10 +60,16 @@ class _CustomDesignPAgeState extends State<CustomDesignPAge> {
       qstsansrs.add(QSTANSRSELECTED(
           ansr: "",
           qst: Style.styles[indexOfCategoty!].questionnaire[i]["qst"]));
-      print(qstsansrs[i].qst);
     }
 
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    AddCntrl.dispose();
+    SiSrCntrl.dispose();
+    super.dispose();
   }
 
   @override
@@ -161,10 +188,10 @@ class _CustomDesignPAgeState extends State<CustomDesignPAge> {
                 SizedBox(
                   height: 6,
                 ),
-                BuildAddition(
-                    "Additional Details", "Pleats, Ruffles, Embroidery, etc."),
+                BuildAddition("Additional Details",
+                    "Pleats, Ruffles, Embroidery, etc.", AddCntrl),
                 BuildAddition("Special Instructions or Specific Requests",
-                    "Add any specific requests here"),
+                    "Add any specific requests here", SiSrCntrl),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 15),
                   child: Row(
@@ -184,26 +211,55 @@ class _CustomDesignPAgeState extends State<CustomDesignPAge> {
   }
 
   Widget BuildButton(title, Color color, Color colorText) {
-    return Container(
-      decoration: BoxDecoration(
-          color: color,
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: Color(0xFF84643D).withOpacity(0.5))),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
-        child: Text(
-          title,
-          style: TextStyle(
-            color: colorText,
-            fontFamily: "Nanum_Myeongjo",
-            fontSize: 20,
+    return InkWell(
+      onTap: () {
+        qstsansrs
+            .add(QSTANSRSELECTED(ansr: mainColor.toString(), qst: "maincolor"));
+        qstsansrs.add(
+            QSTANSRSELECTED(ansr: SecondColor.toString(), qst: "secondcolor"));
+        qstsansrs.add(
+            QSTANSRSELECTED(ansr: AddCntrl.text, qst: "Additional Details"));
+        qstsansrs.add(QSTANSRSELECTED(ansr: SiSrCntrl.text, qst: "SiSR"));
+
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => TailorSelected(
+                image: widget.image,
+                qstsansrs: qstsansrs,
+              ),
+            ));
+        // print("IdClient 66312abd324795932c839325");
+        // print("Idtailor ${IPCONFIG.ClientId}");
+
+        // for (var i = 0; i < qstsansrs.length; i++) {
+        //   print(qstsansrs[i].qst);
+        //   print(qstsansrs[i].ansr);
+        // }
+        // OrderLogique.AddOrderByMe(IPCONFIG.ClientId, "66312abd324795932c839325",
+        //     0, [], widget.image, qstsansrs,,context);
+      },
+      child: Container(
+        decoration: BoxDecoration(
+            color: color,
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(color: Color(0xFF84643D).withOpacity(0.5))),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
+          child: Text(
+            title,
+            style: TextStyle(
+              color: colorText,
+              fontFamily: "Nanum_Myeongjo",
+              fontSize: 20,
+            ),
           ),
         ),
       ),
     );
   }
 
-  Widget BuildAddition(title, hint) {
+  Widget BuildAddition(title, hint, cntrl) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -217,6 +273,7 @@ class _CustomDesignPAgeState extends State<CustomDesignPAge> {
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: TextField(
+            controller: cntrl,
             decoration: InputDecoration(
               hintText: hint,
               hintStyle: TextStyle(
@@ -339,50 +396,40 @@ class _CustomDesignPAgeState extends State<CustomDesignPAge> {
             scrollDirection: Axis.horizontal,
             itemCount: ANSR.length,
             itemBuilder: (context, index) {
-              return Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(4),
-                      color: Color(0xFFC0AF9A).withAlpha(80)),
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                  margin: EdgeInsets.symmetric(horizontal: 10, vertical: 3),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                          height: 25,
-                          child: Checkbox(
-                            shape: CircleBorder(),
-                            side: BorderSide(color: Colors.black),
-                            checkColor: Colors.white,
-                            activeColor: Colors.black,
-                            value: qstsansrs.any(
-                              (element) =>
-                                  element.qst == QSt &&
-                                  element.ansr == ANSR[index],
-                            ),
-                            onChanged: (val) {
-                              setState(() {});
-
-                              for (var element in qstsansrs) {
-                                if (element.qst == QSt) {
-                                  element.ansr = ANSR[index];
-                                }
-                              }
-                              print(QSt);
-                              print(ANSR[index]);
-                              print(qstsansrs[0].qst);
-                              print(qstsansrs[0].ansr);
-                            },
-                          )),
-                      Text(
-                        ANSR[index],
-                        style: TextStyle(
-                          fontFamily: "Nanum_Myeongjo",
-                          fontSize: 14,
-                        ),
-                      ),
-                    ],
-                  ));
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: FilterChip(
+                  checkmarkColor: Colors.black,
+                  side: !qstsansrs.any(
+                    (element) =>
+                        element.qst == QSt && element.ansr == ANSR[index],
+                  )
+                      ? BorderSide.none
+                      : BorderSide(),
+                  selectedColor: Color(0xFFC0AF9A),
+                  backgroundColor: Color(0xFFC0AF9A).withAlpha(90),
+                  selected: qstsansrs.any(
+                    (element) =>
+                        element.qst == QSt && element.ansr == ANSR[index],
+                  ),
+                  label: Text(
+                    ANSR[index],
+                    style: TextStyle(
+                      fontFamily: "Nanum_Myeongjo",
+                      fontSize: 14,
+                    ),
+                  ),
+                  onSelected: (value) {
+                    setState(() {
+                      for (var element in qstsansrs) {
+                        if (element.qst == QSt) {
+                          element.ansr = ANSR[index];
+                        }
+                      }
+                    });
+                  },
+                ),
+              );
             },
           ),
         )

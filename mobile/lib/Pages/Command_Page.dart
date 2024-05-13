@@ -16,8 +16,6 @@ class _MyCommandPageState extends State<MyCommandPage> {
   List<double> leftPositions = [];
   @override
   Widget build(BuildContext context) {
-    print(
-        "outi${Provider.of<ClientProvider>(context, listen: false).client!.orders!.length}");
     return Scaffold(
         backgroundColor: Color(0xFFFFF4DE),
         appBar: AppBar(
@@ -34,13 +32,14 @@ class _MyCommandPageState extends State<MyCommandPage> {
           ),
           toolbarHeight: MediaQuery.of(context).size.height * 0.12,
         ),
-        body: Consumer<ClientProvider>(
-          builder: (context, value, child) {
-            print("eeeeeeeeeeeeeeeeeeeeeeee ${value.client!.orders!.length}");
-            return Container(
-                alignment: Alignment.topCenter,
-                child: ListView.builder(
-                  itemCount: value.client!.orders!.length,
+        body: Column(
+          children: [
+            Consumer<ClientProvider>(
+              builder: (context, value, child) {
+                print("qqqqqqqqqqqqqqq ${value.client}");
+                return Expanded(
+                    child: ListView.builder(
+                  itemCount: 0,
                   itemBuilder: (context, index) {
                     return Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -53,7 +52,9 @@ class _MyCommandPageState extends State<MyCommandPage> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => ChatPAge(),
+                                    builder: (context) => ChatPAge(
+                                        IdTailor: value
+                                            .client!.orders![index].tailor.id!),
                                   ));
                             },
                             backgroundColor: Color(0xFFFCF9F6),
@@ -69,7 +70,9 @@ class _MyCommandPageState extends State<MyCommandPage> {
                     );
                   },
                 ));
-          },
+              },
+            ),
+          ],
         ));
   }
 }

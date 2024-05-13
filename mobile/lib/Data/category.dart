@@ -27,7 +27,7 @@ class CategoryData {
     Categoey_Id(1, "Top"),
     Categoey_Id(2, "Man"),
     Categoey_Id(3, "Woman"),
-    Categoey_Id(4, "Man")
+    Categoey_Id(4, "Kids")
   ];
 
   static TextStyle styleCategoryselected =

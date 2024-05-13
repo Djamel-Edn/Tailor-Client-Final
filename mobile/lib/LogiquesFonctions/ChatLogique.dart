@@ -5,7 +5,6 @@ import 'package:projetfinprepa/Data/Chat_Class.dart';
 import 'package:projetfinprepa/Data/Client_Class.dart';
 import 'package:projetfinprepa/Data/Message_Class.dart';
 import 'package:projetfinprepa/Data/Tailor_Class.dart';
-import 'package:projetfinprepa/IpConfig/Ipconfig.dart';
 
 class ChatLogique {
   static Future GetChat(IdClient, IdTailor) async {
@@ -14,10 +13,8 @@ class ChatLogique {
     var uri = "https://tailor-client-ps9z.onrender.com/chat/fetch";
 
     final headerall = {'Content-Type': 'application/json'};
-    final bodyall = convert.jsonEncode({
-      "clientId": IPCONFIG.ClientId,
-      "tailorId": "6626eb65ed54ccf5c1e7e8ed"
-    });
+    final bodyall =
+        convert.jsonEncode({"clientId": IdClient, "tailorId": IdTailor});
 
     var res =
         await http.post(Uri.parse(uri), headers: headerall, body: bodyall);
@@ -79,13 +76,17 @@ class ChatLogique {
     return chat;
   }
 
-  static Future PostMessage(IdClient, IdChat, textmsg) async {
+  static Future PostMessage(IdSender, IdChat, textmsg, images) async {
     Message? message;
     var uri = "https://tailor-client-ps9z.onrender.com/message/create";
 
     final headerall = {'Content-Type': 'application/json'};
-    final bodyall = convert.jsonEncode(
-        {"chatId": IdChat, "senderId": IdClient, "text": textmsg, "image": ""});
+    final bodyall = convert.jsonEncode({
+      "chatId": IdChat,
+      "senderId": IdSender,
+      "text": textmsg,
+      "image": images
+    });
 
     var res =
         await http.post(Uri.parse(uri), headers: headerall, body: bodyall);

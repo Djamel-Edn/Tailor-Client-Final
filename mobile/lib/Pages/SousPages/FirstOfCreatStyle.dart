@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:projetfinprepa/Pages/CreateStyle_Page.dart';
 import 'package:projetfinprepa/Pages/SousPages/DesignFashionsoftware_Page.dart';
 
 class FirstCreationStylePge extends StatelessWidget {
@@ -20,13 +19,7 @@ class FirstCreationStylePge extends StatelessWidget {
                 height: 30,
               ),
               InkWell(
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => CreateStylePage(),
-                      ));
-                },
+                onTap: () {},
                 child: Text(
                     textAlign: TextAlign.center,
                     "Before you start choose the category and type of garment that resonate with you."),

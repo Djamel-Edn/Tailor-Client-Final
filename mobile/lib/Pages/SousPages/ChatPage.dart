@@ -1,13 +1,21 @@
+import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:grouped_list/grouped_list.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:projetfinprepa/Data/Chat_Class.dart';
 import 'package:projetfinprepa/Data/Message_Class.dart';
 import 'package:projetfinprepa/IpConfig/Ipconfig.dart';
 import 'package:projetfinprepa/Providers/Chat.dart';
 import 'package:provider/provider.dart';
 
 class ChatPAge extends StatefulWidget {
-  const ChatPAge({super.key});
+  String IdTailor;
+  ChatPAge({super.key, required this.IdTailor});
 
   @override
   State<ChatPAge> createState() => _ChatPAgeState();
@@ -15,12 +23,50 @@ class ChatPAge extends StatefulWidget {
 
 class _ChatPAgeState extends State<ChatPAge> {
   TextEditingController _controller = TextEditingController();
+  Chat? _chat;
+  late Timer _timer;
+  File? image;
+  Uint8List? bytes;
   @override
   void initState() {
-    Provider.of<ChatProvider>(context, listen: false).GetChat();
-    print(
-        "aaaaaaaaaaaaaaaaaaaqqqqqqqqqqqqqqqq ${Provider.of<ChatProvider>(context, listen: false).chat}");
+    _timer = Timer.periodic(Duration(seconds: 10), (timer) {
+      Provider.of<ChatProvider>(context, listen: false)
+          .GetChat(IPCONFIG.ClientId, widget.IdTailor)
+          .then(
+        (value) {
+          setState(() {
+            if (Provider.of<ChatProvider>(context, listen: false).chat !=
+                null) {
+              _chat = Provider.of<ChatProvider>(context, listen: false).chat!;
+            } else {
+              _chat == null;
+            }
+          });
+        },
+      );
+    });
+    Provider.of<ChatProvider>(context, listen: false)
+        .GetChat(IPCONFIG.ClientId, widget.IdTailor)
+        .then(
+      (value) {
+        setState(() {
+          if (Provider.of<ChatProvider>(context, listen: false).chat != null) {
+            _chat = Provider.of<ChatProvider>(context, listen: false).chat!;
+          } else {
+            _chat == null;
+          }
+        });
+      },
+    );
+
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    _timer.cancel();
+    super.dispose();
   }
 
   @override
@@ -35,7 +81,9 @@ class _ChatPAgeState extends State<ChatPAge> {
           shadowColor: Colors.black,
           backgroundColor: Color(0xFFFCF9F6),
           leadingWidth: 120,
-          title: Text("sss"),
+          title: _chat != null
+              ? Text("${_chat!.tailor.name}")
+              : Text("Tailor name"),
           centerTitle: false,
           actions: [
             IconButton(
@@ -56,18 +104,15 @@ class _ChatPAgeState extends State<ChatPAge> {
                     Navigator.pop(context);
                   },
                   icon: Icon(Icons.arrow_back_ios)),
-              CircleAvatar(
-                radius: 25,
-              )
-              // : CircleAvatar(
-              //     radius: 25,
-              //     backgroundImage: MemoryImage(base64Decode(
-              //         Provider.of<ChatProvider>(context, listen: false)
-              //             .chat!
-              //             .tailor
-              //             .profilePicture
-              //             .substring(23))),
-              //   ),
+              _chat != null
+                  ? CircleAvatar(
+                      radius: 25,
+                      backgroundImage: MemoryImage(base64Decode(
+                          _chat!.tailor.profilePicture!.substring(23))),
+                    )
+                  : CircleAvatar(
+                      radius: 25,
+                      backgroundImage: AssetImage("images/profileimage.png"))
             ],
           ),
           toolbarHeight: 70,
@@ -112,7 +157,14 @@ class _ChatPAgeState extends State<ChatPAge> {
                   child: Row(
                     children: [
                       IconButton(
-                          onPressed: () {},
+                          onPressed: () async {
+                            final imagePicker = ImagePicker();
+                            var pickedimage = await imagePicker.pickImage(
+                                source: ImageSource.camera);
+                            if (pickedimage != null) {
+                              bytes = File(pickedimage.path).readAsBytesSync();
+                            }
+                          },
                           icon: Icon(
                             Icons.image,
                             size: 40,
@@ -134,12 +186,30 @@ class _ChatPAgeState extends State<ChatPAge> {
                       ),
                       IconButton(
                           onPressed: () {
-                            if (_controller.text.trim() != "") {
-                              value.PostMessageInChat(
-                                      IPCONFIG.ClientId,
-                                      "662eae3634b1ca8d98f2368d",
-                                      _controller.text.trim())
-                                  .then((value) => _controller.text = "");
+                            if (_controller.text.trim() != "" &&
+                                bytes != null) {
+                              if (_chat != null) {
+                                value.PostMessageInChat(
+                                        IPCONFIG.ClientId,
+                                        _chat!.id,
+                                        _controller.text.trim(),
+                                        [base64Encode(bytes!)])
+                                    .then((value) => _controller.text = "");
+                              }
+                            } else if (_controller.text.trim() != "") {
+                              if (_chat != null) {
+                                value.PostMessageInChat(
+                                    IPCONFIG.ClientId,
+                                    _chat!.id,
+                                    _controller.text.trim(),
+                                    []).then((value) => _controller.text = "");
+                              }
+                            } else {
+                              if (_chat != null) {
+                                value.PostMessageInChat(IPCONFIG.ClientId,
+                                        _chat!.id, "", [base64Encode(bytes!)])
+                                    .then((value) => _controller.text = "");
+                              }
                             }
                           },
                           icon: Icon(
@@ -165,45 +235,101 @@ class MessageUi extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 1, vertical: 3),
-      alignment: message.senderId == MYID
-          ? Alignment.centerRight
-          : Alignment.centerLeft,
-      child: Container(
-        decoration: BoxDecoration(
-          color: message.senderId == MYID
-              ? Color(0xFFA38E7E).withOpacity(0.9)
-              : Color(0xFFDDD0B9).withOpacity(0.8),
-          borderRadius: message.senderId == MYID
-              ? BorderRadius.only(
-                  topRight: Radius.circular(14),
-                  topLeft: Radius.circular(14),
-                  bottomLeft: Radius.circular(14))
-              : BorderRadius.only(
-                  topRight: Radius.circular(14),
-                  topLeft: Radius.circular(14),
-                  bottomRight: Radius.circular(14)),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(
-                "${message.text}",
-                style: TextStyle(color: Colors.white),
+    return message!.images!.length == 0
+        ? Container(
+            margin: EdgeInsets.symmetric(horizontal: 1, vertical: 3),
+            alignment: message.senderId == MYID
+                ? Alignment.centerRight
+                : Alignment.centerLeft,
+            child: Container(
+              decoration: BoxDecoration(
+                color: message.senderId == MYID
+                    ? Color(0xFFA38E7E).withOpacity(0.9)
+                    : Color(0xFFDDD0B9).withOpacity(0.8),
+                borderRadius: message.senderId == MYID
+                    ? BorderRadius.only(
+                        topRight: Radius.circular(14),
+                        topLeft: Radius.circular(14),
+                        bottomLeft: Radius.circular(14))
+                    : BorderRadius.only(
+                        topRight: Radius.circular(14),
+                        topLeft: Radius.circular(14),
+                        bottomRight: Radius.circular(14)),
               ),
-              Text(
-                "${message.date.hour}:${message.date.minute}",
-                overflow: TextOverflow.clip,
-                style: TextStyle(color: Color(0xFF9E7B61), fontSize: 10),
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      "${message.text}",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    Text(
+                      "${message.date.hour}:${message.date.minute}",
+                      overflow: TextOverflow.clip,
+                      style: TextStyle(color: Color(0xFF9E7B61), fontSize: 10),
+                    ),
+                  ],
+                ),
               ),
-            ],
-          ),
-        ),
-      ),
-    );
+            ),
+          )
+        : Container(
+            margin: EdgeInsets.symmetric(horizontal: 1, vertical: 3),
+            alignment: message.senderId == MYID
+                ? Alignment.centerRight
+                : Alignment.centerLeft,
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 2),
+                  child: Container(
+                    height: 150,
+                    width: 130,
+                    child: Image.memory(
+                      base64Decode(message.images![0]),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                    color: message.senderId == MYID
+                        ? Color(0xFFA38E7E).withOpacity(0.9)
+                        : Color(0xFFDDD0B9).withOpacity(0.8),
+                    borderRadius: message.senderId == MYID
+                        ? BorderRadius.only(
+                            topRight: Radius.circular(14),
+                            topLeft: Radius.circular(14),
+                            bottomLeft: Radius.circular(14))
+                        : BorderRadius.only(
+                            topRight: Radius.circular(14),
+                            topLeft: Radius.circular(14),
+                            bottomRight: Radius.circular(14)),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          "${message.text}",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        Text(
+                          "${message.date.hour}:${message.date.minute}",
+                          overflow: TextOverflow.clip,
+                          style:
+                              TextStyle(color: Color(0xFF9E7B61), fontSize: 10),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
   }
 }
 

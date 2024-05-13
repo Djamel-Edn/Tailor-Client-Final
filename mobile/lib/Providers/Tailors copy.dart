@@ -11,4 +11,9 @@ class ClientProvider extends ChangeNotifier {
     _client = await ClientLogique.GetAllAboutClient(IPCONFIG.ClientId);
     notifyListeners();
   }
+
+  Future<void> SetOrderTMP(order) async {
+    _client!.orders!.add(order);
+    notifyListeners();
+  }
 }

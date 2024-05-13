@@ -1,17 +1,17 @@
-const Review = require('../Models/reviewModel');
+const reviewModel = require('../Models/reviewModel');
 const Tailor = require('../Models/tailorModel');
 
 const createReview = async (req, res) => {
-    const { clientId, text, rating } = req.body;
-    const review = new Review({
-        clientId,
+    const { client, text, rating } = req.body;
+    const review = new reviewModel({
+        client,
         text,
         rating
     });
     try {
         await review.save();
 
-        await Tailor.findByIdAndUpdate(clientId, { $push: { reviews: review._id } });
+        await Tailor.findByIdAndUpdate(client, { $push: { reviews: review._id } });
 
         res.status(201).json(review);
     } catch (error) {
@@ -23,18 +23,31 @@ const deleteReview = async (req, res) => {
     try {
         const { id } = req.params;
 
-        const review = await Review.findById(id);
+        const review = await reviewModel.findById(id);
         if (!review) {
             return res.status(404).send('No review with that id');
         }
 
         await Tailor.findByIdAndUpdate(review.client, { $pull: { reviews: id } });
 
-        await Review.findByIdAndRemove(id);
+        await reviewModel.findByIdAndRemove(id);
         res.json('Review deleted successfully');
     } catch (error) {
         res.status(500).json('Server error');
     }
 }
+const getTailorReviews = async (req, res) => {
+const { tailorId } = req.params;
+try {
+const tailor = await Tailor.findById(tailorId).populate('reviews');
+if (!tailor) {
+    return res.status(400).json({ error: 'Tailor not found' });
+}
+const reviews=tailor.reviews;
+res.status(200).json(reviews);
+}catch(error){
+console.error(error);
+}}
 
-module.exports = { createReview, deleteReview };
+
+module.exports = { createReview, deleteReview,getTailorReviews };

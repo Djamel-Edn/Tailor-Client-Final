@@ -3,7 +3,7 @@ const Tailor = require('../Models/tailorModel'); // Import the Tailor model
 const mongoose = require('mongoose');
 
 const createPost = async (req, res) => {
-    const { title, image, description, price, category, postSpeciality: speciality, tailor } = req.body;
+    const { title, image, description, price, category, postSpeciality:speciality, tailor } = req.body;
 
     try {
         const post = await Post.create({
@@ -28,7 +28,7 @@ const createPost = async (req, res) => {
 const updatePost = async (req, res) => {
     try {
         const { id } = req.params;
-        const { title, image, description, price, category, speciality, tailor } = req.body;
+        const { title, image, description, price, category, postSpeciality:speciality } = req.body;
 
         if (!mongoose.Types.ObjectId.isValid(id)) {
             return res.status(404).send('No post with that id');
@@ -41,7 +41,6 @@ const updatePost = async (req, res) => {
             price,
             category,
             speciality,
-            tailor
         }, { new: true });
 
         res.json(updatedPost);
@@ -63,12 +62,12 @@ const deletePost = async (req, res) => {
         const post = await Post.findById(id);
         const tailorId = post.tailor;
 
-        await Post.findByIdAndRemove(id);
+        await Post.findByIdAndDelete(id);
 
         // Update the posts array in the Tailor object
         await Tailor.findByIdAndUpdate(tailorId, { $pull: { posts: id } });
 
-        res.json({ message: 'Post deleted successfully' });
+        res.json('Post deleted successfully' );
     } catch (error) {
         console.error('Error deleting post:', error);
         res.status(500).json('Server error');
@@ -101,12 +100,14 @@ module.exports = { getNewestPosts };
 const getTailorPosts = async (req, res) => {
     try {
         const { tailorId } = req.params;
-        const posts = await Post.find({ tailor: tailorId });
+
+        // Assuming tailorId is a valid ObjectId
+        const posts = await Post.find({ tailor: tailorId }).populate('tailor');
+
         res.status(200).json(posts);
     } catch (error) {
         console.error('Error fetching tailor posts:', error);
-        res.status(500).json('Server error');
+        res.status(500).json({ error: 'Server error' });
     }
 };
-
 module.exports = { createPost, updatePost, deletePost, getallPosts, getNewestPosts, getTailorPosts };

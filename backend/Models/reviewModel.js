@@ -1,12 +1,11 @@
-
-const mongoose=require('mongoose');
+const mongoose = require('mongoose');
 
 const reviewSchema = new mongoose.Schema({
     client: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Client'
     },
-    tailorid:String,
+    tailorid: String,
     text: String,
     rating: {
         type: Number,
@@ -17,6 +16,6 @@ const reviewSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     }
- });
- 
-module.exports=mongoose.model('Review',reviewSchema);
+});
+
+module.exports = mongoose.model('Review', reviewSchema);

@@ -13,9 +13,12 @@ class ClientLogique {
     List<Model> models = [];
     var uri = "https://tailor-client-ps9z.onrender.com/getClient/${IDCLIENT}";
     var res = await http.get(Uri.parse(uri));
+    print(
+        "mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm cccccccccccccc ${res.statusCode}");
     if (res.statusCode == 200) {
       var jsonres = convert.jsonDecode(res.body);
-
+      print(
+          "mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm cccccccccccccc ${jsonres}");
       for (var order in jsonres["orders"]) {
         models = [];
         for (var model in order["posts"]) {
@@ -33,6 +36,8 @@ class ClientLogique {
         }
 
         Order Neworder = Order(
+          postStyle: order["postStyle"],
+          questionnaire: order["questionnaire"],
           models: models,
           orderDate: order["orderDate"],
           id: order["_id"],
@@ -57,6 +62,8 @@ class ClientLogique {
               profilePicture: order["tailor"]["profilePicture"],
               orders: null),
         );
+        // print(
+        //     "mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm addd order to list ${order["questionnaire"]}");
         orders.add(Neworder);
       }
       client = ClientClass(
@@ -69,6 +76,7 @@ class ClientLogique {
           profilePicture: jsonres["profilePicture"],
           orders: orders);
     }
+
     return client;
   }
 }

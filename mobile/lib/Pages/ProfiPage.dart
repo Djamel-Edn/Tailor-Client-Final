@@ -10,6 +10,7 @@ import 'package:projetfinprepa/LogiquesFonctions/OrderLogique.dart';
 import 'package:projetfinprepa/Pages/SousPages/MapScreenPage.dart';
 import 'package:projetfinprepa/Providers/Models.dart';
 import 'package:projetfinprepa/Providers/Tailors%20copy.dart';
+import 'package:projetfinprepa/Styles/DataStyles.dart';
 import 'package:provider/provider.dart';
 
 class ProfilPage extends StatefulWidget {
@@ -37,10 +38,18 @@ class _ProfilPageState extends State<ProfilPage> {
   List<Model> Catalogue = [];
   List<Model> ModelsSelected = [];
   List<bool> bools = [];
-
+  var totalrating = 0.0;
   @override
   void initState() {
-    // Catalogue = Provider.of<ModelsProvider>(context, listen: false).AllModel;
+    for (var e in widget.tailor.reviews!) {
+      totalrating += double.parse(e["rating"].toString());
+    }
+    if (widget.tailor.reviews!.isNotEmpty) {
+      totalrating = totalrating / widget.tailor.reviews!.length;
+      totalrating = totalrating.roundToDouble();
+    } else {
+      totalrating = 0;
+    }
 
     if (widget.model != null) {
       ModelsSelected.add(widget.model!);
@@ -107,7 +116,7 @@ class _ProfilPageState extends State<ProfilPage> {
                       //       "images/DefaultProfileWomen.png",
                       //     ),
                       //   ),
-                      ForRead ? Expanded(child: SizedBox()) : SizedBox(),
+                      ForRead ? SizedBox() : SizedBox(),
                       !ForRead
                           ? SizedBox()
                           // Text(
@@ -117,42 +126,36 @@ class _ProfilPageState extends State<ProfilPage> {
                           //         fontSize: 28,
                           //         decoration: TextDecoration.underline),
                           //   )
-                          : Container(
-                              padding: EdgeInsets.all(4),
-                              alignment: Alignment.center,
-                              width: 100,
-                              decoration: BoxDecoration(
-                                  color: Colors.black,
-                                  borderRadius: BorderRadius.circular(8)),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  // Padding(
-                                  //   padding: const EdgeInsets.only(left: 4),
-                                  //   child: Icon(
-                                  //     Icons.favorite_outline_outlined,
-                                  //     color: Colors.white,
-                                  //   ),
-                                  // ),
-                                  // SizedBox(
-                                  //   width: 3,
-                                  // ),
-                                  // Padding(
-                                  //   padding: const EdgeInsets.only(right: 4),
-                                  //   child: Text(
-                                  //     "Follow",
-                                  //     style: TextStyle(
-                                  //         color: Colors.white,
-                                  //         fontFamily: "Nanum_Myeongjo",
-                                  //         fontSize: 16),
-                                  //   ),
-                                  // ),
-                                ],
-                              ),
-                            ),
+                          : SizedBox(),
                       ForRead
-                          ? Text("")
+                          ? InkWell(
+                              onTap: () {
+                                if (Style.SavedTailroFav.contains(
+                                    widget.tailor.id)) {
+                                  Style.SavedTailroFav.remove(widget.tailor.id);
+                                } else {
+                                  Style.SavedTailroFav.add(widget.tailor.id!);
+                                }
+                                setState(() {});
+                              },
+                              child: Container(
+                                padding: EdgeInsets.all(4),
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                    color: Colors.black,
+                                    borderRadius: BorderRadius.circular(8)),
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 4),
+                                  child: Style.SavedTailroFav.contains(
+                                          widget.tailor.id)
+                                      ? Icon(Icons.favorite_border)
+                                      : Icon(
+                                          Icons.favorite,
+                                          color: Colors.red,
+                                        ),
+                                ),
+                              ),
+                            )
                           : SizedBox(
                               width: 100,
                             )
@@ -211,13 +214,12 @@ class _ProfilPageState extends State<ProfilPage> {
                                         ),
                                         Row(
                                           children: [
-                                            Text(widget.tailor.rating),
+                                            Text("${totalrating}"),
                                             SizedBox(
                                               width: 7,
                                             ),
                                             RatingBar.builder(
-                                              initialRating: double.parse(
-                                                  widget.tailor.rating),
+                                              initialRating: totalrating,
                                               minRating: 1,
                                               itemSize: 15,
                                               direction: Axis.horizontal,
@@ -231,6 +233,8 @@ class _ProfilPageState extends State<ProfilPage> {
                                               onRatingUpdate: (rating) {},
                                               ignoreGestures: true,
                                             ),
+                                            Text(
+                                                " (${widget.tailor.reviews!.length})")
                                           ],
                                         )
                                       ],
@@ -803,7 +807,8 @@ class _ProfilPageState extends State<ProfilPage> {
                                                     IPCONFIG.ClientId,
                                                     widget.tailor.id,
                                                     "1200",
-                                                    IDSModel)
+                                                    IDSModel,
+                                                    context)
                                                 .then((value) async {
                                               Provider.of<ClientProvider>(
                                                       context,
@@ -895,9 +900,120 @@ class _ProfilPageState extends State<ProfilPage> {
                       ForRead
                           ? Expanded(
                               child: TabBarView(children: [
-                                Image.asset("images/ImageForGallery.png"),
-                                Text("rev"),
-                                Text("us")
+                                // gallery
+                                widget.tailor.models != null
+                                    ? Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 10, vertical: 10),
+                                        child: GridView.builder(
+                                          itemCount: Catalogue.length,
+                                          gridDelegate:
+                                              SliverGridDelegateWithFixedCrossAxisCount(
+                                                  crossAxisCount: 2,
+                                                  crossAxisSpacing: 10,
+                                                  mainAxisSpacing: 10),
+                                          itemBuilder: (context, index) {
+                                            return Container(
+                                              decoration: BoxDecoration(
+                                                  border: Border.all(),
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          12)),
+                                              child: ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(12),
+                                                child: Image.memory(
+                                                  base64Decode(
+                                                      Catalogue[index].image),
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                      )
+                                    : Image.asset("images/ImageForGallery.png"),
+                                Padding(
+                                  padding: const EdgeInsets.all(12.0),
+                                  child: ListView.builder(
+                                    itemCount: widget.tailor.reviews!.length,
+                                    itemBuilder: (context, index) {
+                                      return Container(
+                                        margin:
+                                            EdgeInsets.symmetric(vertical: 6),
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                          color: Color(0xFFD9D9D9),
+                                        ),
+                                        child: Wrap(
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(8.0),
+                                                  child: CircleAvatar(
+                                                      child: widget.tailor.reviews![
+                                                                          index]
+                                                                      ["client"][
+                                                                  "profilePicture"] !=
+                                                              "/../utils/pp.png"
+                                                          ? Image.memory(base64Decode(widget
+                                                                      .tailor
+                                                                      .reviews![
+                                                                  index]["client"]
+                                                              ["profilePicture"]))
+                                                          : Image.asset(
+                                                              "images/profileimage.png",
+                                                              fit: BoxFit.cover,
+                                                            )),
+                                                ),
+                                                SizedBox(
+                                                  width: 4,
+                                                ),
+                                                Text(
+                                                  "${widget.tailor.reviews![index]["client"]["name"]}",
+                                                  style: TextStyle(
+                                                    fontFamily:
+                                                        "Nanum_Myeongjo",
+                                                    fontSize: 18,
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 12,
+                                                      vertical: 6),
+                                              child: Text(
+                                                  style: TextStyle(
+                                                    fontFamily:
+                                                        "Nanum_Myeongjo",
+                                                    fontSize: 14,
+                                                  ),
+                                                  "${widget.tailor.reviews![index]["text"]}"),
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 8, horizontal: 15),
+                                  child: SingleChildScrollView(
+                                    child: Text(
+                                        textAlign: TextAlign.start,
+                                        style: TextStyle(
+                                          fontFamily: "Nanum_Myeongjo",
+                                          fontSize: 18,
+                                        ),
+                                        "${widget.tailor.description}"),
+                                  ),
+                                )
                               ]),
                             )
                           : SizedBox()

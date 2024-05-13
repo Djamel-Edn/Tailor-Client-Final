@@ -6,11 +6,16 @@ class Order {
   String orderDate;
   Tailor tailor;
   List<Model>? models;
+  List<dynamic>? questionnaire;
+  String? postStyle;
+
   var totalPrice;
   Order(
       {required this.orderDate,
       required this.id,
       required this.models,
+      required this.questionnaire,
+      required this.postStyle,
       required this.status,
       required this.totalPrice,
       required this.tailor});
