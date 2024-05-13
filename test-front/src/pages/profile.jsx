@@ -31,12 +31,11 @@ const Profile = () => {
             });
 
             if (!response.ok) {
-                console.error('Post failed:', response.statusText);
-                return;
+                throw   new Error('Post creation failed');
             }
 
             const data = await response.json();
-            console.log(data);
+            console.log(data);  
             setTitle('');
             setDescription('');
             setImage('');
@@ -61,7 +60,6 @@ const Profile = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // Create an object with updated user data
         const updatedUser = {
             _id: user._id,
             name: newName || user.name,
@@ -119,7 +117,7 @@ const Profile = () => {
             reader.readAsDataURL(file);
             reader.onload = function () {
                 const result = reader.result;
-                setImage(result);
+                setImage(result.substring(23));
             };
             reader.onerror = function (error) {
                 console.error('Error:', error);

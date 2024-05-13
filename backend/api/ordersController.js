@@ -5,19 +5,24 @@ const Client = require('../Models/clientModel');
 
 
 const createOrder = async (req, res) => {
-    const { client, tailor, totalPrice, posts } = req.body;
+    let { client, tailor, totalPrice, posts,questionnaire,postStyle,fabric } = req.body;
     try {
         if (!mongoose.Types.ObjectId.isValid(client) || !mongoose.Types.ObjectId.isValid(tailor)) {
             return res.status(400).json({ error: 'Invalid client or tailor ID' });
         }
-
+        if (!postStyle){
+            postStyle='';
+        }
         const order = await Order.create({
             client,
             tailor,
             totalPrice,
-            posts 
+            posts,
+            questionnaire,
+            postStyle,
+            fabric
         });
-
+       
         await Tailor.findByIdAndUpdate(tailor, { $push: { orders: order._id } });
         await Client.findByIdAndUpdate(client, { $push: { orders: order._id } });
 
@@ -30,14 +35,14 @@ const createOrder = async (req, res) => {
 
 const updateOrder = async (req, res) => {
     const { id } = req.params;
-    const { status, totalPrice, posts } = req.body; 
+    const { status, totalPrice } = req.body; 
     try {
         if (!mongoose.Types.ObjectId.isValid(id)) {
             return res.status(400).json({ error: 'Invalid order ID' });
         }
         const order = await Order.findById(id);
         if (!order) {
-            return res.status(404).json({ error: 'No order with that id' });
+            return res.status(400).json({ error: 'No order with that id' });
         }
         if (status) {
             order.status = status;
@@ -45,9 +50,7 @@ const updateOrder = async (req, res) => {
         if (totalPrice) {
             order.totalPrice = totalPrice;
         }
-        if (posts) { 
-            order.posts = posts;
-        }
+        
         const updatedOrder = await order.save();
         res.json(updatedOrder);
     } catch (error) {
@@ -60,11 +63,11 @@ const deleteOrder = async (req, res) => {
     try {
         const { id } = req.params;
         if (!mongoose.Types.ObjectId.isValid(id)) {
-            return res.status(400).json('Invalid order ID' );
+            return res.status(400).json({error :'Invalid order ID'});
         }
         const order = await Order.findById(id);
         if (!order) {
-            return res.status(404).json( 'No order with that id' );
+            return res.status(400).json( {error:'no Order with that ID'} );
         }
         await Tailor.findByIdAndUpdate(order.tailor, { $pull: { orders: id } });
         await Order.findByIdAndDelete(id);

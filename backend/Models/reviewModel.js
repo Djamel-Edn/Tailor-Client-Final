@@ -5,7 +5,7 @@ const reviewSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Client'
     },
-    tailorid: String,
+    tailorId: String,
     text: String,
     rating: {
         type: Number,

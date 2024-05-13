@@ -22,8 +22,14 @@ const orderSchema = new mongoose.Schema({
     type:mongoose.Schema.Types.ObjectId,
     ref:'Post'
    }],
-    totalPrice: Number
-       
+   
+   questionnaire:[],
+    totalPrice: Number,
+    postStyle:String,
+    fabric:{
+        type:Boolean,
+        default:false
+    }
 
   
 });

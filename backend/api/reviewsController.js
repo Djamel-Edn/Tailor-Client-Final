@@ -2,16 +2,17 @@ const reviewModel = require('../Models/reviewModel');
 const Tailor = require('../Models/tailorModel');
 
 const createReview = async (req, res) => {
-    const { client, text, rating } = req.body;
+    const { client, text, rating,tailorId } = req.body;
     const review = new reviewModel({
         client,
         text,
-        rating
+        rating,
+        tailorId
     });
     try {
         await review.save();
 
-        await Tailor.findByIdAndUpdate(client, { $push: { reviews: review._id } });
+        await Tailor.findByIdAndUpdate(tailorId, { $push: { reviews: review._id } });
 
         res.status(201).json(review);
     } catch (error) {
@@ -25,7 +26,7 @@ const deleteReview = async (req, res) => {
 
         const review = await reviewModel.findById(id);
         if (!review) {
-            return res.status(404).send('No review with that id');
+            return res.status(404).send({error :'No review with that id'});
         }
 
         await Tailor.findByIdAndUpdate(review.client, { $pull: { reviews: id } });
@@ -33,7 +34,7 @@ const deleteReview = async (req, res) => {
         await reviewModel.findByIdAndRemove(id);
         res.json('Review deleted successfully');
     } catch (error) {
-        res.status(500).json('Server error');
+        res.status(500).json({error :'Server error'});
     }
 }
 const getTailorReviews = async (req, res) => {
@@ -47,6 +48,7 @@ const reviews=tailor.reviews;
 res.status(200).json(reviews);
 }catch(error){
 console.error(error);
+res.status(500).json({error :'Server error'});
 }}
 
 

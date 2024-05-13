@@ -6,6 +6,7 @@ function RegisterClient() {
   const [email, setEmail] = useState('');
   const [gender, setGender] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
+  const [city, setCity] = useState('');
 
   localStorage.setItem('user', {name,email,gender});
   const processResponse = (data) => {
@@ -20,18 +21,19 @@ function RegisterClient() {
         console.error('Unexpected data type:', typeof data);
     }
   };
-  
+  console.log(city )
   async function handleSubmit(e) {
     e.preventDefault();
-    if (!name || !email || !password || !gender){setErrorMsg('Please fill all the fields'); return;}
+    if (!name || !email || !password || !gender ||!city){setErrorMsg('Please fill all the fields'); return;}
     try {
       const response = await fetch('https://tailor-client-ps9z.onrender.com/register/client', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email, name, password, gender }),
+        body: JSON.stringify({ email, name, password, gender,city }),
       });
+      
       const data = await response.json();
       
       processResponse(data);
@@ -66,6 +68,11 @@ function RegisterClient() {
             <option value="Male">Male</option>
             <option value="Female">Female</option>
           </select>
+        </label>
+        <label htmlFor="">
+          City
+      <input type="text" value={city} onChange={(e)=>{setCity(e.target.value)}} />
+
         </label>
         <button type="submit">Register</button>
       </form>
