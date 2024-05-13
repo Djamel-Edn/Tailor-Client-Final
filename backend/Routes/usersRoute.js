@@ -1,5 +1,5 @@
 const express = require('express');
-const { registerClient, registerTailor, login, verifyEmail, resetPassword, updatePassword, getallTailors, addFavorite, addLike, getTailor, getClient } = require('../api/usersController');
+const { registerClient, registerTailor, login, verifyEmail, resetPassword, updatePassword, getallTailors, addFavorite, addLike, getTailor, getClient, deleteUser } = require('../api/usersController');
 const { updateProfile } = require('../api/usersController');
 const router = express.Router();
 
@@ -15,4 +15,5 @@ router.post('/updatePassword/:userId',updatePassword)
 router.post('/addLike',addLike)
 router.get("/getTailor/:tailorId",getTailor)
 router.get('/getClient/:clientId', getClient)
+router.delete('/delete/:userId',deleteUser )
 module.exports = router;
