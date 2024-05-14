@@ -6,7 +6,7 @@ const Login = () => {
     const [password, setPassword] = useState('');
     const [errorMsg, setErrorMsg] = useState('');
     const [loggedIn, setLoggedIn] = useState(false);
-    const [userData, setUserData] = useState(null); // Added to store user data
+    const [userData, setUserData] = useState(null); 
     console.log(errorMsg)
     async function handleSubmit(e) {
         e.preventDefault();
@@ -22,10 +22,11 @@ const Login = () => {
                 },
                 body: JSON.stringify({ email, password }),
             });
-            if (!response.ok){
-                throw  response.error;
-            }
+            console.log(response.body)
             const data = await response.json();
+            if (!response.ok){
+                throw data.error ;
+            }
             if (data.email) {
                 localStorage.setItem('user', JSON.stringify(data));
                 setLoggedIn(true);

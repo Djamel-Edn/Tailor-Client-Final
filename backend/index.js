@@ -31,7 +31,6 @@ app.use('/chat', chatRoute);
 app.use('/order', ordersRoute);
 app.use('/message', messageRoute);
 app.use('/review',reviewRoute)
-// MongoDB Connection
 mongoose.connect(process.env.MONGODB_URI, {})
     .then(() => {
         console.log("Connected to MongoDB successfully");
@@ -47,38 +46,35 @@ const io = new Server(server, { cors: { origin: "*" } });
 
 let onlineUsers = [];
 
-io.on("connection", (socket) => {
-    socket.on("addNewUser", (userId) => {
-        onlineUsers.some((user) => user.userId === userId)
-            ? null
-            : onlineUsers.push({ userId, socketId: socket.id });
-        io.emit("getOnlineUsers", onlineUsers);
+io.on('connection', (socket) => {
+    console.log('New client connected');
+  
+    socket.on('addNewUser', (userId) => {
+      if (!onlineUsers.some(user => user.userId === userId)) {
+        onlineUsers.push({ userId, socketId: socket.id });
+      }
+      io.emit('getOnlineUsers', onlineUsers);
+      console.log(`User ${userId} connected. Online users:`, onlineUsers);
     });
-
-    socket.on("sendMessage", (data) => {
-        const { chatId, senderId, text, secondUser } = data;
-        if (text) {
-            const nvMessage = { chatId, senderId, text };
-            const user = onlineUsers.find((user) => user.userId === secondUser);
-            io.to(user?.socketId).emit("receiveMessage", nvMessage);
-        }
+  
+    socket.on('join', (roomId) => {
+      socket.join(roomId);
+      console.log(`Socket ${socket.id} joined room ${roomId}`);
     });
-
-    socket.on("disconnect", () => {
-        // Find the user object in the onlineUsers array
-        const userIndex = onlineUsers.findIndex((user) => user.socketId === socket.id);
-      
-        // If the user exists in the array, remove them
-        if (userIndex !== -1) {
-          onlineUsers.splice(userIndex, 1);
-        }
-      
-        // Emit the updated onlineUsers array to all connected clients
-        io.emit("getOnlineUsers", onlineUsers);
+  
+    socket.on('message', (roomId, message) => {
+      io.to(roomId).emit('message', message);
     });
-});
+  
+    socket.on('disconnect', () => {
+      onlineUsers = onlineUsers.filter(user => user.socketId !== socket.id);
+      io.emit('getOnlineUsers', onlineUsers);
+      console.log(`Client disconnected. Online users:`, onlineUsers);
+    });
+  });
+  
 
-// Start server
+
 PORT =process.env.PORT 
 server.listen(5001, () => {
     console.log(`Server is running on port ${PORT}`);

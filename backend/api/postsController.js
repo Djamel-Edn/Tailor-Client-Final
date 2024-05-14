@@ -114,7 +114,6 @@ const getTailorPosts = async (req, res) => {
     try {
         const { tailorId } = req.params;
 
-        // Assuming tailorId is a valid ObjectId
         const posts = await Post.find({ tailor: tailorId }).populate('tailor');
 
         res.status(200).json(posts);

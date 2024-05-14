@@ -1,6 +1,5 @@
 const chatModel = require('../Models/chatModel');
 const clientModel = require('../Models/clientModel');
-const messageModel = require('../Models/messageModel');
 const tailorModel = require('../Models/tailorModel');
 
 const createOrFindChat = async (req, res) => {
