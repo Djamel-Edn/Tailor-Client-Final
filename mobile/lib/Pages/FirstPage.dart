@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:projetfinprepa/IpConfig/Ipconfig.dart';
 import 'package:projetfinprepa/Pages/Command_Page.dart';
 import 'package:projetfinprepa/Pages/Search_Page.dart';
 import 'package:projetfinprepa/Pages/tstthreeD.dart';
@@ -23,7 +24,7 @@ class _FirstPageState extends State<FirstPage> {
     Provider.of<ModelsProvider>(context, listen: false).GetAllModels();
 
     Provider.of<ClientProvider>(context, listen: false)
-        .GetALlAboutCurrentUser();
+        .GetALlAboutCurrentUser(IPCONFIG.ClientId);
     Provider.of<TailorsProvider>(context, listen: false).GetAllTailors();
 
     super.initState();

@@ -41,8 +41,7 @@ class OrderLogique {
       List<QSTANSRSELECTED> qsts, Tailor tailor, context) async {
     print("in add order");
     var uri = "https://tailor-client-ps9z.onrender.com/order/create";
-    var uri2 = "https://tailor-client-ps9z.onrender.com/chat/fetch";
-
+    // var uri2 = "https://tailor-client-ps9z.onrender.com/chat/fetch";
     final headerall = {'Content-Type': 'application/json'};
 
     List<Map<String, dynamic>> jsonListOfObjects = qsts.map((obj) {
@@ -54,15 +53,16 @@ class OrderLogique {
       "tailor": IdTailor,
       "totalPrice": 0,
       "postStyle": image,
-      "questionnaire": jsonListOfObjects
+      "questionnaire": jsonListOfObjects,
     });
-    final bodyall2 = convert.jsonEncode({
-      "clientId": IdClient,
-      "tailorId": IdTailor,
-    });
+    // final bodyall2 = convert.jsonEncode({
+    //   "clientId": IdClient,
+    //   "tailorId": IdTailor,
+    // });
     var res =
         await http.post(Uri.parse(uri), headers: headerall, body: bodyall);
     if (res.statusCode == 201) {
+      print("sssssssssssssssssssssssssss ${res.statusCode}");
       var jsonres = convert.jsonDecode(res.body);
 
       Order order = Order(
@@ -75,8 +75,12 @@ class OrderLogique {
           orderDate: jsonres["orderDate"],
           postStyle: jsonres["postStyle"]);
       Provider.of<ClientProvider>(context, listen: false).SetOrderTMP(order);
-      var res2 =
-          await http.post(Uri.parse(uri2), headers: headerall, body: bodyall2);
+
+      await Provider.of<TailorsProvider>(context, listen: false)
+          .GetTailor(IdTailor);
+      print("in add order by be prove apre get tailor");
+      // var res2 =
+      //     await http.post(Uri.parse(uri2), headers: headerall, body: bodyall2);
     }
   }
 

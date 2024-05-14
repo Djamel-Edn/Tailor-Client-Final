@@ -813,7 +813,8 @@ class _ProfilPageState extends State<ProfilPage> {
                                               Provider.of<ClientProvider>(
                                                       context,
                                                       listen: false)
-                                                  .GetALlAboutCurrentUser();
+                                                  .GetALlAboutCurrentUser(
+                                                      IPCONFIG.ClientId);
                                               return Future.delayed(
                                                   Duration(seconds: 1), () {
                                                 showDialog(

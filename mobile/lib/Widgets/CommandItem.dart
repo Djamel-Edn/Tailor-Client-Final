@@ -70,8 +70,7 @@ class _CommandItemState extends State<CommandItem> {
                           return ClipRRect(
                               borderRadius: BorderRadius.circular(20),
                               child: Image.memory(
-                                base64Decode(widget.order.models![index].image
-                                    .substring(23)),
+                                base64Decode(widget.order.models![index].image),
                                 fit: BoxFit.cover,
                               ));
                         },

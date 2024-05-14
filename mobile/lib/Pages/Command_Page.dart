@@ -36,10 +36,10 @@ class _MyCommandPageState extends State<MyCommandPage> {
           children: [
             Consumer<ClientProvider>(
               builder: (context, value, child) {
-                print("qqqqqqqqqqqqqqq ${value.client}");
+                print("qqqqqqqqqqqqqqq ${value.client!.id!}");
                 return Expanded(
                     child: ListView.builder(
-                  itemCount: 0,
+                  itemCount: value.client!.orders!.length,
                   itemBuilder: (context, index) {
                     return Padding(
                       padding: const EdgeInsets.all(8.0),

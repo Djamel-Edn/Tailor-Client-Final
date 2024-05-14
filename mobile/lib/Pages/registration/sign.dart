@@ -1,14 +1,12 @@
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:http/http.dart' as http;
 import 'package:icons_plus/icons_plus.dart';
-import 'package:projetfinprepa/Pages/FirstPage.dart';
-import 'package:projetfinprepa/Pages/registration/forget.dart';
+import 'package:projetfinprepa/LogiquesFonctions/RegistaerLogique.dart';
 import 'package:projetfinprepa/Pages/registration/file.dart';
-
+import 'package:projetfinprepa/Pages/registration/forget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class sign extends StatefulWidget {
@@ -63,40 +61,41 @@ class _SignState extends State<sign> {
     }
   }
 
-  Future<void> _signIn() async {
-    final String email = _emailController.text;
-    final String password = _passwordController.text;
+  // Future<void> _signIn() async {
+  //   final String email = _emailController.text;
+  //   final String password = _passwordController.text;
 
-    final response = await http.post(
-      Uri.parse('http://255.255.255.0:5001/login'),
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-      },
-      body: jsonEncode(<String, String>{
-        'email': email,
-        'password': password,
-      }),
-    );
+  //   final response = await http.post(
+  //     Uri.parse('http://255.255.255.0:5001/login'),
+  //     headers: <String, String>{
+  //       'Content-Type': 'application/json',
+  //     },
+  //     body: jsonEncode(<String, String>{
+  //       'email': email,
+  //       'password': password,
+  //     }),
+  //   );
 
-    if (response.statusCode == 200) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const FirstPage(),
-        ),
-      );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Failed to sign in. Please try again.'),
-        ),
-      );
-    }
-  }
+  //   if (response.statusCode == 200) {
+  //     Navigator.push(
+  //       context,
+  //       MaterialPageRoute(
+  //         builder: (context) => const FirstPage(),
+  //       ),
+  //     );
+  //   } else {
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       const SnackBar(
+  //         content: Text('Failed to sign in. Please try again.'),
+  //       ),
+  //     );
+  //   }
+  // }
 
   Future<void> _signInWithGoogle() async {
     try {
-      final GoogleSignInAccount? googleSignInAccount = await _googleSignIn.signIn();
+      final GoogleSignInAccount? googleSignInAccount =
+          await _googleSignIn.signIn();
       if (googleSignInAccount != null) {
         final String email = googleSignInAccount.email ?? '';
         String? password = await _getSavedPassword(email);
@@ -108,7 +107,8 @@ class _SignState extends State<sign> {
           }
         }
 
-        final authenticated = await _authenticateWithBackend(email, password ?? '');
+        final authenticated =
+            await _authenticateWithBackend(email, password ?? '');
         if (authenticated) {
           _emailController.text = email;
           _passwordController.text = password ?? '';
@@ -175,7 +175,7 @@ class _SignState extends State<sign> {
         child: Stack(
           children: [
             Padding(
-              padding: const EdgeInsets.only(top: 50, left: 5,right: 5),
+              padding: const EdgeInsets.only(top: 50, left: 5, right: 5),
               child: IconButton(
                 onPressed: () => Navigator.pop(context),
                 icon: const Icon(Icons.arrow_back),
@@ -186,7 +186,8 @@ class _SignState extends State<sign> {
               child: Image.asset('images/shad.png'),
             ),
             Padding(
-              padding: const EdgeInsets.only(bottom: 0, left: 0, right: 62, top: 410),
+              padding: const EdgeInsets.only(
+                  bottom: 0, left: 0, right: 62, top: 410),
               child: Image.asset('images/mimi.png'),
             ),
             Padding(
@@ -205,15 +206,15 @@ class _SignState extends State<sign> {
                         color: Color(0xFF84643D),
                       ),
                     ),
- SizedBox(height: 20),
-                     Text(
-          ' Hi ! Welcom back you have been missed ',
-          style: TextStyle(
-            fontSize: 16,
-           
-           // color: Colors.black,
-          ),
-        ), 
+                    SizedBox(height: 20),
+                    Text(
+                      ' Hi ! Welcom back you have been missed ',
+                      style: TextStyle(
+                        fontSize: 16,
+
+                        // color: Colors.black,
+                      ),
+                    ),
                     const SizedBox(
                       height: 50.0,
                     ),
@@ -228,7 +229,8 @@ class _SignState extends State<sign> {
                       decoration: InputDecoration(
                         label: const Text(
                           'Email',
-                          style: TextStyle(color: Colors.brown, fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                              color: Colors.brown, fontWeight: FontWeight.bold),
                         ),
                         hintText: 'Enter Email',
                         suffixIcon: const Icon(Icons.email),
@@ -248,7 +250,8 @@ class _SignState extends State<sign> {
                           ),
                           borderRadius: BorderRadius.circular(25),
                         ),
-                        contentPadding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                        contentPadding: const EdgeInsets.symmetric(
+                            vertical: 15, horizontal: 20),
                       ),
                     ),
                     const SizedBox(
@@ -265,7 +268,9 @@ class _SignState extends State<sign> {
                       },
                       decoration: InputDecoration(
                         suffixIcon: IconButton(
-                          icon: Icon(_isPasswordVisible ? Icons.visibility : Icons.visibility_off),
+                          icon: Icon(_isPasswordVisible
+                              ? Icons.visibility
+                              : Icons.visibility_off),
                           onPressed: () {
                             setState(() {
                               _isPasswordVisible = !_isPasswordVisible;
@@ -296,7 +301,8 @@ class _SignState extends State<sign> {
                           ),
                           borderRadius: BorderRadius.circular(25),
                         ),
-                        contentPadding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                        contentPadding: const EdgeInsets.symmetric(
+                            vertical: 15, horizontal: 20),
                       ),
                     ),
                     const SizedBox(
@@ -349,62 +355,64 @@ class _SignState extends State<sign> {
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
-                        onPressed:() {Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const FirstPage(),
-        ),
-      );},
+                        onPressed: () async {
+                          await Register.LoginAccount(
+                              _emailController.text.trim(),
+                              _passwordController.text.trim(),
+                              context);
+                        },
                         style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF84643D)),
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              Color(0xFF84643D)),
                         ),
                         child: const Text(
-                          'Sign in ',
-                          style: TextStyle(color: Color(0xFFFCF9F6), fontSize: 20),
+                          'Sign in',
+                          style:
+                              TextStyle(color: Color(0xFFFCF9F6), fontSize: 20),
                         ),
                       ),
                     ),
                     const SizedBox(
                       height: 25.0,
                     ),
-                  
-                   MaterialButton(
-  onPressed: _signInWithGoogle,
-  color: Color.fromARGB(255, 231, 218, 206),
-  elevation: 3, // Add elevation for a slight shadow
-  shape: RoundedRectangleBorder(
-    borderRadius: BorderRadius.circular(50), // Set border radius
-  ),
-  child: Padding(
-    padding: const EdgeInsets.only (top: 4.5,  bottom:   4.5),
-    child: Row( 
-     // mainAxisAlignment: MainAxisAlignment.start,
-      children: <Widget>[
-        Container( 
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: Colors.white
-          ),
-         padding: EdgeInsets.all(5),
-          child: Logo(Logos.google
-            ,
-            size: 25,
-         
-          ),
-        ),
-        SizedBox(width: 25,),
-        Text(
-          'Continue with Google',
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
-          ),
-        ),
-      ],
-    ),
-  ),
-),
+
+                    MaterialButton(
+                      onPressed: _signInWithGoogle,
+                      color: Color.fromARGB(255, 231, 218, 206),
+                      elevation: 3, // Add elevation for a slight shadow
+                      shape: RoundedRectangleBorder(
+                        borderRadius:
+                            BorderRadius.circular(50), // Set border radius
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 4.5, bottom: 4.5),
+                        child: Row(
+                          // mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            Container(
+                              decoration: BoxDecoration(
+                                  shape: BoxShape.circle, color: Colors.white),
+                              padding: EdgeInsets.all(5),
+                              child: Logo(
+                                Logos.google,
+                                size: 25,
+                              ),
+                            ),
+                            SizedBox(
+                              width: 25,
+                            ),
+                            Text(
+                              'Continue with Google',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
 
                     const SizedBox(
                       height: 100.0,

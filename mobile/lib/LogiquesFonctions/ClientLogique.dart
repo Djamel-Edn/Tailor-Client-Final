@@ -13,12 +13,10 @@ class ClientLogique {
     List<Model> models = [];
     var uri = "https://tailor-client-ps9z.onrender.com/getClient/${IDCLIENT}";
     var res = await http.get(Uri.parse(uri));
-    print(
-        "mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm cccccccccccccc ${res.statusCode}");
+
     if (res.statusCode == 200) {
       var jsonres = convert.jsonDecode(res.body);
-      print(
-          "mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm cccccccccccccc ${jsonres}");
+
       for (var order in jsonres["orders"]) {
         models = [];
         for (var model in order["posts"]) {

@@ -60,6 +60,7 @@ dependencies:
   mailer: ^5.1.2
   random_string: ^2.1.0
   google_sign_in: ^6.2.1 
+  shared_preferences: ^2.2.3
 
 
 

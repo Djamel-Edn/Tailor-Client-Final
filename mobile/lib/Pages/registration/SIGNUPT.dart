@@ -1,11 +1,12 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:icons_plus/icons_plus.dart';
-import 'package:projetfinprepa/Pages/FirstPage.dart';
-
-import 'package:projetfinprepa/Pages/registration/sign.dart';
 import 'package:http/http.dart' as http;
+import 'package:icons_plus/icons_plus.dart';
+import 'package:projetfinprepa/LogiquesFonctions/RegistaerLogique.dart';
+import 'package:projetfinprepa/Pages/FirstPage.dart';
+import 'package:projetfinprepa/Pages/registration/sign.dart';
+import 'package:projetfinprepa/Pages/registration/verfy.dart';
 
 class SignUpScreen1 extends StatefulWidget {
   const SignUpScreen1({Key? key}) : super(key: key);
@@ -21,73 +22,76 @@ class _SignUpScreenState extends State<SignUpScreen1> {
   TextEditingController _confirmPasswordController = TextEditingController();
   TextEditingController _emailController = TextEditingController();
   TextEditingController _phoneNumberController = TextEditingController();
- 
+
   String? selectedGender;
-List<String> wilayas = [
-  'Adrar',
-  'Chlef',
-  'Laghouat',
-  'Oum El Bouaghi',
-  'Batna',
-  'Béjaïa',
-  'Biskra',
-  // Add more wilayas here...
-];
+  List<String> wilayas = [
+    'Adrar',
+    'Chlef',
+    'Laghouat',
+    'Oum El Bouaghi',
+    'Batna',
+    'Béjaïa',
+    'Biskra',
+    // Add more wilayas here...
+  ];
 
-String? selectedWilaya;
+  String? selectedWilaya;
 
-Future<void> _signUp(String email, String password, String fullName, String gender ,  String phoneNumber) async {
-  try {
-    final response = await http.post(
-      Uri.parse('http://255.255.255.0:5001/register/client'), 
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-      },
-      body: jsonEncode(<String, String>{
-        'email': email,
-        'password': password,
-        'Fullname': fullName,
-        'Gender': gender,
-         'phoneNumber': phoneNumber,
-      }),
-    );
-
-    if (response.statusCode == 200) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const FirstPage(),
-        ),
+  Future<void> _signUp(String email, String password, String fullName,
+      String gender, String phoneNumber) async {
+    try {
+      final response = await http.post(
+        Uri.parse('http://255.255.255.0:5001/register/client'),
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode(<String, String>{
+          'email': email,
+          'password': password,
+          'Fullname': fullName,
+          'Gender': gender,
+          'phoneNumber': phoneNumber,
+        }),
       );
-    } else {
+
+      if (response.statusCode == 200) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const FirstPage(),
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Failed to sign up. Please try again.'),
+          ),
+        );
+      }
+    } catch (error) {
+      print('Error during signup: $error');
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Failed to sign up. Please try again.'),
+          content:
+              Text('An error occurred during signup. Please try again later.'),
         ),
       );
     }
-  } catch (error) {
-    print('Error during signup: $error');
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('An error occurred during signup. Please try again later.'),
-      ),
-    );
   }
-}
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFFCF9F6),
       body: Stack(
         children: [
-         
           Padding(
             padding: const EdgeInsets.only(top: 0, left: 90),
             child: Image.asset('images/shad.png'),
           ),
           Padding(
-            padding: const EdgeInsets.only(bottom: 0, left: 0, right: 62, top: 410),
+            padding:
+                const EdgeInsets.only(bottom: 0, left: 0, right: 62, top: 410),
             child: Image.asset('images/mimi.png'),
           ),
           SingleChildScrollView(
@@ -98,7 +102,8 @@ Future<void> _signUp(String email, String password, String fullName, String gend
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Center(child: Text('SIGN UP', style: TextStyle(fontSize: 30))),
+                    Center(
+                        child: Text('SIGN UP', style: TextStyle(fontSize: 30))),
                     SizedBox(height: 40),
                     TextFormField(
                       controller: _nameController,
@@ -108,12 +113,17 @@ Future<void> _signUp(String email, String password, String fullName, String gend
                         }
                         return null;
                       },
-                      decoration: InputDecoration( focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.brown, width: 2), // Change border color when focused
+                      decoration: InputDecoration(
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Colors.brown,
+                              width: 2), // Change border color when focused
                         ),
-                        contentPadding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+                        contentPadding:
+                            EdgeInsets.symmetric(vertical: 16, horizontal: 16),
                         prefixIcon: Icon(Icons.account_circle),
-                        labelText: 'Full Name',labelStyle: TextStyle(color:  Colors.brown),
+                        labelText: 'Full Name',
+                        labelStyle: TextStyle(color: Colors.brown),
                         border: OutlineInputBorder(),
                       ),
                     ),
@@ -132,104 +142,114 @@ Future<void> _signUp(String email, String password, String fullName, String gend
                           child: Text(value.isEmpty ? 'Select Gender' : value),
                         );
                       }).toList(),
-                      decoration: InputDecoration(   focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.brown, width: 2), // Change border color when focused
+                      decoration: InputDecoration(
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Colors.brown,
+                              width: 2), // Change border color when focused
                         ),
-                        contentPadding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+                        contentPadding:
+                            EdgeInsets.symmetric(vertical: 16, horizontal: 16),
                         border: OutlineInputBorder(),
-                        labelText: 'Gender',labelStyle: TextStyle(color:  Colors.brown),
+                        labelText: 'Gender',
+                        labelStyle: TextStyle(color: Colors.brown),
                       ),
                     ),
                     const SizedBox(height: 20),
-                     DropdownButtonFormField<String>(
-  value: selectedWilaya,
-  onChanged: (String? newValue) {
-    setState(() {
-      selectedWilaya = newValue;
-    });
-  },
-  items: wilayas.map((String wilaya) {
-    return DropdownMenuItem<String>(
-      value: wilaya,
-      child: Text(wilaya),
-    );
-  }).toList(),
-  decoration: InputDecoration(
-    focusedBorder: OutlineInputBorder(
-      borderSide: BorderSide(color: Colors.brown, width: 2),
-    ),
-    contentPadding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-    border: OutlineInputBorder(),
-    labelText: 'Wilaya',
-    labelStyle: TextStyle(color: Colors.brown),
-  ),
-), 
-const SizedBox(height: 20),
+                    DropdownButtonFormField<String>(
+                      value: selectedWilaya,
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          selectedWilaya = newValue;
+                        });
+                      },
+                      items: wilayas.map((String wilaya) {
+                        return DropdownMenuItem<String>(
+                          value: wilaya,
+                          child: Text(wilaya),
+                        );
+                      }).toList(),
+                      decoration: InputDecoration(
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.brown, width: 2),
+                        ),
+                        contentPadding:
+                            EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+                        border: OutlineInputBorder(),
+                        labelText: 'Wilaya',
+                        labelStyle: TextStyle(color: Colors.brown),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
                     TextFormField(
                       controller: _emailController,
                       validator: (value) {
                         if (value!.isEmpty) {
                           return 'Please enter your email';
-                        } else if (!value.endsWith('@esi-sba.dz')) { 
+                        } else if (!value.contains("@")) {
                           return 'Wrong Email ';
                         }
                         return null;
                       },
-                      decoration: InputDecoration(  focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.brown, width: 2), 
+                      decoration: InputDecoration(
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.brown, width: 2),
                         ),
-                        contentPadding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-                        labelText: 'Email',labelStyle: TextStyle(color:  Colors.brown),
+                        contentPadding:
+                            EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+                        labelText: 'Email',
+                        labelStyle: TextStyle(color: Colors.brown),
                         prefixIcon: Icon(Iconsax.direct),
                         border: OutlineInputBorder(),
                       ),
                     ),
                     const SizedBox(height: 20),
-
-TextFormField(
-  controller: _phoneNumberController,
-  keyboardType: TextInputType.phone,
-  validator: (value) {
-    if (value!.isEmpty) {
-      return 'Please enter your phone number';
-    } else if (!value.startsWith('+213')) {
-      return 'Please enter a valid Algerian phone number';
-    }
-    return null;
-  },
-  decoration: InputDecoration(
-    focusedBorder: OutlineInputBorder(
-      borderSide: BorderSide(color: Colors.brown, width: 2),
-    ),
-    contentPadding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-    labelText: 'Phone Number',
-    labelStyle: TextStyle(color: Colors.brown),
-    prefixIcon: Icon(Icons.phone),
-    border: OutlineInputBorder(),
-  ),
-),
-
-  const SizedBox(height: 20),
-
+                    TextFormField(
+                      controller: _phoneNumberController,
+                      keyboardType: TextInputType.phone,
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'Please enter your phone number';
+                        } else if (!value.startsWith('+213')) {
+                          return 'Please enter a valid Algerian phone number';
+                        }
+                        return null;
+                      },
+                      decoration: InputDecoration(
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.brown, width: 2),
+                        ),
+                        contentPadding:
+                            EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+                        labelText: 'Phone Number',
+                        labelStyle: TextStyle(color: Colors.brown),
+                        prefixIcon: Icon(Icons.phone),
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
                     TextFormField(
                       controller: _passwordController,
                       obscureText: true,
-                      
                       validator: (value) {
                         if (value!.isEmpty) {
                           return 'Please enter your password';
-                        } else if (value.length < 8) { 
+                        } else if (value.length < 8) {
                           return 'Password must be at least 8 characters';
                         }
                         return null;
                       },
-                      decoration: InputDecoration( focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.brown, width: 2), // Change border color when focused
+                      decoration: InputDecoration(
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Colors.brown,
+                              width: 2), // Change border color when focused
                         ),
-                        contentPadding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+                        contentPadding:
+                            EdgeInsets.symmetric(vertical: 16, horizontal: 16),
                         prefixIcon: Icon(Iconsax.eye_slash),
                         labelText: 'Password',
-                        labelStyle: TextStyle(color:  Colors.brown),
+                        labelStyle: TextStyle(color: Colors.brown),
                         border: OutlineInputBorder(),
                       ),
                     ),
@@ -245,47 +265,67 @@ TextFormField(
                         }
                         return null;
                       },
-                      decoration: InputDecoration( focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.brown, width: 2), // Change border color when focused
+                      decoration: InputDecoration(
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Colors.brown,
+                              width: 2), // Change border color when focused
                         ),
-                        contentPadding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+                        contentPadding:
+                            EdgeInsets.symmetric(vertical: 16, horizontal: 16),
                         prefixIcon: Icon(Iconsax.password_check),
                         labelText: 'Confirm Password',
-                        labelStyle: TextStyle(color:  Colors.brown),
+                        labelStyle: TextStyle(color: Colors.brown),
                         border: OutlineInputBorder(),
                       ),
                     ),
                     const SizedBox(height: 40),
-                    Center(
-                      child: GestureDetector(
-              onTap: () {
-                // Check if the form is valid before signing up
-                if (_formKey.currentState?.validate() ?? false) {
-                   _signUp(
-      _emailController.text,
-      _passwordController.text,
-      _nameController.text,
-      _phoneNumberController.text,
-      selectedGender ?? '' // Ensure selectedGender is not null
-    );
-                
-                }
-              },
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Color(0xFF84643D),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                padding: EdgeInsets.symmetric(horizontal: 126, vertical: 11),
-                child: Text(
-                  'Sign up',
-                  style: TextStyle(color: Color(0xFFFCF9F6), fontSize: 15),
-                ),
-              ),
-            ),
-          ),
-
-                    
+                    Builder(
+                      builder: (ctx) => Center(
+                        child: GestureDetector(
+                          onTap: () {
+                            // Check if the form is valid before signing up
+                            if (_formKey.currentState?.validate() ?? false) {
+                              //                _signUp(
+                              //   _emailController.text,
+                              //   _passwordController.text,
+                              //   _nameController.text,
+                              //   _phoneNumberController.text,
+                              //   selectedGender ?? '' // Ensure selectedGender is not null
+                              // );sss
+                              Register.CreateAccountTailor(
+                                      _emailController.text,
+                                      _nameController.text,
+                                      _passwordController.text,
+                                      "gender her",
+                                      "ORAN",
+                                      context)
+                                  .then((value) => Navigator.pushAndRemoveUntil(
+                                      ctx,
+                                      MaterialPageRoute(
+                                        builder: (context) => Verify(
+                                          index: 0,
+                                        ),
+                                      ),
+                                      (route) => false));
+                            }
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Color(0xFF84643D),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 126, vertical: 11),
+                            child: Text(
+                              'Sign up',
+                              style: TextStyle(
+                                  color: Color(0xFFFCF9F6), fontSize: 15),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
                     SizedBox(height: 15),
                     const Center(
                       child: Row(
@@ -321,9 +361,7 @@ TextFormField(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         Logo(Logos.facebook_f),
-                         Logo(Logos.google),
-                        
-                       
+                        Logo(Logos.google),
                       ],
                     ),
                     const SizedBox(height: 40),
@@ -351,7 +389,7 @@ TextFormField(
                               '  Sign in',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                color:Color(0xFF84643D),
+                                color: Color(0xFF84643D),
                               ),
                             ),
                           ),

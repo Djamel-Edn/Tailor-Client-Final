@@ -3,8 +3,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:projetfinprepa/Data/Tailor_Class.dart';
-import 'package:projetfinprepa/IpConfig/Ipconfig.dart';
 import 'package:projetfinprepa/LogiquesFonctions/OrderLogique.dart';
+import 'package:projetfinprepa/Providers/LocalDB.dart';
 import 'package:projetfinprepa/Providers/Tailors.dart';
 import 'package:provider/provider.dart';
 
@@ -191,8 +191,12 @@ class _SearchPageState extends State<TailorSelected> {
                                     itemBuilder: (context, index) {
                                       return InkWell(
                                         onTap: () {
+                                          print("aaaaaaaaaaaaaa qqq");
                                           OrderLogique.AddOrderByMe(
-                                              IPCONFIG.ClientId,
+                                              Provider.of<LocalDbProvider>(
+                                                      context,
+                                                      listen: false)
+                                                  .id,
                                               ResultTilors[index].id,
                                               0,
                                               [],
@@ -289,16 +293,16 @@ class _SearchPageState extends State<TailorSelected> {
                                           //         widget.qstsansrs,
                                           //         ResultTilorsNearest[index],
                                           //         context);
-
-                                          OrderLogique.AddOrderByMe(
-                                              IPCONFIG.ClientId,
-                                              ResultTilorsNearest[index].id,
-                                              0,
-                                              [],
-                                              widget.image,
-                                              widget.qstsansrs,
-                                              ResultTilorsNearest[index],
-                                              context);
+                                          print("qqqq");
+                                          // OrderLogique.AddOrderByMe(
+                                          //     IPCONFIG.ClientId,
+                                          //     ResultTilorsNearest[index].id,
+                                          //     0,
+                                          //     [],
+                                          //     widget.image,
+                                          //     widget.qstsansrs,
+                                          //     ResultTilorsNearest[index],
+                                          //     context);
                                         },
                                         child: AnimatedContainer(
                                           duration: Duration(

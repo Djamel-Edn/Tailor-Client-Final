@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:projetfinprepa/Pages/TailorPages/FirstPageTailor.dart';
+import 'package:projetfinprepa/Pages/registration/MyApp.dart';
 import 'package:projetfinprepa/Providers/Chat.dart';
+import 'package:projetfinprepa/Providers/LocalDB.dart';
 import 'package:projetfinprepa/Providers/Models.dart';
 import 'package:projetfinprepa/Providers/Tailors%20copy.dart';
 import 'package:projetfinprepa/Providers/Tailors.dart';
@@ -23,10 +24,13 @@ void main() {
       ),
       ChangeNotifierProvider(
         create: (context) => ChatProvider(),
+      ),
+      ChangeNotifierProvider(
+        create: (context) => LocalDbProvider(),
       )
     ],
-    child: FirstPageTailor(),
-    // child: FirstPage()
+    child: MyAppHia(),
+    //  child: FirstPage()
   ));
   //
 
