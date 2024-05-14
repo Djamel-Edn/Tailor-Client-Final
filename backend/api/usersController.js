@@ -494,4 +494,4 @@ const getClient = async (req, res) => {
 }
 
 
-module.exports = {deleteUser, getClient, getTailor, addLike, updatePassword, registerClient, registerTailor, login, verifyEmail, resetPassword, updateProfile, getallTailors, verifyEmail, addFavorite };
+module.exports = { getClient, getTailor, addLike, updatePassword, registerClient, registerTailor, login, verifyEmail, resetPassword, updateProfile, getallTailors, verifyEmail, addFavorite };

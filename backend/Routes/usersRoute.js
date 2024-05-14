@@ -1,5 +1,5 @@
 const express = require('express');
-const { registerClient, registerTailor, login, verifyEmail, resetPassword, updatePassword, getallTailors, addFavorite, addLike, getTailor, getClient, deleteUser } = require('../api/usersController');
+const { registerClient, registerTailor, login, verifyEmail, resetPassword, updatePassword, getallTailors, addFavorite, addLike, getTailor, getClient} = require('../api/usersController');
 const { updateProfile } = require('../api/usersController');
 const router = express.Router();
 
