@@ -493,20 +493,5 @@ const getClient = async (req, res) => {
 
 }
 
-const deleteUser=async(req,res)=>{
-    const {userId}=req.params;
-    try{
-        const user=await clientModel.findById(userId)||await tailorModel.findById(userId);
-        if(!user){
-            return res.status(404).json({error:'User not found'});
-}
 
-        await user.remove();
-        res.status(200).json('User deleted successfully');
-
-    }
-    catch(error){
-        console.log(error);
-        res.status(500).json({error:'Server error'});
-    }}
-module.exports = { getClient, getTailor, addLike, updatePassword, registerClient, registerTailor, login, verifyEmail, resetPassword, updateProfile, getallTailors, verifyEmail, addFavorite };
+module.exports = {deleteUser, getClient, getTailor, addLike, updatePassword, registerClient, registerTailor, login, verifyEmail, resetPassword, updateProfile, getallTailors, verifyEmail, addFavorite };

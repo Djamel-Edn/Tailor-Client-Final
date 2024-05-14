@@ -15,5 +15,4 @@ router.post('/updatePassword/:userId',updatePassword)
 router.post('/addLike',addLike)
 router.get("/getTailor/:tailorId",getTailor)
 router.get('/getClient/:clientId', getClient)
-router.delete('/delete/:userId',deleteUser )
 module.exports = router;
