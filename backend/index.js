@@ -50,23 +50,33 @@ io.on('connection', (socket) => {
     socket.on('addNewUser', (userId) => {
       if (!onlineUsers.some(user => user.userId === userId)) {
         onlineUsers.push({ userId, socketId: socket.id });
+        console.log('onlineUsers',onlineUsers)
       }
       io.emit('getOnlineUsers', onlineUsers);
       console.log(`User ${userId} connected. Online users:`, onlineUsers);
     });
   
   
-    socket.on('message', ( message,clientId,tailorId) => {
-      userstoget=onlineUsers.filter(user => user.userId === clientId || user.userId === tailorId)
-      userstoget.forEach(user => {
-        io.to(user.socketId).emit('message', message);
-      });
+    socket.on('message', ( message,senderId,receiverId) => {
+      userstoget=onlineUsers.filter(user=> user.userId === receiverId)
+        io.to(usertoget.socketId).emit('message', message);
     });
-  socket.on('newOrder', ( order,clientId,tailorId) => {
-    userstoget=onlineUsers.filter(user => user.userId === clientId || user.userId === tailorId)
+  socket.on('newOrder', ( order,tailorId) => {
+    usertoget=onlineUsers.filter(user=> user.userId === tailorId)
+ 
+      io.to(usertoget.socketId).emit('newOrder', order);
+  
+  })
+  socket.on('newReview', ( review,tailorId) => {
+    usertoget=onlineUsers.filter( user.userId === tailorId)
+ 
+      io.to(usertoget.socketId).emit('newReview', review);
+  })
+  socket.on('updateOrder', ( order,clientId,tailorId) => {
+    userstoget=onlineUsers.filter(user=> user.userId==tailorId ||user.userId === clientId)
     userstoget.forEach(user => {
-      io.to(user.socketId).emit('newOrder', order);
-    }); 
+      io.to(user.socketId).emit('updateOrder', order);
+    });
   })
     socket.on('disconnect', () => {
       onlineUsers = onlineUsers.filter(user => user.socketId !== socket.id);
