@@ -59,6 +59,7 @@ io.on('connection', (socket) => {
   
     socket.on('message', ( message,senderId,receiverId) => {
       usertoget=onlineUsers.filter(user=> user.userId === receiverId)
+      console.log('message',usertoget)
         io.to(usertoget.socketId).emit('message', message);
     });
   socket.on('newOrder', ( order,tailorId) => {
