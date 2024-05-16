@@ -57,8 +57,8 @@ io.on('connection', (socket) => {
     });
   
   
-    socket.on('message', (message,receiverId) => {  
-      const usertoget = onlineUsers.find(user => user.userId === receiverId);
+    socket.on('message', (message,RecieverId) => {  
+      const usertoget = onlineUsers.find(user => user.userId === RecieverId);
       
       console.log('message', message);
       console.log('usertoget', usertoget);
