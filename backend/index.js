@@ -60,12 +60,12 @@ io.on('connection', (socket) => {
     socket.on('message', ( message) => {
       userstoget=onlineUsers.filter(user=> user.userId === message.tailorId|| user.userId === message.clientId)
       console.log('message',message)
-      console.log('usertoget',usertoget)
-      console.log('receiverId',message.tailorId)
-      console.log('sender',message.clientId)
+      console.log('usertoget',userstoget)
+      
       userstoget.forEach(user => {
         io.to(user.socketId).emit('message', message);
       });
+    })
   socket.on('newOrder', ( order,tailorId) => {
     usertoget=onlineUsers.filter(user=> user.userId === tailorId)
  
