@@ -57,8 +57,8 @@ io.on('connection', (socket) => {
     });
   
   
-    socket.on('message', ( message) => {
-      usertoget=onlineUsers.filter(user=> user.userId !== message.RecieverId)
+    socket.on('message', ( message) => {  
+      usertoget=onlineUsers.filter(user=> user.userId == message.RecieverId)
       console.log('message',message)
       console.log('usertoget',usertoget)
 
