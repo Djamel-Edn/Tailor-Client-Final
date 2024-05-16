@@ -50,7 +50,7 @@ io.on('connection', (socket) => {
     socket.on('addNewUser', (userId) => {
       if (!onlineUsers.some(user => user.userId === userId)) {
         onlineUsers.push({ userId, socketId: socket.id });
-        console.log('onlineUsers',onlineUsers)
+        
       }
       io.emit('getOnlineUsers', onlineUsers);
       console.log(`User ${userId} connected. Online users:`, onlineUsers);
@@ -58,7 +58,7 @@ io.on('connection', (socket) => {
   
   
     socket.on('message', ( message,senderId,receiverId) => {
-      userstoget=onlineUsers.filter(user=> user.userId === receiverId)
+      usertoget=onlineUsers.filter(user=> user.userId === receiverId)
         io.to(usertoget.socketId).emit('message', message);
     });
   socket.on('newOrder', ( order,tailorId) => {
