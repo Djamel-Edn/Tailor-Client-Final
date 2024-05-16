@@ -63,7 +63,7 @@ io.on('connection', (socket) => {
       console.log('usertoget',usertoget)
 
       
-        io.to(usertoget.socketId).emit('message', message);
+        usertoget.socketId.emit('message', message);
     
     })
   socket.on('newOrder', ( order,tailorId) => {
