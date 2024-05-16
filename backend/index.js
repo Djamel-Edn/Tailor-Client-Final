@@ -58,13 +58,14 @@ io.on('connection', (socket) => {
   
   
     socket.on('message', ( message) => {
-      usertoget=onlineUsers.filter(user=> user.userId === message.tailorId|| user.userId === message.clientId)
+      userstoget=onlineUsers.filter(user=> user.userId === message.tailorId|| user.userId === message.clientId)
       console.log('message',message)
       console.log('usertoget',usertoget)
       console.log('receiverId',message.tailorId)
       console.log('sender',message.clientId)
-        io.to(usertoget.socketId).emit('message', message);
-    });
+      userstoget.forEach(user => {
+        io.to(user.socketId).emit('message', message);
+      });
   socket.on('newOrder', ( order,tailorId) => {
     usertoget=onlineUsers.filter(user=> user.userId === tailorId)
  
