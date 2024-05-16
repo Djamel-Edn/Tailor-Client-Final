@@ -57,11 +57,12 @@ io.on('connection', (socket) => {
     });
   
   
-    socket.on('message', ( message,senderId,receiverId) => {
-      usertoget=onlineUsers.filter(user=> user.userId === receiverId)
+    socket.on('message', ( message,sender,receiver) => {
+      usertoget=onlineUsers.filter(user=> user.userId === receiver)
       console.log('message',message)
       console.log('usertoget',usertoget)
-      console.log('receiverId',receiverId)
+      console.log('receiverId',receiver)
+      console.log('sender',sender)
         io.to(usertoget.socketId).emit('message', message);
     });
   socket.on('newOrder', ( order,tailorId) => {
