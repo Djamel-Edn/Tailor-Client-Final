@@ -57,15 +57,19 @@ io.on('connection', (socket) => {
     });
   
   
-    socket.on('message', ( message) => {  
-      usertoget=onlineUsers.filter(user=> user.userId == message.RecieverId)
-      console.log('message',message)
-      console.log('usertoget',usertoget)
-
+    socket.on('message', (message) => {  
+      const usertoget = onlineUsers.find(user => user.userId === message.RecieverId);
       
-        usertoget.socketId.emit('message', message);
-    
-    })
+      console.log('message', message);
+      console.log('usertoget', usertoget);
+  
+      if (usertoget && usertoget.socketId) {
+        console.log("socketId suer",usertoget.socketId)
+        io.to(usertoget.socketId).emit('message', message);
+      } else {
+        console.log('User not found or socketId is not valid');
+      }
+    });
   socket.on('newOrder', ( order,tailorId) => {
     usertoget=onlineUsers.filter(user=> user.userId === tailorId)
  
