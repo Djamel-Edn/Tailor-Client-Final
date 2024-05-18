@@ -38,10 +38,8 @@ mongoose.connect(process.env.MONGODB_URI, {})
         console.error("Error connecting to MongoDB:", error);
     });
 
-// Create HTTP server
 const server = http.createServer(app);
 
-// Socket.io setup
 const io = new Server(server, { cors: { origin: "*" } }); 
 
 let onlineUsers = [];
@@ -52,20 +50,42 @@ io.on('connection', (socket) => {
     socket.on('addNewUser', (userId) => {
       if (!onlineUsers.some(user => user.userId === userId)) {
         onlineUsers.push({ userId, socketId: socket.id });
+        
       }
       io.emit('getOnlineUsers', onlineUsers);
       console.log(`User ${userId} connected. Online users:`, onlineUsers);
     });
   
-    socket.on('join', (roomId) => {
-      socket.join(roomId);
-      console.log(`Socket ${socket.id} joined room ${roomId}`);
-    });
   
-    socket.on('message', (roomId, message) => {
-      io.to(roomId).emit('message', message);
-    });
+    socket.on('message', (message) => {  
+      const usertoget = onlineUsers.find(user => user.userId === message.RecieverId);
+      
+      console.log('message', message);
+      console.log('usertoget', usertoget);
   
+      if (usertoget && usertoget.socketId) {
+        io.to(usertoget.socketId).emit('message', message);
+      } else {
+        console.log('User not found or socketId is not valid');
+      }
+    });
+  socket.on('newOrder', ( order,tailorId) => {
+    usertoget=onlineUsers.filter(user=> user.userId === tailorId)
+ 
+      io.to(usertoget.socketId).emit('newOrder', order);
+  
+  })
+  socket.on('newReview', ( review,tailorId) => {
+    usertoget=onlineUsers.filter( user.userId === tailorId)
+ 
+      io.to(usertoget.socketId).emit('newReview', review);
+  })
+  socket.on('updateOrder', ( order,clientId,tailorId) => {
+    userstoget=onlineUsers.filter(user=> user.userId==tailorId ||user.userId === clientId)
+    userstoget.forEach(user => {
+      io.to(user.socketId).emit('updateOrder', order);
+    });
+  })
     socket.on('disconnect', () => {
       onlineUsers = onlineUsers.filter(user => user.socketId !== socket.id);
       io.emit('getOnlineUsers', onlineUsers);
