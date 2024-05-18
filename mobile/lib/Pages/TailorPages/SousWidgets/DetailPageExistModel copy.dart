@@ -3,7 +3,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:projetfinprepa/LogiquesFonctions/OrderLogique.dart';
 import 'package:projetfinprepa/Pages/TailorPages/ChatPageTailor.dart';
+import 'package:projetfinprepa/Providers/Chat.dart';
 import 'package:projetfinprepa/Widgets/CommandItemTailorLargeImages.dart';
+import 'package:provider/provider.dart';
 
 class DetailPageExistModel extends StatelessWidget {
   var order;
@@ -131,11 +133,26 @@ class DetailPageExistModel extends StatelessWidget {
                                 width: 10,
                               ),
                               InkWell(
-                                onTap: () {
-                                  Navigator.push(
+                                onTap: () async {
+                                  // showDialog(
+                                  //     barrierDismissible: false,
+                                  //     context: context,
+                                  //     builder: (context) => Center(
+                                  //         child: CircularProgressIndicator()));
+                                  await Provider.of<ChatProvider>(context,
+                                          listen: false)
+                                      .GetChat(order["client"]["_id"],
+                                          "6626eb65ed54ccf5c1e7e8ed");
+                                  // Navigator.pop(context);
+
+                                  await Navigator.push(
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) => ChatPAgeTailor(
+                                            chat: Provider.of<ChatProvider>(
+                                                    context,
+                                                    listen: false)
+                                                .chat,
                                             IDCLIENT: order["client"]["_id"]),
                                       ));
                                 },
@@ -263,15 +280,36 @@ class DetailPageExistModel extends StatelessWidget {
                                   ),
                                   Expanded(
                                     child: InkWell(
-                                      onTap: () {
-                                        Navigator.push(
+                                      onTap: () async {
+                                        // showDialog(
+                                        //     context: context,
+                                        //     builder: (context) => Center(
+                                        //         child:
+                                        //             CircularProgressIndicator()));
+                                        await Provider.of<ChatProvider>(context,
+                                                listen: false)
+                                            .GetChat(order["client"]["_id"],
+                                                "6626eb65ed54ccf5c1e7e8ed");
+                                        // Navigator.pop(context);
+                                        await Navigator.push(
                                             context,
                                             MaterialPageRoute(
                                               builder: (context) =>
                                                   ChatPAgeTailor(
+                                                      chat: Provider.of<
+                                                                  ChatProvider>(
+                                                              context,
+                                                              listen: false)
+                                                          .chat,
                                                       IDCLIENT: order["client"]
                                                           ["_id"]),
                                             ));
+                                        // .then((value) {
+                                        // setState(() {
+                                        //   print("cpppppppppppppppppppppp");
+                                        //   _chat = Provider.of<ChatProvider>(context, listen: false).chat!;
+                                        // });
+                                        // });
                                       },
                                       child: Container(
                                         alignment: Alignment.center,

@@ -12,11 +12,19 @@ class ChatProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> PostMessageInChat(IdSender, IdChat, text, images) async {
+  void SetMessage(newmessage) {
+    _chat!.messages.add(newmessage);
+    print("ppppppppppppppppppppppppppppppppppp");
+    print(_chat!.messages.length);
+    notifyListeners();
+  }
+
+  Future<Message> PostMessageInChat(IdSender, IdChat, text, images) async {
     Message NewMessage =
         await ChatLogique.PostMessage(IdSender, IdChat, text, images);
-    _chat!.messages.add(NewMessage);
-
     notifyListeners();
+
+    _chat!.messages.add(NewMessage);
+    return NewMessage;
   }
 }

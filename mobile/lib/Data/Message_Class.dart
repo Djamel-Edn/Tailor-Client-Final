@@ -1,7 +1,7 @@
 class Message {
   String ChatId, senderId;
   String? text;
-  List<String>? images;
+  List<dynamic>? images;
   DateTime date;
 
   Message(

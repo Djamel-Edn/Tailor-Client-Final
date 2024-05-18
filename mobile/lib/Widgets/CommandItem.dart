@@ -36,8 +36,6 @@ class _CommandItemState extends State<CommandItem> {
 
   @override
   Widget build(BuildContext context) {
-    print("objectaaaaaa ${widget.order.questionnaire}");
-
     return Container(
         height: 200,
         width: 400,

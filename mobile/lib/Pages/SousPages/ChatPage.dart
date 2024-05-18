@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
@@ -11,7 +10,9 @@ import 'package:projetfinprepa/Data/Chat_Class.dart';
 import 'package:projetfinprepa/Data/Message_Class.dart';
 import 'package:projetfinprepa/IpConfig/Ipconfig.dart';
 import 'package:projetfinprepa/Providers/Chat.dart';
+import 'package:projetfinprepa/Providers/LocalDB.dart';
 import 'package:provider/provider.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class ChatPAge extends StatefulWidget {
   String IdTailor;
@@ -24,48 +25,84 @@ class ChatPAge extends StatefulWidget {
 class _ChatPAgeState extends State<ChatPAge> {
   TextEditingController _controller = TextEditingController();
   Chat? _chat;
-  late Timer _timer;
   File? image;
   Uint8List? bytes;
+  late IO.Socket socket;
   @override
-  void initState() {
-    _timer = Timer.periodic(Duration(seconds: 10), (timer) {
-      Provider.of<ChatProvider>(context, listen: false)
-          .GetChat(IPCONFIG.ClientId, widget.IdTailor)
-          .then(
-        (value) {
-          setState(() {
-            if (Provider.of<ChatProvider>(context, listen: false).chat !=
-                null) {
-              _chat = Provider.of<ChatProvider>(context, listen: false).chat!;
-            } else {
-              _chat == null;
-            }
-          });
-        },
-      );
+  void connect() {
+    socket = IO.io("https://tailor-client-ps9z.onrender.com", <String, dynamic>{
+      "transports": ["websocket"],
+      "autoConnect": false,
     });
-    Provider.of<ChatProvider>(context, listen: false)
-        .GetChat(IPCONFIG.ClientId, widget.IdTailor)
-        .then(
-      (value) {
-        setState(() {
-          if (Provider.of<ChatProvider>(context, listen: false).chat != null) {
-            _chat = Provider.of<ChatProvider>(context, listen: false).chat!;
-          } else {
-            _chat == null;
-          }
-        });
-      },
-    );
+    socket.connect();
+    print("connected");
 
+    socket.emit(
+        "addNewUser", Provider.of<LocalDbProvider>(context, listen: false).id);
+    socket.onConnect((data) {
+      socket.on("message", (data) {
+        // pushmessage(data);
+        if (mounted)
+          setState(() {
+            Provider.of<ChatProvider>(context, listen: false).SetMessage(
+                Message(
+                    ChatId: data["message"]["ChatId"],
+                    senderId: data["message"]["senderId"],
+                    text: data["message"]["text"],
+                    images: data["message"]["images"],
+                    date: DateTime.now()));
+          });
+      });
+    });
+  }
+
+  void pushmessage(data) {
+    Message msg = Message(
+        ChatId: data["message"]["ChatId"],
+        senderId: data["message"]["SenderId"],
+        text: data["message"]["text"],
+        images: data["message"]["images"],
+        date: DateTime.now());
+    setState(() {
+      _chat!.messages.add(msg);
+    });
+  }
+
+  void sendmessage(Message msg, IdReciever) {
+    print(
+        "qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq socjet $msg");
+    Map<String, dynamic> msgobj = {
+      "ChatId": msg.ChatId,
+      "senderId": msg.senderId,
+      "text": msg.text,
+      "images": msg.images,
+      "date": msg.date.toString()
+    };
+    socket.emit("message", {
+      "message": msgobj,
+      "RecieverId": IdReciever,
+    });
+    print("id send message");
+  }
+
+  void initState() {
+    connect();
+    print(
+        "qqqqqqqqqqqqqqq ${Provider.of<LocalDbProvider>(context, listen: false).id}");
+
+    Provider.of<ChatProvider>(context, listen: false)
+        .GetChat(Provider.of<LocalDbProvider>(context, listen: false).id,
+            widget.IdTailor)
+        .whenComplete(() => setState(() {
+              print("cmppppppppppppppppppppp");
+              _chat = Provider.of<ChatProvider>(context, listen: false).chat;
+            }));
     super.initState();
   }
 
   @override
   void dispose() {
-    _controller.dispose();
-    _timer.cancel();
+    // _controller.dispose();
     super.dispose();
   }
 
@@ -103,7 +140,7 @@ class _ChatPAgeState extends State<ChatPAge> {
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                  icon: Icon(Icons.arrow_back_ios)),
+                  icon: Icon(Icons.arrow_back)),
               _chat != null
                   ? CircleAvatar(
                       radius: 25,
@@ -138,10 +175,12 @@ class _ChatPAgeState extends State<ChatPAge> {
                           child: Center(
                             child: Padding(
                                 padding: const EdgeInsets.all(8.0),
-                                child: Text(DateFormat.yMMMd().format(DateTime(
-                                    element.date.year,
-                                    element.date.month,
-                                    element.date.day)))
+                                child: Text(
+                                    style: TextStyle(color: Colors.black),
+                                    DateFormat.yMMMd().format(DateTime(
+                                        element.date.year,
+                                        element.date.month,
+                                        element.date.day)))
                                 // Text(),
                                 ),
                           ),
@@ -160,9 +199,25 @@ class _ChatPAgeState extends State<ChatPAge> {
                           onPressed: () async {
                             final imagePicker = ImagePicker();
                             var pickedimage = await imagePicker.pickImage(
-                                source: ImageSource.camera);
+                                source: ImageSource.gallery);
                             if (pickedimage != null) {
                               bytes = File(pickedimage.path).readAsBytesSync();
+                              List images = [];
+                              images.add(base64Encode(bytes!));
+                              await value.PostMessageInChat(
+                                      Provider.of<LocalDbProvider>(context,
+                                              listen: false)
+                                          .id,
+                                      _chat!.id,
+                                      _controller.text.trim(),
+                                      images)
+                                  .then((val) {
+                                _controller.text = "";
+
+                                print("sendnia message .....${val.images}");
+
+                                sendmessage(val, widget.IdTailor);
+                              });
                             }
                           },
                           icon: Icon(
@@ -170,52 +225,45 @@ class _ChatPAgeState extends State<ChatPAge> {
                             size: 40,
                           )),
                       Expanded(
-                        child: TextField(
-                          controller: _controller,
-                          decoration: InputDecoration(
-                              focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(30),
-                                  borderSide:
-                                      BorderSide(color: Colors.transparent)),
-                              hintText: "write your message",
-                              fillColor: Color(0XFFD9D9D9).withAlpha(90),
-                              filled: true,
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(30))),
+                        child: SizedBox(
+                          height: 50,
+                          child: TextField(
+                            controller: _controller,
+                            decoration: InputDecoration(
+                                focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(30),
+                                    borderSide:
+                                        BorderSide(color: Colors.transparent)),
+                                hintText: "write your message",
+                                fillColor: Color(0XFFD9D9D9).withAlpha(90),
+                                filled: true,
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(30))),
+                          ),
                         ),
                       ),
                       IconButton(
-                          onPressed: () {
-                            if (_controller.text.trim() != "" &&
-                                bytes != null) {
+                          onPressed: () async {
+                            print(
+                                "zzzzzzzzzzzzzz ${Provider.of<LocalDbProvider>(context, listen: false).id}");
+                            if (_controller.text.trim() != "") {
                               if (_chat != null) {
+                                print("send image");
+
                                 value.PostMessageInChat(
-                                        IPCONFIG.ClientId,
-                                        _chat!.id,
-                                        _controller.text.trim(),
-                                        [base64Encode(bytes!)])
-                                    .then((value) => _controller.text = "");
-                              }
-                            } else if (_controller.text.trim() != "") {
-                              if (_chat != null) {
-                                value.PostMessageInChat(
-                                    IPCONFIG.ClientId,
+                                    Provider.of<LocalDbProvider>(context,
+                                            listen: false)
+                                        .id,
                                     _chat!.id,
                                     _controller.text.trim(),
-                                    []).then((value) => _controller.text = "");
-                              }
-                            } else {
-                              if (_chat != null) {
-                                value.PostMessageInChat(IPCONFIG.ClientId,
-                                        _chat!.id, "", [base64Encode(bytes!)])
-                                    .then((value) => _controller.text = "");
+                                    []).then((value) {
+                                  _controller.text = "";
+                                  sendmessage(value, widget.IdTailor);
+                                });
                               }
                             }
                           },
-                          icon: Icon(
-                            Icons.telegram,
-                            size: 40,
-                          ))
+                          icon: Image.asset("images/sendIcon.png"))
                     ],
                   ),
                 )
@@ -232,68 +280,86 @@ class MessageUi extends StatelessWidget {
   Message message;
   MessageUi({super.key, required this.message});
   String MYID = IPCONFIG.ClientId;
-
   @override
   Widget build(BuildContext context) {
-    return message!.images!.length == 0
+    return message.images!.length == 0
         ? Container(
-            margin: EdgeInsets.symmetric(horizontal: 1, vertical: 3),
+            margin: EdgeInsets.symmetric(horizontal: 0, vertical: 3),
             alignment: message.senderId == MYID
                 ? Alignment.centerRight
                 : Alignment.centerLeft,
-            child: Container(
-              decoration: BoxDecoration(
-                color: message.senderId == MYID
-                    ? Color(0xFFA38E7E).withOpacity(0.9)
-                    : Color(0xFFDDD0B9).withOpacity(0.8),
-                borderRadius: message.senderId == MYID
-                    ? BorderRadius.only(
-                        topRight: Radius.circular(14),
-                        topLeft: Radius.circular(14),
-                        bottomLeft: Radius.circular(14))
-                    : BorderRadius.only(
-                        topRight: Radius.circular(14),
-                        topLeft: Radius.circular(14),
-                        bottomRight: Radius.circular(14)),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(
-                      "${message.text}",
-                      style: TextStyle(color: Colors.white),
+            child: message.text != ""
+                ? Container(
+                    decoration: BoxDecoration(
+                      color: message.senderId == MYID
+                          ? Color(0xFFA38E7E).withOpacity(0.9)
+                          : Color(0xFFDDD0B9).withOpacity(0.8),
+                      borderRadius: message.senderId == MYID
+                          ? BorderRadius.only(
+                              topRight: Radius.circular(14),
+                              topLeft: Radius.circular(14),
+                              bottomLeft: Radius.circular(14))
+                          : BorderRadius.only(
+                              topRight: Radius.circular(14),
+                              topLeft: Radius.circular(14),
+                              bottomRight: Radius.circular(14)),
                     ),
-                    Text(
-                      "${message.date.hour}:${message.date.minute}",
-                      overflow: TextOverflow.clip,
-                      style: TextStyle(color: Color(0xFF9E7B61), fontSize: 10),
+                    child: Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text(
+                            "${message.text}",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          Wrap(
+                            children: [
+                              Text(
+                                "${message.date.hour}:${message.date.minute}",
+                                overflow: TextOverflow.clip,
+                                style: TextStyle(
+                                    color: Color(0xFF54361E), fontSize: 10),
+                              ),
+                              message.senderId == MYID
+                                  ? Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 3, top: 3),
+                                      child: Image.asset(
+                                        "images/seenIcon.png",
+                                        height: 8,
+                                      ),
+                                    )
+                                  : SizedBox()
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
-                  ],
-                ),
-              ),
-            ),
+                  )
+                : Container(),
           )
         : Container(
-            margin: EdgeInsets.symmetric(horizontal: 1, vertical: 3),
+            margin: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
             alignment: message.senderId == MYID
                 ? Alignment.centerRight
                 : Alignment.centerLeft,
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 2),
-                  child: Container(
-                    height: 150,
-                    width: 130,
-                    child: Image.memory(
+                  padding: const EdgeInsets.symmetric(vertical: 0),
+                  child: Wrap(children: [
+                    Image.memory(
                       base64Decode(message.images![0]),
                       fit: BoxFit.cover,
+                      height: MediaQuery.of(context).size.height * 0.4,
+                      width: MediaQuery.of(context).size.width * 0.8,
                     ),
-                  ),
+                  ]),
                 ),
                 Container(
+                  // alignment: Alignment.centerLeft,
                   decoration: BoxDecoration(
                     color: message.senderId == MYID
                         ? Color(0xFFA38E7E).withOpacity(0.9)
@@ -308,24 +374,26 @@ class MessageUi extends StatelessWidget {
                             topLeft: Radius.circular(14),
                             bottomRight: Radius.circular(14)),
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Text(
-                          "${message.text}",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        Text(
-                          "${message.date.hour}:${message.date.minute}",
-                          overflow: TextOverflow.clip,
-                          style:
-                              TextStyle(color: Color(0xFF9E7B61), fontSize: 10),
-                        ),
-                      ],
-                    ),
-                  ),
+                  child: message.text != ""
+                      ? Padding(
+                          padding: const EdgeInsets.all(1.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text(
+                                "${message.text}",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              Text(
+                                "${message.date.hour}:${message.date.minute}",
+                                overflow: TextOverflow.clip,
+                                style: TextStyle(
+                                    color: Color(0xFF9E7B61), fontSize: 10),
+                              ),
+                            ],
+                          ),
+                        )
+                      : Container(),
                 ),
               ],
             ),
