@@ -23,7 +23,7 @@ app.use(cors({
 app.use(bodyParser.json({ limit: '20mb' }));
 app.use(bodyParser.urlencoded({ limit: '20mb', extended: true }));
 
-// Routes
+
 app.use(express.json());
 app.use('/', usersRoute);
 app.use('/post', postsRoute);
@@ -69,25 +69,22 @@ io.on('connection', (socket) => {
       }
     });
   socket.on('newOrder', ( order) => {
-   const usertoget=onlineUsers.find(user=> user.userId === order.tailor)
+    usertoget=onlineUsers.filter(user=> user.userId === order.tailor)
     console.log(order)
     console.log('usertoget',usertoget)
     console.log('usertoget.socketId',usertoget.socketId)
-    if (usertoget.socketId){
-
       io.to(usertoget.socketId).emit('newOrder', order);
-    }
     })
   
   socket.on('newReview', ( review) => {
-  const usertoget=onlineUsers.filter( user.userId === review.tailorId)
+    usertoget=onlineUsers.filter( user.userId === review.tailorId)
     console.log(review)
     console.log('usertoget',usertoget)
       io.to(usertoget.socketId).emit('newReview', review);
   })
   socket.on('updateOrder', ( order) => {
     
-  const userstoget=onlineUsers.filter(user=> user.userId==order.tailor || user.userId === order.client)
+    userstoget=onlineUsers.filter(user=> user.userId==order.tailor || user.userId === order.client)
     console.log(order)
     console.log('userstoget',userstoget)
     userstoget.forEach(user => {
