@@ -69,7 +69,7 @@ io.on('connection', (socket) => {
       }
     });
   socket.on('newOrder', ( order) => {
-   const usertoget=onlineUsers.filter(user=> user.userId === order.tailor)
+   const usertoget=onlineUsers.find(user=> user.userId === order.tailor)
     console.log(order)
     console.log('usertoget',usertoget)
     console.log('usertoget.socketId',usertoget.socketId)
@@ -80,14 +80,14 @@ io.on('connection', (socket) => {
     })
   
   socket.on('newReview', ( review) => {
-    usertoget=onlineUsers.filter( user.userId === review.tailorId)
+  const usertoget=onlineUsers.filter( user.userId === review.tailorId)
     console.log(review)
     console.log('usertoget',usertoget)
       io.to(usertoget.socketId).emit('newReview', review);
   })
   socket.on('updateOrder', ( order) => {
     
-    userstoget=onlineUsers.filter(user=> user.userId==order.tailor || user.userId === order.client)
+  const userstoget=onlineUsers.filter(user=> user.userId==order.tailor || user.userId === order.client)
     console.log(order)
     console.log('userstoget',userstoget)
     userstoget.forEach(user => {
