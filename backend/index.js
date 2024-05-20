@@ -60,8 +60,7 @@ io.on('connection', (socket) => {
     socket.on('message', (message) => {  
       const usertoget = onlineUsers.find(user => user.userId === message.RecieverId);
       
-      console.log('message', message);
-      console.log('usertoget', usertoget);
+     
   
       if (usertoget && usertoget.socketId) {
         io.to(usertoget.socketId).emit('message', message);
@@ -69,19 +68,27 @@ io.on('connection', (socket) => {
         console.log('User not found or socketId is not valid');
       }
     });
-  socket.on('newOrder', ( order,tailorId) => {
-    usertoget=onlineUsers.filter(user=> user.userId === tailorId)
- 
+  socket.on('newOrder', ( order) => {
+    usertoget=onlineUsers.filter(user=> user.userId === order.tailor)
+    console.log(order)
+    console.log('usertoget',usertoget)
+    if (usertoget && usertoget.socketId) {
       io.to(usertoget.socketId).emit('newOrder', order);
-  
+    } else {
+      console.log('User not found or socketId is not valid');
+    }
   })
-  socket.on('newReview', ( review,tailorId) => {
-    usertoget=onlineUsers.filter( user.userId === tailorId)
- 
+  socket.on('newReview', ( review) => {
+    usertoget=onlineUsers.filter( user.userId === review.tailorId)
+    console.log(review)
+    console.log('usertoget',usertoget)
       io.to(usertoget.socketId).emit('newReview', review);
   })
-  socket.on('updateOrder', ( order,clientId,tailorId) => {
-    userstoget=onlineUsers.filter(user=> user.userId==tailorId ||user.userId === clientId)
+  socket.on('updateOrder', ( order) => {
+    
+    userstoget=onlineUsers.filter(user=> user.userId==order.tailor || user.userId === order.client)
+    console.log(order)
+    console.log('userstoget',userstoget)
     userstoget.forEach(user => {
       io.to(user.socketId).emit('updateOrder', order);
     });
