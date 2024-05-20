@@ -72,7 +72,11 @@ io.on('connection', (socket) => {
     usertoget=onlineUsers.filter(user=> user.userId === order.tailor)
     console.log(order)
     console.log('usertoget',usertoget)
+    console.log('usertoget.socketId',usertoget.socketId)
+    if (usertoget.socketId){
+
       io.to(usertoget.socketId).emit('newOrder', order);
+    }
     })
   
   socket.on('newReview', ( review) => {
