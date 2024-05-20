@@ -69,7 +69,7 @@ io.on('connection', (socket) => {
       }
     });
   socket.on('newOrder', ( order) => {
-    usertoget=onlineUsers.filter(user=> user.userId === order.tailor)
+   const usertoget=onlineUsers.filter(user=> user.userId === order.tailor)
     console.log(order)
     console.log('usertoget',usertoget)
     console.log('usertoget.socketId',usertoget.socketId)
