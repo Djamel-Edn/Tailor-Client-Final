@@ -72,12 +72,9 @@ io.on('connection', (socket) => {
     usertoget=onlineUsers.filter(user=> user.userId === order.tailor)
     console.log(order)
     console.log('usertoget',usertoget)
-    if (usertoget && usertoget.socketId) {
       io.to(usertoget.socketId).emit('newOrder', order);
-    } else {
-      console.log('User not found or socketId is not valid');
-    }
-  })
+    })
+  
   socket.on('newReview', ( review) => {
     usertoget=onlineUsers.filter( user.userId === review.tailorId)
     console.log(review)
