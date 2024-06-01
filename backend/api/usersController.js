@@ -384,21 +384,19 @@ const addFavorite = async (req, res) => {
 
         const postExists = user.favorites.indexOf(postId);
         if (postExists !== -1) {
-            user.favorites.splice(tailorIndex, 1);
+            user.favorites.splice(postExists, 1);
             await user.save();
             return res.status(200).json({ favorites: user.favorites });
         } else {
-            user.favorites.push(tailorId);
+            user.favorites.push(postId);
             await user.save();
             return res.status(200).json({ favorites: user.favorites });
         }
        
 
 
-        user.favorites.push(postId);
-        await user.save();
-
-        res.status(200).json({ favorites: user.favorites });
+        
+        
     } catch (error) {
         console.error('Error:', error);
         res.status(500).json({ error: 'Server error' });
