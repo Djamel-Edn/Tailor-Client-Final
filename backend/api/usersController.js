@@ -16,7 +16,7 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-// Verify transporter
+
 transporter.verify((error, success) => {
     if (error) {
         console.log('SMTP transporter verification failed:', error);
@@ -26,7 +26,7 @@ transporter.verify((error, success) => {
 });
 
 const sendVerificationEmail = ({ _id, email }, res) => {
-    const code = Math.floor(1000 + Math.random() * 9000); // Generate a random code between 1000 and 9999
+    const code = Math.floor(1000 + Math.random() * 9000); 
 
     const mailOptions = {
         from: process.env.AUTH_EMAIL,
@@ -36,7 +36,7 @@ const sendVerificationEmail = ({ _id, email }, res) => {
     };
 
     const saltRounds = 10;
-    const uniqueString = code.toString(); // Use the code as the uniqueString
+    const uniqueString = code.toString(); 
 
     bcrypt.hash(uniqueString, saltRounds)
         .then((hashedUniqueString) => {
@@ -88,7 +88,7 @@ const registerClient = async (req, res) => {
             name,
             email,
             password: hashedPassword,
-            resetPasswordToken: "",
+            
             gender,
             verified: false,
             orders: [],
@@ -384,21 +384,19 @@ const addFavorite = async (req, res) => {
 
         const postExists = user.favorites.indexOf(postId);
         if (postExists !== -1) {
-            user.favorites.splice(tailorIndex, 1);
+            user.favorites.splice(postExists, 1);
             await user.save();
             return res.status(200).json({ favorites: user.favorites });
         } else {
-            user.favorites.push(tailorId);
+            user.favorites.push(postId);
             await user.save();
             return res.status(200).json({ favorites: user.favorites });
         }
        
 
 
-        user.favorites.push(postId);
-        await user.save();
-
-        res.status(200).json({ favorites: user.favorites });
+        
+        
     } catch (error) {
         console.error('Error:', error);
         res.status(500).json({ error: 'Server error' });

@@ -12,7 +12,7 @@ router.put('/update/:userId', updateProfile);
 router.get('/getallTailors',getallTailors);
 router.post('/addFavorite/:userId',addFavorite)
 router.post('/updatePassword/:userId',updatePassword)
-router.post('/addLike',addLike)
+router.post('/addLike/:userId',addLike)
 router.get("/getTailor/:tailorId",getTailor)
 router.get('/getClient/:clientId', getClient)
 module.exports = router;
