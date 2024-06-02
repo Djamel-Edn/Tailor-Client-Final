@@ -88,7 +88,7 @@ const registerClient = async (req, res) => {
             name,
             email,
             password: hashedPassword,
-            resetPasswordToken: "",
+            
             gender,
             verified: false,
             orders: [],
