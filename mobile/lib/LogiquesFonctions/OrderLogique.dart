@@ -4,16 +4,18 @@ import 'package:http/http.dart' as http;
 import 'package:projetfinprepa/Data/ANSQST.dart';
 import 'package:projetfinprepa/Data/Order_class.dart';
 import 'package:projetfinprepa/Data/Tailor_Class.dart';
+import 'package:projetfinprepa/Providers/LocalDB.dart';
 import 'package:projetfinprepa/Providers/Tailors%20copy.dart';
 import 'package:projetfinprepa/Providers/Tailors.dart';
 import 'package:provider/provider.dart';
 
 class OrderLogique {
-  static Future<void> AddOrder(
+  static Future<OrderEmit?> AddOrder(
       IdClient, IdTailor, TotalPrice, posts, context) async {
     print("in add order");
-    var uri = "https://tailor-client-ps9z.onrender.com/order/create";
-    var uri2 = "https://tailor-client-ps9z.onrender.com/chat/fetch";
+    var uri = "https://tailor-client-5cqi.onrender.com/order/create";
+    var uri2 = "https://tailor-client-5cqi.onrender.com/chat/fetch";
+    //  late IO.Socket socket;
 
     final headerall = {'Content-Type': 'application/json'};
     print("aqqqqqqqqqqqqqwwwwwwww");
@@ -34,14 +36,38 @@ class OrderLogique {
     if (res.statusCode == 201) {
       var res2 =
           await http.post(Uri.parse(uri2), headers: headerall, body: bodyall2);
+      var jsonres = convert.jsonDecode(res.body);
+      print("her in res ////// ${jsonres}");
+      OrderEmit orderobj = OrderEmit(
+          orderDate: jsonres["orderDate"],
+          id: jsonres["_id"],
+          models: jsonres["posts"],
+          questionnaire: jsonres["questionnaire"],
+          postStyle: jsonres["postStyle"],
+          status: jsonres["status"],
+          totalPrice: jsonres["totalPrice"],
+          tailor: jsonres["tailor"]);
+      return orderobj;
+      // "id": jsonres["_id"],
+      // "models": jsonres["posts"],
+      // "orderDate": jsonres["orderDate"],
+      // "postStyle": jsonres["postStyle"],
+      // "questionnaire": jsonres["questionnaire"],
+      // "status": jsonres["status"],
+      // "tailor": jsonres["tailor"],
+      // "totalPrice": jsonres["totalPrice"],
+
+      // socket!.emit("newOrder", {
+      //   "newOrder": orderobj,
+      // });
     }
   }
 
-  static Future<void> AddOrderByMe(IdClient, IdTailor, TotalPrice, posts, image,
-      List<QSTANSRSELECTED> qsts, Tailor tailor, context) async {
+  static Future<OrderEmit?> AddOrderByMe(IdClient, IdTailor, TotalPrice, posts,
+      image, List<QSTANSRSELECTED> qsts, Tailor tailor, context) async {
     print("in add order");
-    var uri = "https://tailor-client-ps9z.onrender.com/order/create";
-    // var uri2 = "https://tailor-client-ps9z.onrender.com/chat/fetch";
+    var uri = "https://tailor-client-5cqi.onrender.com/order/create";
+    // var uri2 = "https://tailor-client-5cqi.onrender.com/chat/fetch";
     final headerall = {'Content-Type': 'application/json'};
 
     List<Map<String, dynamic>> jsonListOfObjects = qsts.map((obj) {
@@ -75,18 +101,28 @@ class OrderLogique {
           orderDate: jsonres["orderDate"],
           postStyle: jsonres["postStyle"]);
       Provider.of<ClientProvider>(context, listen: false).SetOrderTMP(order);
+      OrderEmit orderobj = OrderEmit(
+          orderDate: jsonres["orderDate"],
+          id: jsonres["_id"],
+          models: jsonres["posts"],
+          questionnaire: jsonres["questionnaire"],
+          postStyle: jsonres["postStyle"],
+          status: jsonres["status"],
+          totalPrice: jsonres["totalPrice"],
+          tailor: jsonres["tailor"]);
 
       await Provider.of<TailorsProvider>(context, listen: false)
           .GetTailor(IdTailor);
       print("in add order by be prove apre get tailor");
       // var res2 =
       //     await http.post(Uri.parse(uri2), headers: headerall, body: bodyall2);
+      return orderobj;
     }
   }
 
   static Future<void> AcceptOrder(idOrder, status, totalPrice, context) async {
     print("in update order");
-    var uri = "https://tailor-client-ps9z.onrender.com/order/update/$idOrder";
+    var uri = "https://tailor-client-5cqi.onrender.com/order/update/$idOrder";
 
     final headerall = {'Content-Type': 'application/json'};
     print("aqqqqqqqqqqqqqwwwwwwww");
@@ -100,14 +136,13 @@ class OrderLogique {
     print("in update order................................");
     if (res.statusCode == 200) {
       await Provider.of<TailorsProvider>(context, listen: false)
-          .GetTailor("6626eb65ed54ccf5c1e7e8ed");
+          .GetTailor(Provider.of<LocalDbProvider>(context, listen: false).id);
     }
-    print(res.statusCode);
   }
 
   static Future<void> RejectedOrder(idOrder, status, context) async {
     print("in update order");
-    var uri = "https://tailor-client-ps9z.onrender.com/order/update/$idOrder";
+    var uri = "https://tailor-client-5cqi.onrender.com/order/update/$idOrder";
 
     final headerall = {'Content-Type': 'application/json'};
     print("aqqqqqqqqqqqqqwwwwwwww");
@@ -120,8 +155,27 @@ class OrderLogique {
     print("in rej order................................");
     if (res.statusCode == 200) {
       await Provider.of<TailorsProvider>(context, listen: false)
-          .GetTailor("6626eb65ed54ccf5c1e7e8ed");
+          .GetTailor(Provider.of<LocalDbProvider>(context, listen: false).id);
     }
     print(res.statusCode);
+  }
+
+  static Future<void> DeletOrder(idOrder, context) async {
+    print("in update order");
+    var uri = "https://tailor-client-5cqi.onrender.com/order/delete/$idOrder";
+
+    final headerall = {'Content-Type': 'application/json'};
+    print("aqqqqqqqqqqqqqwwwwwwww");
+
+    var res = await http.delete(
+      Uri.parse(uri),
+      headers: headerall,
+    );
+    print("in delete order................................");
+    if (res.statusCode == 200) {
+      await Provider.of<ClientProvider>(context, listen: false)
+          .GetALlAboutCurrentUser(
+              Provider.of<LocalDbProvider>(context, listen: false).id, context);
+    }
   }
 }

@@ -7,10 +7,12 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:projetfinprepa/Data/Models_Class.dart';
 import 'package:projetfinprepa/Data/Tailor_Class.dart';
 import 'package:projetfinprepa/Data/category.dart';
+import 'package:projetfinprepa/LogiquesFonctions/ReviweLogique.dart';
 import 'package:projetfinprepa/Pages/ProfiPage.dart';
+import 'package:projetfinprepa/Providers/CollecionProv.dart';
+import 'package:projetfinprepa/Providers/LocalDB.dart';
 import 'package:projetfinprepa/Providers/Models.dart';
 import 'package:projetfinprepa/Providers/Tailors.dart';
-import 'package:projetfinprepa/Styles/DataStyles.dart';
 import 'package:provider/provider.dart';
 
 class SearchPage extends StatefulWidget {
@@ -167,824 +169,824 @@ class _SearchPageState extends State<SearchPage> {
     Result = ResultTilors;
     return DefaultTabController(
       length: 2,
-      child: Scaffold(
-        body: Container(
-          color: Color(0xFFFFF4DE),
-          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 30),
-          child: Column(
-            children: [
-              Align(
-                alignment: Alignment.topCenter,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: TextField(
-                    controller: _controller,
-                    onTapOutside: (event) {
-                      ResultModels = AllDataModels;
-                    },
-                    onEditingComplete: () {
-                      setState(() {
-                        FocusScope.of(context).unfocus();
-                        if (_FilterSlected.length == 0) {
-                          ResultModels = AllDataModels;
-                        } else {
-                          _controller.text = _controller.text =
-                              _FilterSlected[0].substring(0, 1).toUpperCase() +
-                                  _FilterSlected[0].substring(1).toLowerCase();
-                          _FilterSlected[0] = _controller.text;
-                        }
-                        Showseg = false;
-
-                        ResultModels = AllDataModels.where(
-                          (element) =>
-                              element.speciality.toUpperCase() ==
-                              _FilterSlected[0].toUpperCase(),
-                        ).toList();
-                        ResultModelsWithFilter = ResultModels;
-                        if (!ResultModels.isEmpty) {
-                          EmptyResultModels = false;
-                        }
-                      });
-                    },
-                    onTap: () {
-                      setState(() {
-                        Showseg = true;
-                      });
-                    },
-                    onChanged: (value) {
-                      _ShowMatchSeg(value);
-                      _ShowResult(value);
-
-                      var tst = FilterTypes.firstWhere(
-                        (element) =>
-                            element.toUpperCase() == value.toUpperCase(),
-                        orElse: () => "NotFound",
-                      );
-
-                      if (tst != "NotFound") {
+      child: Scaffold(body: Consumer<CollectionProvider>(
+        builder: (context, collecFavs, child) {
+          return Container(
+            color: Color(0xFFFFF4DE),
+            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+            child: Column(
+              children: [
+                Align(
+                  alignment: Alignment.topCenter,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: TextField(
+                      controller: _controller,
+                      onTapOutside: (event) {
+                        ResultModels = AllDataModels;
+                      },
+                      onEditingComplete: () {
                         setState(() {
-                          _FilterSlected.clear();
-                          _FilterSlected.add(value.toUpperCase());
+                          FocusScope.of(context).unfocus();
+                          if (_FilterSlected.length == 0) {
+                            ResultModels = AllDataModels;
+                          } else {
+                            _controller.text = _controller
+                                .text = _FilterSlected[0]
+                                    .substring(0, 1)
+                                    .toUpperCase() +
+                                _FilterSlected[0].substring(1).toLowerCase();
+                            _FilterSlected[0] = _controller.text;
+                          }
+                          Showseg = false;
+
+                          ResultModels = AllDataModels.where(
+                            (element) =>
+                                element.speciality.toUpperCase() ==
+                                _FilterSlected[0].toUpperCase(),
+                          ).toList();
+                          ResultModelsWithFilter = ResultModels;
+                          if (!ResultModels.isEmpty) {
+                            EmptyResultModels = false;
+                          }
                         });
-                      } else {
-                        _FilterSlected.clear();
-                      }
-                    },
-                    cursorColor: Colors.black,
-                    decoration: InputDecoration(
-                        prefixIcon: Icon(Icons.search),
-                        hintText: "Search",
-                        focusedBorder: OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Color(0xFF3C2F1F), width: 1),
-                            borderRadius: BorderRadius.circular(20)),
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20))),
+                      },
+                      onTap: () {
+                        setState(() {
+                          Showseg = true;
+                        });
+                      },
+                      onChanged: (value) {
+                        _ShowMatchSeg(value);
+                        _ShowResult(value);
+
+                        var tst = FilterTypes.firstWhere(
+                          (element) =>
+                              element.toUpperCase() == value.toUpperCase(),
+                          orElse: () => "NotFound",
+                        );
+
+                        if (tst != "NotFound") {
+                          setState(() {
+                            _FilterSlected.clear();
+                            _FilterSlected.add(value.toUpperCase());
+                          });
+                        } else {
+                          _FilterSlected.clear();
+                        }
+                      },
+                      cursorColor: Colors.black,
+                      decoration: InputDecoration(
+                          prefixIcon: Icon(Icons.search),
+                          hintText: "Search",
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Color(0xFF3C2F1F), width: 1),
+                              borderRadius: BorderRadius.circular(20)),
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20))),
+                    ),
                   ),
                 ),
-              ),
-              TabBar(
-                onTap: (index) {
-                  setState(() {
-                    indexCategory = index;
-                  });
-                },
-                padding: EdgeInsets.all(20),
-                isScrollable: true,
-                labelColor: Colors.white,
-                tabAlignment: TabAlignment.start,
-                dividerColor: Colors.transparent,
-                indicatorColor: Colors.transparent,
-                tabs: CategoryDataInSearch.category.map((e) {
-                  return Tab(
-                    child: AnimatedContainer(
-                        width: MediaQuery.of(context).size.width * 0.33,
-                        duration: Duration(milliseconds: 700),
-                        decoration: BoxDecoration(
-                            color: indexCategory == e.id ? Colors.black : null,
-                            border: indexCategory == e.id
-                                ? Border.all(color: Colors.black)
-                                : Border.all(color: Colors.black),
-                            borderRadius: BorderRadius.circular(8)),
-                        child: Center(
-                          child: Text(
-                            e.category,
-                            textAlign: TextAlign.center,
-                          ),
-                        )),
-                  );
-                }).toList(),
-              ),
-              Expanded(
-                  child: TabBarView(children: [
-                !Showseg
-                    ? EmptyResultModels
-                        ? Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  "Not foundkjmm",
-                                  style: TextStyle(
-                                      fontSize: 28, color: Color(0xFFC0AF9A)),
-                                ),
-                                SizedBox(
-                                  height: 20,
-                                ),
-                                Image.asset("images/ImjNotFound.png")
-                              ],
+                TabBar(
+                  onTap: (index) {
+                    setState(() {
+                      indexCategory = index;
+                    });
+                  },
+                  padding: EdgeInsets.all(20),
+                  isScrollable: true,
+                  labelColor: Colors.white,
+                  unselectedLabelColor: Color(0xFF84643D),
+                  tabAlignment: TabAlignment.start,
+                  dividerColor: Colors.transparent,
+                  indicatorColor: Colors.transparent,
+                  tabs: CategoryDataInSearch.category.map((e) {
+                    return Tab(
+                      child: AnimatedContainer(
+                          width: MediaQuery.of(context).size.width * 0.33,
+                          duration: Duration(milliseconds: 700),
+                          decoration: BoxDecoration(
+                              color: indexCategory == e.id
+                                  ? Color(0xFF84643D)
+                                  : null,
+                              border: indexCategory == e.id
+                                  ? Border.all(color: Color(0xFF84643D))
+                                  : Border.all(color: Color(0xFF84643D)),
+                              borderRadius: BorderRadius.circular(8)),
+                          child: Center(
+                            child: Text(
+                              e.category,
+                              textAlign: TextAlign.center,
                             ),
-                          )
-                        : AnimationLimiter(
-                            child: GridView.custom(
-                              physics: BouncingScrollPhysics(),
-                              gridDelegate: SliverQuiltedGridDelegate(
-                                crossAxisCount: 4,
-                                mainAxisSpacing: 4,
-                                crossAxisSpacing: 4,
-                                repeatPattern:
-                                    QuiltedGridRepeatPattern.inverted,
-                                pattern: [
-                                  QuiltedGridTile(2, 2),
-                                  QuiltedGridTile(1, 1),
-                                  QuiltedGridTile(1, 1),
-                                  QuiltedGridTile(1, 2),
+                          )),
+                    );
+                  }).toList(),
+                ),
+                Expanded(
+                    child: TabBarView(children: [
+                  !Showseg
+                      ? EmptyResultModels
+                          ? Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "Not found",
+                                    style: TextStyle(
+                                        fontSize: 28, color: Color(0xFFC0AF9A)),
+                                  ),
+                                  SizedBox(
+                                    height: 20,
+                                  ),
+                                  Image.asset("images/ImjNotFound.png")
                                 ],
                               ),
-                              childrenDelegate: SliverChildBuilderDelegate(
-                                childCount: ResultModels.length,
-                                (context, index) =>
-                                    AnimationConfiguration.staggeredGrid(
-                                  columnCount: 4,
-                                  position: index,
-                                  duration: Duration(seconds: 1),
-                                  child: SlideAnimation(
-                                    verticalOffset: 90,
-                                    child: ScaleAnimation(
-                                      delay: Duration(
-                                          microseconds: 1200 + (index * 1000)),
-                                      child: InkWell(
-                                        onTap: () {
-                                          showModalBottomSheet(
-                                            backgroundColor: Color(0xFFFFF4DE),
-                                            isDismissible: true,
-                                            context: context,
-                                            builder: (context) {
-                                              return StatefulBuilder(
-                                                builder: (context, setState) {
-                                                  return Column(children: [
-                                                    Expanded(
-                                                      child: Stack(
-                                                        children: [
-                                                          Container(
-                                                            decoration: BoxDecoration(
-                                                                color: Colors
-                                                                    .transparent,
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            10)),
-                                                            margin:
-                                                                EdgeInsets.all(
-                                                                    10),
-                                                            child: AspectRatio(
-                                                              aspectRatio: 1,
-                                                              child: ClipRRect(
+                            )
+                          : AnimationLimiter(
+                              child: GridView.custom(
+                                physics: BouncingScrollPhysics(),
+                                gridDelegate: SliverQuiltedGridDelegate(
+                                  crossAxisCount: 4,
+                                  mainAxisSpacing: 4,
+                                  crossAxisSpacing: 4,
+                                  repeatPattern:
+                                      QuiltedGridRepeatPattern.inverted,
+                                  pattern: [
+                                    QuiltedGridTile(2, 2),
+                                    QuiltedGridTile(1, 1),
+                                    QuiltedGridTile(1, 1),
+                                    QuiltedGridTile(1, 2),
+                                  ],
+                                ),
+                                childrenDelegate: SliverChildBuilderDelegate(
+                                  childCount: ResultModels.length,
+                                  (context, index) =>
+                                      AnimationConfiguration.staggeredGrid(
+                                    columnCount: 4,
+                                    position: index,
+                                    duration: Duration(seconds: 1),
+                                    child: SlideAnimation(
+                                      verticalOffset: 90,
+                                      child: ScaleAnimation(
+                                        delay: Duration(
+                                            microseconds:
+                                                1200 + (index * 1000)),
+                                        child: InkWell(
+                                          onTap: () {
+                                            showModalBottomSheet(
+                                              backgroundColor:
+                                                  Color(0xFFFFF4DE),
+                                              isDismissible: true,
+                                              context: context,
+                                              builder: (context) {
+                                                return StatefulBuilder(
+                                                  builder: (context, setState) {
+                                                    return Column(children: [
+                                                      Expanded(
+                                                        child: Stack(
+                                                          children: [
+                                                            Container(
+                                                              decoration: BoxDecoration(
+                                                                  color: Colors
+                                                                      .transparent,
                                                                   borderRadius:
                                                                       BorderRadius
                                                                           .circular(
-                                                                              10),
-                                                                  child: ResultModelsWithFilter
-                                                                              .length !=
-                                                                          0
-                                                                      ? Image
-                                                                          .memory(
-                                                                          base64Decode(
-                                                                              ResultModelsWithFilter[index].image),
-                                                                          fit: BoxFit
-                                                                              .cover,
-                                                                        )
-                                                                      : Image
-                                                                          .memory(
-                                                                          base64Decode(
-                                                                              ResultModels[index].image),
-                                                                          fit: BoxFit
-                                                                              .cover,
-                                                                        )),
+                                                                              10)),
+                                                              margin: EdgeInsets
+                                                                  .all(10),
+                                                              child:
+                                                                  AspectRatio(
+                                                                aspectRatio: 1,
+                                                                child: ClipRRect(
+                                                                    borderRadius: BorderRadius.circular(10),
+                                                                    child: ResultModelsWithFilter.length != 0
+                                                                        ? Image.memory(
+                                                                            base64Decode(ResultModelsWithFilter[index].image),
+                                                                            fit:
+                                                                                BoxFit.cover,
+                                                                          )
+                                                                        : Image.memory(
+                                                                            base64Decode(ResultModels[index].image),
+                                                                            fit:
+                                                                                BoxFit.cover,
+                                                                          )),
+                                                              ),
                                                             ),
-                                                          ),
-                                                          Positioned(
-                                                              top: 30,
-                                                              right: 20,
-                                                              child: InkWell(
-                                                                onTap: () {
-                                                                  setState(
-                                                                      () {});
-                                                                  print(
-                                                                      "save post");
-                                                                  if (ResultModelsWithFilter
-                                                                          .length !=
-                                                                      0) {
-                                                                    print(ResultModelsWithFilter[
-                                                                            index]
-                                                                        .titel);
-                                                                    if (SavedData
-                                                                        .contains(
-                                                                            ResultModelsWithFilter[index])) {
-                                                                      SavedData.remove(
-                                                                          ResultModelsWithFilter[
-                                                                              index]);
+                                                            Positioned(
+                                                                top: 30,
+                                                                right: 20,
+                                                                child: InkWell(
+                                                                  overlayColor:
+                                                                      MaterialStatePropertyAll(
+                                                                          Colors
+                                                                              .transparent),
+                                                                  onTap:
+                                                                      () async {
+                                                                    ////////
+                                                                    setState(
+                                                                        () {});
+                                                                    print(
+                                                                        "save post");
+                                                                    if (ResultModelsWithFilter
+                                                                            .length !=
+                                                                        0) {
+                                                                      await RevLogique.AddLikePost(
+                                                                          Provider.of<LocalDbProvider>(context, listen: false)
+                                                                              .id,
+                                                                          ResultModelsWithFilter[index]
+                                                                              .id,
+                                                                          context);
+                                                                      collecFavs
+                                                                          .addOrdeletLike(
+                                                                              ResultModelsWithFilter[index].id);
                                                                     } else {
-                                                                      SavedData.add(
-                                                                          ResultModelsWithFilter[
-                                                                              index]);
+                                                                      await RevLogique.AddLikePost(
+                                                                          Provider.of<LocalDbProvider>(context, listen: false)
+                                                                              .id,
+                                                                          ResultModels[index]
+                                                                              .id,
+                                                                          context);
+                                                                      collecFavs
+                                                                          .addOrdeletLike(
+                                                                              ResultModels[index].id);
                                                                     }
-                                                                  } else {
-                                                                    print(ResultModels[
-                                                                            index]
-                                                                        .titel);
-                                                                    if (SavedData
-                                                                        .contains(
-                                                                            ResultModels[index])) {
-                                                                      SavedData.remove(
-                                                                          ResultModels[
-                                                                              index]);
-                                                                    } else {
-                                                                      SavedData.add(
-                                                                          ResultModels[
-                                                                              index]);
-                                                                    }
-                                                                  }
-                                                                  print(
-                                                                      SavedData);
-                                                                },
-                                                                child:
-                                                                    Container(
-                                                                  height: 25,
-                                                                  child: ResultModelsWithFilter
-                                                                              .length ==
-                                                                          0
-                                                                      ? !SavedData.contains(ResultModels[
-                                                                              index])
-                                                                          ? Image
-                                                                              .asset(
-                                                                              "images/saveinst.png",
-                                                                            )
-                                                                          : Image
-                                                                              .asset(
-                                                                              "images/saveinst.png",
-                                                                              color: Colors.amber,
-                                                                            )
-                                                                      : !SavedData.contains(ResultModelsWithFilter[
-                                                                              index])
-                                                                          ? Image
-                                                                              .asset(
-                                                                              "images/saveinst.png",
-                                                                            )
-                                                                          : Image
-                                                                              .asset(
-                                                                              "images/saveinst.png",
-                                                                              color: Colors.amber,
-                                                                            ),
-                                                                ),
-                                                              )),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                    Padding(
-                                                      padding: const EdgeInsets
-                                                          .symmetric(
-                                                          horizontal: 20,
-                                                          vertical: 8),
-                                                      child: Container(
-                                                        decoration: BoxDecoration(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        10),
-                                                            border:
-                                                                Border.all()),
-                                                        child: Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .all(8.0),
-                                                          child: Row(
-                                                            children: [
-                                                              InkWell(
-                                                                onTap: () {
-                                                                  Navigator.push(
-                                                                      context,
-                                                                      MaterialPageRoute(
-                                                                        builder:
-                                                                            (context) =>
-                                                                                ProfilPage(
-                                                                          model:
-                                                                              null,
-                                                                          tailor:
-                                                                              AllDataModels[index].tailor!,
-                                                                          IsFoRead:
-                                                                              true,
-                                                                          IsFoOrder:
-                                                                              false,
-                                                                        ),
-                                                                      ));
-                                                                },
-                                                                child:
-                                                                    CircleAvatar(
-                                                                  radius: 25,
-                                                                  backgroundImage: MemoryImage(base64Decode(AllDataModels[
-                                                                          index]
-                                                                      .tailor!
-                                                                      .profilePicture!
-                                                                      .substring(
-                                                                          23))),
-                                                                ),
-                                                              ),
-                                                              SizedBox(
-                                                                width: 6,
-                                                              ),
-                                                              Column(
-                                                                children: [
-                                                                  InkWell(
-                                                                    onTap: () {
-                                                                      Navigator.push(
-                                                                          context,
-                                                                          MaterialPageRoute(
-                                                                            builder: (context) =>
-                                                                                ProfilPage(
-                                                                              model: null,
-                                                                              tailor: AllDataModels[index].tailor!,
-                                                                              IsFoRead: true,
-                                                                              IsFoOrder: false,
-                                                                            ),
-                                                                          ));
-                                                                    },
-                                                                    child: Text(
-                                                                      AllDataModels[
-                                                                              index]
-                                                                          .tailor!
-                                                                          .name!,
-                                                                      style:
-                                                                          TextStyle(
-                                                                        fontFamily:
-                                                                            "Nanum_Myeongjo",
-                                                                        fontWeight:
-                                                                            FontWeight.bold,
-                                                                        fontSize:
-                                                                            20,
-                                                                      ),
-                                                                    ),
-                                                                  ),
-                                                                  RatingBar
-                                                                      .builder(
-                                                                    initialRating:
-                                                                        CalculRating(
-                                                                            AllDataModels[index].tailor!),
-                                                                    itemSize:
-                                                                        15,
-                                                                    direction: Axis
-                                                                        .horizontal,
-                                                                    allowHalfRating:
-                                                                        true,
-                                                                    itemCount:
-                                                                        5,
-                                                                    itemBuilder:
-                                                                        (context,
-                                                                                _) =>
-                                                                            const Icon(
-                                                                      Icons
-                                                                          .star,
-                                                                      size: 1,
-                                                                      color: Colors
-                                                                          .amber,
-                                                                    ),
-                                                                    onRatingUpdate:
-                                                                        (rating) {},
-                                                                    ignoreGestures:
-                                                                        true,
-                                                                  )
-                                                                ],
-                                                              ),
-                                                              Expanded(
-                                                                  child:
-                                                                      SizedBox()),
-                                                              Row(
-                                                                children: [
-                                                                  IconButton(
-                                                                      onPressed:
-                                                                          () {
-                                                                        if (Style
-                                                                            .SavedTailroFav.contains(AllDataModels[
-                                                                                index]
-                                                                            .tailor!
-                                                                            .id)) {
-                                                                          Style.SavedTailroFav.remove(AllDataModels[index]
-                                                                              .tailor!
-                                                                              .id);
-                                                                        } else {
-                                                                          Style.SavedTailroFav.add(AllDataModels[index]
-                                                                              .tailor!
-                                                                              .id!);
-                                                                        }
-                                                                        setState(
-                                                                            () {});
-                                                                        // SavedTailroFav.add(value)
-                                                                      },
-                                                                      icon: Style.SavedTailroFav.contains(AllDataModels[index]
-                                                                              .tailor!
-                                                                              .id)
-                                                                          ? Icon(
-                                                                              Icons.favorite_border)
-                                                                          : Icon(
-                                                                              Icons.favorite,
-                                                                              color: Colors.red,
-                                                                            )),
-                                                                ],
-                                                              )
-                                                            ],
-                                                          ),
+                                                                    setState(
+                                                                        () {});
+                                                                  },
+                                                                  child: Container(
+                                                                      height: 40,
+                                                                      padding: EdgeInsets.all(7),
+                                                                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(20), color: Color(0xFFFCF9F6)),
+                                                                      child: ResultModelsWithFilter.length == 0
+                                                                          ? collecFavs.likes.contains(ResultModels[index].id)
+                                                                              ? Image.asset(
+                                                                                  "images/enregistrerinstagram (1).png",
+                                                                                )
+                                                                              : Image.asset(
+                                                                                  "images/enregistrerinstagram.png",
+                                                                                )
+                                                                          : collecFavs.likes.contains(ResultModelsWithFilter[index].id)
+                                                                              ? Image.asset(
+                                                                                  "images/enregistrerinstagram (1).png",
+                                                                                )
+                                                                              : Image.asset(
+                                                                                  "images/enregistrerinstagram.png",
+                                                                                )),
+                                                                )),
+                                                          ],
                                                         ),
                                                       ),
-                                                    ),
-                                                    Padding(
-                                                      padding: const EdgeInsets
-                                                          .symmetric(
-                                                          horizontal: 20,
-                                                          vertical: 15),
-                                                      child: InkWell(
-                                                        onTap: () {
-                                                          Model model;
-                                                          if (ResultModelsWithFilter
-                                                                  .length ==
-                                                              0) {
-                                                            model =
-                                                                ResultModels[
-                                                                    index];
-                                                          } else {
-                                                            model =
-                                                                ResultModelsWithFilter[
-                                                                    index];
-                                                          }
-                                                          Navigator.push(
-                                                              context,
-                                                              MaterialPageRoute(
-                                                                builder:
-                                                                    (context) =>
-                                                                        ProfilPage(
-                                                                  model: model,
-                                                                  tailor: AllDataModels[
-                                                                          index]
-                                                                      .tailor!,
-                                                                  IsFoRead:
-                                                                      false,
-                                                                  IsFoOrder:
-                                                                      true,
-                                                                ),
-                                                              ));
-                                                        },
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .symmetric(
+                                                                horizontal: 20,
+                                                                vertical: 8),
                                                         child: Container(
-                                                          alignment:
-                                                              Alignment.center,
-                                                          height: 60,
-                                                          width:
-                                                              double.infinity,
                                                           decoration: BoxDecoration(
                                                               borderRadius:
                                                                   BorderRadius
                                                                       .circular(
-                                                                          12),
-                                                              border:
-                                                                  Border.all(),
-                                                              color:
-                                                                  Colors.black),
-                                                          child: Text(
-                                                            "Order Now",
-                                                            style: TextStyle(
-                                                                fontFamily:
-                                                                    "Nanum_Myeongjo",
-                                                                fontSize: 21,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                                color: Colors
-                                                                    .white),
+                                                                          10),
+                                                              border: Border.all(
+                                                                  color: Color(
+                                                                      0xFF84643D))),
+                                                          child: Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .all(8.0),
+                                                            child: Row(
+                                                              children: [
+                                                                InkWell(
+                                                                  onTap: () {
+                                                                    Navigator.push(
+                                                                        context,
+                                                                        MaterialPageRoute(
+                                                                          builder: (context) =>
+                                                                              ProfilPage(
+                                                                            model:
+                                                                                null,
+                                                                            tailor:
+                                                                                AllDataModels[index].tailor!,
+                                                                            IsFoRead:
+                                                                                true,
+                                                                            IsFoOrder:
+                                                                                false,
+                                                                          ),
+                                                                        ));
+                                                                  },
+                                                                  child: AllDataModels[index]
+                                                                              .tailor!
+                                                                              .profilePicture !=
+                                                                          "../utils/pp.png"
+                                                                      ? CircleAvatar(
+                                                                          foregroundImage: MemoryImage(base64Decode(AllDataModels[index]
+                                                                              .tailor!
+                                                                              .profilePicture!)))
+                                                                      : Expanded(
+                                                                          child:
+                                                                              CircleAvatar(foregroundImage: AssetImage("images/profileimage.png")),
+                                                                        ),
+                                                                ),
+                                                                SizedBox(
+                                                                  width: 6,
+                                                                ),
+                                                                Column(
+                                                                  children: [
+                                                                    InkWell(
+                                                                      onTap:
+                                                                          () {
+                                                                        Navigator.push(
+                                                                            context,
+                                                                            MaterialPageRoute(
+                                                                              builder: (context) => ProfilPage(
+                                                                                model: null,
+                                                                                tailor: AllDataModels[index].tailor!,
+                                                                                IsFoRead: true,
+                                                                                IsFoOrder: false,
+                                                                              ),
+                                                                            ));
+                                                                      },
+                                                                      child:
+                                                                          Text(
+                                                                        AllDataModels[index]
+                                                                            .tailor!
+                                                                            .name!,
+                                                                        style:
+                                                                            TextStyle(
+                                                                          fontFamily:
+                                                                              "Nanum_Myeongjo",
+                                                                          fontWeight:
+                                                                              FontWeight.bold,
+                                                                          fontSize:
+                                                                              20,
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                    RatingBar
+                                                                        .builder(
+                                                                      initialRating:
+                                                                          CalculRating(
+                                                                              AllDataModels[index].tailor!),
+                                                                      itemSize:
+                                                                          15,
+                                                                      direction:
+                                                                          Axis.horizontal,
+                                                                      allowHalfRating:
+                                                                          true,
+                                                                      itemCount:
+                                                                          5,
+                                                                      itemBuilder:
+                                                                          (context, _) =>
+                                                                              const Icon(
+                                                                        Icons
+                                                                            .star,
+                                                                        size: 1,
+                                                                        color: Colors
+                                                                            .amber,
+                                                                      ),
+                                                                      onRatingUpdate:
+                                                                          (rating) {},
+                                                                      ignoreGestures:
+                                                                          true,
+                                                                    )
+                                                                  ],
+                                                                ),
+                                                                Expanded(
+                                                                    child:
+                                                                        SizedBox()),
+                                                                Row(
+                                                                  children: [
+                                                                    IconButton(
+                                                                        onPressed:
+                                                                            () async {
+                                                                          await RevLogique.AddFavTailor(
+                                                                              Provider.of<LocalDbProvider>(context, listen: false).id,
+                                                                              AllDataModels[index].tailor!.id,
+                                                                              context);
+                                                                          collecFavs.addOrdeletFav(AllDataModels[index]
+                                                                              .tailor!
+                                                                              .id);
+                                                                          setState(
+                                                                              () {});
+
+                                                                          // SavedTailroFav.add(value)
+                                                                        },
+                                                                        icon: collecFavs.favs.contains(AllDataModels[index].tailor!.id)
+                                                                            ? Icon(
+                                                                                Icons.favorite,
+                                                                                color: Colors.red,
+                                                                              )
+                                                                            : Icon(
+                                                                                Icons.favorite_border,
+                                                                              )),
+                                                                  ],
+                                                                )
+                                                              ],
+                                                            ),
                                                           ),
                                                         ),
                                                       ),
-                                                    )
-                                                  ]);
-                                                },
-                                              );
-                                            },
-                                          );
-                                        },
-                                        child: Hero(
-                                            tag: "$index",
-                                            child: AspectRatio(
-                                              aspectRatio: 1,
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                    border: Border.all(
-                                                        color: Color(0xFF84643D)
-                                                            .withAlpha(50))),
-                                                child: Image.memory(
-                                                  base64Decode(
-                                                    ResultModels[index].image,
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .symmetric(
+                                                                horizontal: 20,
+                                                                vertical: 15),
+                                                        child: InkWell(
+                                                          onTap: () {
+                                                            Model model;
+                                                            if (ResultModelsWithFilter
+                                                                    .length ==
+                                                                0) {
+                                                              model =
+                                                                  ResultModels[
+                                                                      index];
+                                                            } else {
+                                                              model =
+                                                                  ResultModelsWithFilter[
+                                                                      index];
+                                                            }
+                                                            Navigator.push(
+                                                                context,
+                                                                MaterialPageRoute(
+                                                                  builder:
+                                                                      (context) =>
+                                                                          ProfilPage(
+                                                                    model:
+                                                                        model,
+                                                                    tailor: AllDataModels[
+                                                                            index]
+                                                                        .tailor!,
+                                                                    IsFoRead:
+                                                                        false,
+                                                                    IsFoOrder:
+                                                                        true,
+                                                                  ),
+                                                                ));
+                                                          },
+                                                          child: Container(
+                                                            alignment: Alignment
+                                                                .center,
+                                                            height: 60,
+                                                            width:
+                                                                double.infinity,
+                                                            decoration: BoxDecoration(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            12),
+                                                                border: Border.all(
+                                                                    color: Color(
+                                                                        0xFF84643D)),
+                                                                color: Color(
+                                                                    0xFF84643D)),
+                                                            child: Text(
+                                                              "Order Now",
+                                                              style: TextStyle(
+                                                                  fontFamily:
+                                                                      "Nanum_Myeongjo",
+                                                                  fontSize: 21,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  color: Colors
+                                                                      .white),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      )
+                                                    ]);
+                                                  },
+                                                );
+                                              },
+                                            );
+                                          },
+                                          child: Hero(
+                                              tag: "$index",
+                                              child: AspectRatio(
+                                                aspectRatio: 1,
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                      border: Border.all(
+                                                          color: Color(
+                                                                  0xFF84643D)
+                                                              .withAlpha(50))),
+                                                  child: Image.memory(
+                                                    base64Decode(
+                                                      ResultModels[index].image,
+                                                    ),
+                                                    fit: BoxFit.cover,
                                                   ),
-                                                  fit: BoxFit.cover,
                                                 ),
-                                              ),
-                                            )),
+                                              )),
+                                        ),
                                       ),
                                     ),
                                   ),
                                 ),
                               ),
+                            )
+                      : Wrap(
+                          children: ResultMatchSeg.map((e) {
+                          return Padding(
+                            padding: const EdgeInsets.all(3.0),
+                            child: FilterChip(
+                              backgroundColor: Color(0xFFC0AF9A).withAlpha(50),
+                              label: Text("$e"),
+                              side: BorderSide.none,
+                              selectedColor: Color(0xFFC0AF9A).withAlpha(50),
+                              selected:
+                                  _FilterSlected.contains(e.toUpperCase()),
+                              onSelected: (value) {
+                                setState(() {
+                                  if (value) {
+                                    _FilterSlected.clear();
+                                    _FilterSlected.add(e.toUpperCase());
+                                  } else {
+                                    _FilterSlected.removeWhere(
+                                        (element) => element == e);
+                                  }
+                                  if (_FilterSlected.length == 0) {
+                                    ResultModels = AllDataModels;
+                                  } else {
+                                    _controller.text = _FilterSlected[0]
+                                            .substring(0, 1)
+                                            .toUpperCase() +
+                                        _FilterSlected[0]
+                                            .substring(1)
+                                            .toLowerCase();
+                                  }
+                                });
+                              },
                             ),
-                          )
-                    : Wrap(
-                        children: ResultMatchSeg.map((e) {
-                        return Padding(
-                          padding: const EdgeInsets.all(3.0),
-                          child: FilterChip(
-                            label: Text("$e"),
-                            selected: _FilterSlected.contains(e.toUpperCase()),
-                            onSelected: (value) {
-                              setState(() {
-                                if (value) {
-                                  _FilterSlected.clear();
-                                  _FilterSlected.add(e.toUpperCase());
-                                } else {
-                                  _FilterSlected.removeWhere(
-                                      (element) => element == e);
-                                }
-                                if (_FilterSlected.length == 0) {
-                                  ResultModels = AllDataModels;
-                                } else {
-                                  _controller.text = _FilterSlected[0]
-                                          .substring(0, 1)
-                                          .toUpperCase() +
-                                      _FilterSlected[0]
-                                          .substring(1)
-                                          .toLowerCase();
-                                }
-                              });
-                            },
+                          );
+                        }).toList()),
+                  EmptyResultTailors
+                      ? Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "Not found",
+                                style: TextStyle(
+                                    fontSize: 28, color: Color(0xFFC0AF9A)),
+                              ),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              Image.asset("images/ImjNotFound.png")
+                            ],
                           ),
-                        );
-                      }).toList()),
-                EmptyResultTailors
-                    ? Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                        )
+                      : Column(
                           children: [
-                            Text(
-                              "Not found",
-                              style: TextStyle(
-                                  fontSize: 28, color: Color(0xFFC0AF9A)),
+                            CheckboxListTile(
+                              shape: CircleBorder(),
+                              side: BorderSide(color: Colors.black),
+                              checkColor: Colors.white,
+                              activeColor: Colors.black,
+                              title: Row(
+                                children: [
+                                  Container(
+                                      height: 21,
+                                      child: Image.asset("images/adress.png")),
+                                  SizedBox(
+                                    width: 4,
+                                  ),
+                                  Text(
+                                    "Nearest",
+                                    style: TextStyle(
+                                      fontFamily: "Nanum_Myeongjo",
+                                      // fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              value: _nearest,
+                              onChanged: (value) {
+                                setState(() {
+                                  _nearest = value!;
+                                  if (value) {
+                                    ResultTilorsNearest = ResultTilors.where(
+                                        (element) =>
+                                            element.name == "Rajaa" ||
+                                            element.name == "Nour").toList();
+                                  }
+                                });
+                              },
                             ),
-                            SizedBox(
-                              height: 20,
+                            Divider(
+                              thickness: 1,
+                              color: Colors.black,
                             ),
-                            Image.asset("images/ImjNotFound.png")
+                            Expanded(
+                              child: !_nearest
+                                  ? GridView.builder(
+                                      gridDelegate:
+                                          SliverGridDelegateWithFixedCrossAxisCount(
+                                              crossAxisCount: 2,
+                                              childAspectRatio: 0.87),
+                                      itemCount: ResultTilors.length,
+                                      itemBuilder: (context, index) {
+                                        return InkWell(
+                                          onTap: () {
+                                            print(ResultTilors[index]);
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      ProfilPage(
+                                                          model: null,
+                                                          tailor: ResultTilors[
+                                                              index],
+                                                          IsFoRead: true,
+                                                          IsFoOrder: false),
+                                                ));
+                                          },
+                                          child: AnimatedContainer(
+                                            duration: Duration(
+                                                milliseconds:
+                                                    600 + (index * 100)),
+                                            padding: EdgeInsets.all(20),
+                                            margin: EdgeInsets.symmetric(
+                                                horizontal: 10, vertical: 12),
+                                            decoration: BoxDecoration(
+                                                border: Border.all(
+                                                    color: Colors.black),
+                                                color: Color(0xFFD9D9D9)
+                                                    .withAlpha(60),
+                                                borderRadius:
+                                                    BorderRadius.circular(10)),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                ResultTilors[index]
+                                                            .profilePicture
+                                                            .toString() !=
+                                                        "../utils/pp.png"
+                                                    ? CircleAvatar(
+                                                        radius: 40,
+                                                        foregroundImage:
+                                                            MemoryImage(
+                                                          base64Decode(
+                                                              ResultTilors[
+                                                                      index]
+                                                                  .profilePicture
+                                                                  .toString()
+                                                                  .substring(
+                                                                      23)),
+                                                        ),
+                                                      )
+                                                    : CircleAvatar(
+                                                        radius: 40,
+                                                        foregroundImage:
+                                                            AssetImage(
+                                                          "images/DefaultProfileWomen.png",
+                                                        ),
+                                                      ),
+                                                Text(
+                                                  ResultTilors[index].name!,
+                                                  style:
+                                                      TextStyle(fontSize: 18),
+                                                ),
+                                                RatingBar.builder(
+                                                  initialRating: CalculRating(
+                                                      ResultTilors[index]),
+                                                  minRating: 1,
+                                                  itemSize: 15,
+                                                  direction: Axis.horizontal,
+                                                  allowHalfRating: true,
+                                                  itemCount: 5,
+                                                  itemBuilder: (context, _) =>
+                                                      Icon(
+                                                    Icons.star,
+                                                    size: 1,
+                                                    color: Colors.amber,
+                                                  ),
+                                                  onRatingUpdate: (rating) {},
+                                                  ignoreGestures: true,
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    )
+                                  : GridView.builder(
+                                      gridDelegate:
+                                          SliverGridDelegateWithFixedCrossAxisCount(
+                                              crossAxisCount: 2,
+                                              childAspectRatio: 0.87),
+                                      itemCount: ResultTilorsNearest.length,
+                                      itemBuilder: (context, index) {
+                                        return InkWell(
+                                          onTap: () {
+                                            print(ResultTilors.length);
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      ProfilPage(
+                                                          model: null,
+                                                          tailor:
+                                                              ResultTilorsNearest[
+                                                                  index],
+                                                          IsFoRead: true,
+                                                          IsFoOrder: false),
+                                                ));
+                                          },
+                                          child: AnimatedContainer(
+                                            duration: Duration(
+                                                milliseconds:
+                                                    600 + (index * 100)),
+                                            padding: EdgeInsets.all(20),
+                                            margin: EdgeInsets.symmetric(
+                                                horizontal: 10, vertical: 12),
+                                            decoration: BoxDecoration(
+                                                boxShadow: [],
+                                                border: Border.all(
+                                                    color: Colors.black),
+                                                color: Color(0xFFD9D9D9)
+                                                    .withAlpha(60),
+                                                borderRadius:
+                                                    BorderRadius.circular(10)),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                ResultTilorsNearest[index]
+                                                            .profilePicture
+                                                            .toString() !=
+                                                        "../utils/pp.png"
+                                                    ? CircleAvatar(
+                                                        radius: 40,
+                                                        foregroundImage:
+                                                            MemoryImage(
+                                                          base64Decode(
+                                                              ResultTilorsNearest[
+                                                                      index]
+                                                                  .profilePicture
+                                                                  .toString()
+                                                                  .substring(
+                                                                      23)),
+                                                        ),
+                                                      )
+                                                    : CircleAvatar(
+                                                        radius: 40,
+                                                        foregroundImage:
+                                                            AssetImage(
+                                                          "images/DefaultProfileWomen.png",
+                                                        ),
+                                                      ),
+                                                Text(
+                                                  ResultTilorsNearest[index]
+                                                      .name!,
+                                                  style:
+                                                      TextStyle(fontSize: 18),
+                                                ),
+                                                RatingBar.builder(
+                                                  initialRating: CalculRating(
+                                                      ResultTilorsNearest[
+                                                          index]),
+                                                  minRating: 1,
+                                                  itemSize: 15,
+                                                  direction: Axis.horizontal,
+                                                  allowHalfRating: true,
+                                                  itemCount: 5,
+                                                  itemBuilder: (context, _) =>
+                                                      Icon(
+                                                    Icons.star,
+                                                    size: 1,
+                                                    color: Colors.amber,
+                                                  ),
+                                                  onRatingUpdate: (rating) {},
+                                                  ignoreGestures: true,
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                            ),
                           ],
                         ),
-                      )
-                    : Column(
-                        children: [
-                          CheckboxListTile(
-                            shape: CircleBorder(),
-                            side: BorderSide(color: Colors.black),
-                            checkColor: Colors.white,
-                            activeColor: Colors.black,
-                            title: Row(
-                              children: [
-                                Container(
-                                    height: 21,
-                                    child: Image.asset("images/adress.png")),
-                                SizedBox(
-                                  width: 4,
-                                ),
-                                Text(
-                                  "Nearest",
-                                  style: TextStyle(
-                                    fontFamily: "Nanum_Myeongjo",
-                                    // fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            value: _nearest,
-                            onChanged: (value) {
-                              setState(() {
-                                _nearest = value!;
-                                if (value) {
-                                  ResultTilorsNearest = ResultTilors.where(
-                                      (element) =>
-                                          element.name == "Rajaa" ||
-                                          element.name == "Nour").toList();
-                                }
-                              });
-                            },
-                          ),
-                          Divider(
-                            thickness: 1,
-                            color: Colors.black,
-                          ),
-                          Expanded(
-                            child: !_nearest
-                                ? GridView.builder(
-                                    gridDelegate:
-                                        SliverGridDelegateWithFixedCrossAxisCount(
-                                            crossAxisCount: 2,
-                                            childAspectRatio: 0.87),
-                                    itemCount: ResultTilors.length,
-                                    itemBuilder: (context, index) {
-                                      return InkWell(
-                                        onTap: () {
-                                          print(ResultTilors[index]);
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    ProfilPage(
-                                                        model: null,
-                                                        tailor:
-                                                            ResultTilors[index],
-                                                        IsFoRead: true,
-                                                        IsFoOrder: false),
-                                              ));
-                                        },
-                                        child: AnimatedContainer(
-                                          duration: Duration(
-                                              milliseconds:
-                                                  600 + (index * 100)),
-                                          padding: EdgeInsets.all(20),
-                                          margin: EdgeInsets.symmetric(
-                                              horizontal: 10, vertical: 12),
-                                          decoration: BoxDecoration(
-                                              border: Border.all(
-                                                  color: Colors.black),
-                                              color: Color(0xFFD9D9D9)
-                                                  .withAlpha(60),
-                                              borderRadius:
-                                                  BorderRadius.circular(10)),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              ResultTilors[index]
-                                                          .profilePicture
-                                                          .toString() !=
-                                                      "../utils/pp.png"
-                                                  ? CircleAvatar(
-                                                      radius: 40,
-                                                      foregroundImage:
-                                                          MemoryImage(
-                                                        base64Decode(
-                                                            ResultTilors[index]
-                                                                .profilePicture
-                                                                .toString()
-                                                                .substring(23)),
-                                                      ),
-                                                    )
-                                                  : CircleAvatar(
-                                                      radius: 40,
-                                                      foregroundImage:
-                                                          AssetImage(
-                                                        "images/DefaultProfileWomen.png",
-                                                      ),
-                                                    ),
-                                              Text(
-                                                ResultTilors[index].name!,
-                                                style: TextStyle(fontSize: 18),
-                                              ),
-                                              RatingBar.builder(
-                                                initialRating: 3,
-                                                minRating: 1,
-                                                itemSize: 15,
-                                                direction: Axis.horizontal,
-                                                allowHalfRating: true,
-                                                itemCount: 5,
-                                                itemBuilder: (context, _) =>
-                                                    Icon(
-                                                  Icons.star,
-                                                  size: 1,
-                                                  color: Colors.amber,
-                                                ),
-                                                onRatingUpdate: (rating) {},
-                                                ignoreGestures: true,
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                  )
-                                : GridView.builder(
-                                    gridDelegate:
-                                        SliverGridDelegateWithFixedCrossAxisCount(
-                                            crossAxisCount: 2,
-                                            childAspectRatio: 0.87),
-                                    itemCount: ResultTilorsNearest.length,
-                                    itemBuilder: (context, index) {
-                                      return InkWell(
-                                        onTap: () {
-                                          print(ResultTilors.length);
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    ProfilPage(
-                                                        model: null,
-                                                        tailor:
-                                                            ResultTilorsNearest[
-                                                                index],
-                                                        IsFoRead: true,
-                                                        IsFoOrder: false),
-                                              ));
-                                        },
-                                        child: AnimatedContainer(
-                                          duration: Duration(
-                                              milliseconds:
-                                                  600 + (index * 100)),
-                                          padding: EdgeInsets.all(20),
-                                          margin: EdgeInsets.symmetric(
-                                              horizontal: 10, vertical: 12),
-                                          decoration: BoxDecoration(
-                                              boxShadow: [],
-                                              border: Border.all(
-                                                  color: Colors.black),
-                                              color: Color(0xFFD9D9D9)
-                                                  .withAlpha(60),
-                                              borderRadius:
-                                                  BorderRadius.circular(10)),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              ResultTilorsNearest[index]
-                                                          .profilePicture
-                                                          .toString() !=
-                                                      "../utils/pp.png"
-                                                  ? CircleAvatar(
-                                                      radius: 40,
-                                                      foregroundImage:
-                                                          MemoryImage(
-                                                        base64Decode(
-                                                            ResultTilorsNearest[
-                                                                    index]
-                                                                .profilePicture
-                                                                .toString()
-                                                                .substring(23)),
-                                                      ),
-                                                    )
-                                                  : CircleAvatar(
-                                                      radius: 40,
-                                                      foregroundImage:
-                                                          AssetImage(
-                                                        "images/DefaultProfileWomen.png",
-                                                      ),
-                                                    ),
-                                              Text(
-                                                ResultTilorsNearest[index]
-                                                    .name!,
-                                                style: TextStyle(fontSize: 18),
-                                              ),
-                                              RatingBar.builder(
-                                                initialRating: 3,
-                                                minRating: 1,
-                                                itemSize: 15,
-                                                direction: Axis.horizontal,
-                                                allowHalfRating: true,
-                                                itemCount: 5,
-                                                itemBuilder: (context, _) =>
-                                                    Icon(
-                                                  Icons.star,
-                                                  size: 1,
-                                                  color: Colors.amber,
-                                                ),
-                                                onRatingUpdate: (rating) {},
-                                                ignoreGestures: true,
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                  ),
-                          ),
-                        ],
-                      ),
-              ]))
-            ],
-          ),
-        ),
-      ),
+                ]))
+              ],
+            ),
+          );
+        },
+      )),
     );
   }
 }

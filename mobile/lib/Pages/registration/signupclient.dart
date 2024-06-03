@@ -12,6 +12,7 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
+  var cntxdialog;
   final _formKey = GlobalKey<FormState>();
   TextEditingController _nameController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
@@ -190,22 +191,35 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   //     _passwordController.text);
                                   // _signIn();l
                                   print("cccccccccccccccccccccccccccc");
+                                  showDialog(
+                                      context: context,
+                                      builder: (contextdialog) {
+                                        cntxdialog = contextdialog;
+                                        return Center(
+                                          child: CircularProgressIndicator(
+                                            color: Color(0xFFFFF4DE),
+                                          ),
+                                        );
+                                      });
+                                  print(selectedGender);
                                   Register.CreateAccount(
                                           _emailController.text,
                                           _nameController.text,
                                           _passwordController.text,
-                                          _genderController.text,
+                                          selectedGender,
                                           "ORAN",
                                           context)
-                                      .then((value) =>
-                                          Navigator.pushAndRemoveUntil(
-                                              ctx,
-                                              MaterialPageRoute(
-                                                builder: (context) => Verify(
-                                                  index: 1,
-                                                ),
-                                              ),
-                                              (route) => false));
+                                      .then((value) {
+                                    Navigator.pop(cntxdialog);
+                                    return Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => Verify(
+                                          index: 1,
+                                        ),
+                                      ),
+                                    );
+                                  });
                                 }
                               },
                               child: Container(

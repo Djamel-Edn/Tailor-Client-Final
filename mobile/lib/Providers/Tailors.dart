@@ -12,7 +12,7 @@ class TailorsProvider extends ChangeNotifier {
 
   Future<void> GetAllTailors() async {
     _AllTailors = [];
-    var uri = "https://tailor-client-ps9z.onrender.com/getallTailors";
+    var uri = "https://tailor-client-5cqi.onrender.com/getallTailors";
     var res = await http.get(Uri.parse(uri));
     if (res.statusCode == 200) {
       var jsonres = convert.jsonDecode(res.body);
@@ -41,8 +41,9 @@ class TailorsProvider extends ChangeNotifier {
   }
 
   Future<void> GetTailor(IdTailor) async {
-    var uri = "https://tailor-client-ps9z.onrender.com/getTailor/$IdTailor";
+    var uri = "https://tailor-client-5cqi.onrender.com/getTailor/$IdTailor";
     var res = await http.get(Uri.parse(uri));
+    print("getttttttttttttttttttthhhhhhhhhhhhhhhh ${res.statusCode}");
     if (res.statusCode == 200) {
       var jsonres = convert.jsonDecode(res.body);
 
@@ -65,6 +66,8 @@ class TailorsProvider extends ChangeNotifier {
           profilePicture: jsonres["profilePicture"],
           orders: jsonres["orders"]);
     }
+    print("getttttttttttttttttttthhhhhhhhhhhhhhhh ${res.statusCode}");
+
     notifyListeners();
   }
 }

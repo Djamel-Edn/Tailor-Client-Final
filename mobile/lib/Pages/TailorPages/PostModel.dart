@@ -18,6 +18,7 @@ class _PostModelPageState extends State<PostModelPage> {
   var namecntrl = TextEditingController();
   var Pricecntrl = TextEditingController();
   var Desccntrl = TextEditingController();
+  var cntxdialog;
 
   File? image;
   List<String> FilterTypes = [
@@ -289,19 +290,27 @@ class _PostModelPageState extends State<PostModelPage> {
                     _SpecialitySelected != "") {
                   showDialog(
                     context: context,
-                    builder: (context) {
-                      return Center(child: CircularProgressIndicator());
+                    builder: (contextd) {
+                      cntxdialog = contextd;
+                      Future.delayed(Duration(seconds: 6), () {
+                        Navigator.pop(contextd);
+                      });
+                      return Center(
+                          child: CircularProgressIndicator(
+                        color: Color(0xFFFFF4DE),
+                      ));
                     },
                   );
                   List<int> imagebytes = image!.readAsBytesSync();
                   ModelLogique.AddPost(
-                      namecntrl.text.trim(),
-                      Desccntrl.text.trim(),
-                      base64Encode(imagebytes),
-                      double.parse(Pricecntrl.text.trim()),
-                      _CategSelected,
-                      _SpecialitySelected,
-                      context);
+                    namecntrl.text.trim(),
+                    Desccntrl.text.trim(),
+                    base64Encode(imagebytes),
+                    double.parse(Pricecntrl.text.trim()),
+                    _CategSelected,
+                    _SpecialitySelected,
+                    context,
+                  );
                 } else {}
               },
               child: Container(

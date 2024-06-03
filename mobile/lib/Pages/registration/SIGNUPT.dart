@@ -36,6 +36,7 @@ class _SignUpScreenState extends State<SignUpScreen1> {
   ];
 
   String? selectedWilaya;
+  var contexdialog;
 
   Future<void> _signUp(String email, String password, String fullName,
       String gender, String phoneNumber) async {
@@ -293,21 +294,36 @@ class _SignUpScreenState extends State<SignUpScreen1> {
                               //   _phoneNumberController.text,
                               //   selectedGender ?? '' // Ensure selectedGender is not null
                               // );sss
+                              showDialog(
+                                context: context,
+                                builder: (contextk) {
+                                  contexdialog = contextk;
+
+                                  return Center(
+                                    child: CircularProgressIndicator(
+                                      color: Color(0xFFFFF4DE),
+                                    ),
+                                  );
+                                },
+                              );
                               Register.CreateAccountTailor(
                                       _emailController.text,
                                       _nameController.text,
                                       _passwordController.text,
-                                      "gender her",
+                                      "Female",
                                       "ORAN",
                                       context)
-                                  .then((value) => Navigator.pushAndRemoveUntil(
-                                      ctx,
-                                      MaterialPageRoute(
-                                        builder: (context) => Verify(
-                                          index: 0,
-                                        ),
-                                      ),
-                                      (route) => false));
+                                  .then((value) {
+                                Navigator.pop(contexdialog);
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => Verify(
+                                      index: 0,
+                                    ),
+                                  ),
+                                );
+                              });
                             }
                           },
                           child: Container(

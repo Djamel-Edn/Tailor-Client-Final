@@ -11,6 +11,12 @@ class OrderProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> DeletOrder(Idorder, context) async {
+    await OrderLogique.DeletOrder(Idorder, context);
+
+    notifyListeners();
+  }
+
   Future<void> AddOrderByMe(IdClient, Idtailor, TotalPrice, Posts, image,
       qstans, tailor, context) async {
     print("in add order by be prove");

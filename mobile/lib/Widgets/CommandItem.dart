@@ -82,10 +82,17 @@ class _CommandItemState extends State<CommandItem> {
                           borderRadius: BorderRadius.circular(20)),
                       child: ClipRRect(
                           borderRadius: BorderRadius.circular(20),
-                          child: Image.asset(
-                            widget.order.postStyle!,
-                            fit: BoxFit.cover,
-                          )),
+                          child: widget.order.postStyle!.length < 100
+                              ? Image.asset(
+                                  widget.order.postStyle!,
+                                  fit: BoxFit.cover,
+                                )
+                              : Image.memory(
+                                  base64Decode(
+                                    widget.order.postStyle!,
+                                  ),
+                                  fit: BoxFit.cover,
+                                )),
                     ),
               SizedBox(
                 width: 10,
@@ -140,7 +147,13 @@ class _CommandItemState extends State<CommandItem> {
                       children: [
                         Container(
                           height: 21,
-                          child: Image.asset("images/pending.png"),
+                          child: widget.order.status == "Accepted"
+                              ? Image.asset("images/accept.png")
+                              : widget.order.status == "Completed"
+                                  ? Image.asset("images/accept.png")
+                                  : widget.order.status == "Rejected"
+                                      ? Image.asset("images/rejected (2).png")
+                                      : Image.asset("images/pending.png"),
                         ),
                         SizedBox(
                           width: 8,

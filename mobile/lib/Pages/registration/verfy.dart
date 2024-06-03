@@ -16,6 +16,10 @@ class _VerifyState extends State<Verify> {
   late List<TextEditingController> _otpControllers;
   bool _isLoading = false;
 
+  var contextdialoge;
+  var contexdialog;
+  var contextdialoge2;
+
   @override
   void initState() {
     super.initState();
@@ -235,13 +239,14 @@ class _VerifyState extends State<Verify> {
                                             .client !=
                                         null) {
                                       Register.VerfiOTP(
-                                          Provider.of<ClientProvider>(context,
-                                                  listen: false)
-                                              .client!
-                                              .id,
-                                          otpstr,
-                                          1,
-                                          ctx);
+                                        Provider.of<ClientProvider>(context,
+                                                listen: false)
+                                            .client!
+                                            .id,
+                                        otpstr,
+                                        1,
+                                        context,
+                                      );
                                     }
                                   } else {
                                     String otpstr = _otpControllers[0].text +
@@ -257,14 +262,16 @@ class _VerifyState extends State<Verify> {
                                                 listen: false)
                                             .tailor !=
                                         null) {
+                                      print("qqqqqqqqqqqqqqqqqqq");
                                       Register.VerfiOTP(
-                                          Provider.of<TailorsProvider>(context,
-                                                  listen: false)
-                                              .tailor!
-                                              .id,
-                                          otpstr,
-                                          0,
-                                          ctx);
+                                        Provider.of<TailorsProvider>(context,
+                                                listen: false)
+                                            .tailor!
+                                            .id,
+                                        otpstr,
+                                        0,
+                                        context,
+                                      );
                                     }
                                   }
                                   //

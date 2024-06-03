@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:projetfinprepa/IpConfig/Ipconfig.dart';
 import 'package:projetfinprepa/Pages/Command_Page.dart';
 import 'package:projetfinprepa/Pages/Search_Page.dart';
 import 'package:projetfinprepa/Pages/tstthreeD.dart';
+import 'package:projetfinprepa/Providers/LocalDB.dart';
 import 'package:projetfinprepa/Providers/Models.dart';
 import 'package:projetfinprepa/Providers/Tailors%20copy.dart';
 import 'package:projetfinprepa/Providers/Tailors.dart';
@@ -21,10 +21,11 @@ class _FirstPageState extends State<FirstPage> {
   int currentpage = 0;
   @override
   void initState() {
+    Provider.of<ClientProvider>(context, listen: false).GetALlAboutCurrentUser(
+        Provider.of<LocalDbProvider>(context, listen: false).id, context);
+
     Provider.of<ModelsProvider>(context, listen: false).GetAllModels();
 
-    Provider.of<ClientProvider>(context, listen: false)
-        .GetALlAboutCurrentUser(IPCONFIG.ClientId);
     Provider.of<TailorsProvider>(context, listen: false).GetAllTailors();
 
     super.initState();
@@ -42,7 +43,8 @@ class _FirstPageState extends State<FirstPage> {
           margin: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
           height: MediaQuery.of(context).size.height * 0.0899,
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20), color: Colors.black),
+              borderRadius: BorderRadius.circular(20),
+              color: Color(0xFF84643D)),
           child: BottomNavigationBar(
             showSelectedLabels: false,
             type: BottomNavigationBarType.fixed,
@@ -62,7 +64,7 @@ class _FirstPageState extends State<FirstPage> {
                     decoration: BoxDecoration(
                         color: currentpage != 0
                             ? Colors.transparent
-                            : Colors.white,
+                            : Colors.transparent,
                         borderRadius: BorderRadius.circular(3)),
                     child: Padding(
                       padding: const EdgeInsets.all(3.0),
@@ -77,8 +79,9 @@ class _FirstPageState extends State<FirstPage> {
                 icon: Container(
                   margin: EdgeInsets.only(top: 3),
                   decoration: BoxDecoration(
-                      color:
-                          currentpage != 1 ? Colors.transparent : Colors.white,
+                      color: currentpage != 1
+                          ? Colors.transparent
+                          : Colors.transparent,
                       borderRadius: BorderRadius.circular(3)),
                   child: Padding(
                     padding: const EdgeInsets.all(3.0),
@@ -97,7 +100,7 @@ class _FirstPageState extends State<FirstPage> {
                     decoration: BoxDecoration(
                         color: currentpage != 2
                             ? Colors.transparent
-                            : Colors.white,
+                            : Colors.transparent,
                         borderRadius: BorderRadius.circular(3)),
                     child: Padding(
                       padding: const EdgeInsets.all(3.1),
@@ -115,7 +118,7 @@ class _FirstPageState extends State<FirstPage> {
                     decoration: BoxDecoration(
                         color: currentpage != 3
                             ? Colors.transparent
-                            : Colors.white,
+                            : Colors.transparent,
                         borderRadius: BorderRadius.circular(3)),
                     child: Padding(
                       padding: const EdgeInsets.all(6.0),
@@ -134,7 +137,7 @@ class _FirstPageState extends State<FirstPage> {
                     decoration: BoxDecoration(
                         color: currentpage != 4
                             ? Colors.transparent
-                            : Colors.white,
+                            : Colors.transparent,
                         borderRadius: BorderRadius.circular(3)),
                     child: Padding(
                       padding: const EdgeInsets.all(3.0),

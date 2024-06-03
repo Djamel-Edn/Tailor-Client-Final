@@ -114,6 +114,7 @@ class _SignState extends State<sign> {
           _passwordController.text = password ?? '';
 
           FocusScope.of(context).nextFocus();
+
           FocusScope.of(context).requestFocus(FocusNode());
         } else {
           ScaffoldMessenger.of(context).showSnackBar(

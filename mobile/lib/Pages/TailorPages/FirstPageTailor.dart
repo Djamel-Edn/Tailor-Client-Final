@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:projetfinprepa/Pages/TailorPages/Command_PageTailor.dart';
 import 'package:projetfinprepa/Pages/TailorPages/Home_PageTailor.dart';
 import 'package:projetfinprepa/Pages/TailorPages/PostModel.dart';
-import 'package:projetfinprepa/Pages/tstthreeD.dart';
+import 'package:projetfinprepa/Providers/LocalDB.dart';
 import 'package:projetfinprepa/Providers/Tailors.dart';
 import 'package:provider/provider.dart';
 
@@ -16,9 +16,8 @@ class FirstPageTailor extends StatefulWidget {
 class _FirstPageState extends State<FirstPageTailor> {
   List Pages = [
     HomePageTailor(),
-    MyCommandPageTailor(),
     PostModelPage(),
-    parx(),
+    MyCommandPageTailor(),
   ];
   int currentpage = 0;
   @override
@@ -28,7 +27,7 @@ class _FirstPageState extends State<FirstPageTailor> {
     // Provider.of<ClientProvider>(context, listen: false)
     //     .GetALlAboutCurrentUser();
     Provider.of<TailorsProvider>(context, listen: false)
-        .GetTailor("6626eb65ed54ccf5c1e7e8ed");
+        .GetTailor(Provider.of<LocalDbProvider>(context, listen: false).id);
 
     super.initState();
   }
@@ -45,7 +44,8 @@ class _FirstPageState extends State<FirstPageTailor> {
           margin: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
           height: MediaQuery.of(context).size.height * 0.0899,
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20), color: Colors.black),
+              borderRadius: BorderRadius.circular(20),
+              color: Color(0xFF84643D)),
           child: BottomNavigationBar(
             showSelectedLabels: false,
             type: BottomNavigationBarType.fixed,
@@ -65,7 +65,7 @@ class _FirstPageState extends State<FirstPageTailor> {
                     decoration: BoxDecoration(
                         color: currentpage != 0
                             ? Colors.transparent
-                            : Colors.white,
+                            : Colors.transparent,
                         borderRadius: BorderRadius.circular(3)),
                     child: Padding(
                       padding: const EdgeInsets.all(3.0),
@@ -82,32 +82,13 @@ class _FirstPageState extends State<FirstPageTailor> {
                     decoration: BoxDecoration(
                         color: currentpage != 1
                             ? Colors.transparent
-                            : Colors.white,
-                        borderRadius: BorderRadius.circular(3)),
-                    child: Padding(
-                      padding: const EdgeInsets.all(6.0),
-                      child: Image.asset(
-                        "images/image 6 (1).png",
-                        color: currentpage != 1 ? Colors.white : Colors.black,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                  // images/image 6 (1).png
-                  label: "Command"),
-              BottomNavigationBarItem(
-                  icon: Container(
-                    margin: EdgeInsets.only(top: 3),
-                    decoration: BoxDecoration(
-                        color: currentpage != 2
-                            ? Colors.transparent
-                            : Colors.white,
+                            : Colors.transparent,
                         borderRadius: BorderRadius.circular(3)),
                     child: Padding(
                       padding: const EdgeInsets.all(3.1),
                       child: Icon(
                         Icons.add,
-                        color: currentpage != 2 ? Colors.white : Colors.black,
+                        color: currentpage != 1 ? Colors.white : Colors.black,
                       ),
                     ),
                   ),
@@ -117,15 +98,15 @@ class _FirstPageState extends State<FirstPageTailor> {
                   icon: Container(
                     margin: EdgeInsets.only(top: 3),
                     decoration: BoxDecoration(
-                        color: currentpage != 3
+                        color: currentpage != 2
                             ? Colors.transparent
-                            : Colors.white,
+                            : Colors.transparent,
                         borderRadius: BorderRadius.circular(3)),
                     child: Padding(
                       padding: const EdgeInsets.all(6.0),
                       child: Image.asset(
                         "images/image 6 (1).png",
-                        color: currentpage != 3 ? Colors.white : Colors.black,
+                        color: currentpage != 2 ? Colors.white : Colors.black,
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -136,15 +117,15 @@ class _FirstPageState extends State<FirstPageTailor> {
                   icon: Container(
                     margin: EdgeInsets.only(top: 3),
                     decoration: BoxDecoration(
-                        color: currentpage != 4
+                        color: currentpage != 3
                             ? Colors.transparent
-                            : Colors.white,
+                            : Colors.transparent,
                         borderRadius: BorderRadius.circular(3)),
                     child: Padding(
                       padding: const EdgeInsets.all(3.0),
                       child: Image.asset(
                         "images/Customer (1).png",
-                        color: currentpage != 4 ? Colors.white : Colors.black,
+                        color: currentpage != 3 ? Colors.white : Colors.black,
                       ),
                     ),
                   ),

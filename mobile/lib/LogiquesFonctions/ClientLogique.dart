@@ -5,14 +5,17 @@ import 'package:projetfinprepa/Data/Client_Class.dart';
 import 'package:projetfinprepa/Data/Models_Class.dart';
 import 'package:projetfinprepa/Data/Order_class.dart';
 import 'package:projetfinprepa/Data/Tailor_Class.dart';
+import 'package:projetfinprepa/Providers/CollecionProv.dart';
+import 'package:provider/provider.dart';
 
 class ClientLogique {
-  static Future<ClientClass?> GetAllAboutClient(IDCLIENT) async {
+  static Future<ClientClass?> GetAllAboutClient(IDCLIENT, context) async {
     ClientClass? client;
     List<Order> orders = [];
     List<Model> models = [];
-    var uri = "https://tailor-client-ps9z.onrender.com/getClient/${IDCLIENT}";
+    var uri = "https://tailor-client-5cqi.onrender.com/getClient/${IDCLIENT}";
     var res = await http.get(Uri.parse(uri));
+    print("in gettttttttttttttttttttttttt client ${res.statusCode}");
 
     if (res.statusCode == 200) {
       var jsonres = convert.jsonDecode(res.body);
@@ -68,12 +71,20 @@ class ClientLogique {
           name: jsonres["name"],
           email: jsonres["email"],
           id: jsonres["_id"],
+          likes: jsonres["favorites"],
+          favorites: jsonres["likes"],
           password: jsonres["passwrd"],
           verified: jsonres["verified"],
           resetPasswordToken: jsonres["passwrd"],
           profilePicture: jsonres["profilePicture"],
           orders: orders);
     }
+    Provider.of<CollectionProvider>(context, listen: false)
+        .GetFavs(context, client);
+    Provider.of<CollectionProvider>(context, listen: false)
+        .GetLikes(context, client!.likes);
+    print(
+        "wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww ${client.likes} ${client}");
 
     return client;
   }

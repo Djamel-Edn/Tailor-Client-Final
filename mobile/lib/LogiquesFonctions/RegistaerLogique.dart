@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:projetfinprepa/Pages/FirstPage.dart';
 import 'package:projetfinprepa/Pages/TailorPages/FirstPageTailor.dart';
+import 'package:projetfinprepa/Providers/LocalDB.dart';
 import 'package:projetfinprepa/Providers/Tailors%20copy.dart';
 import 'package:projetfinprepa/Providers/Tailors.dart';
 import 'package:provider/provider.dart';
@@ -12,7 +13,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class Register {
   static Future<void> LoginAccount(email, password, context) async {
     print("in logi clinet");
-    var uri = "https://tailor-client-ps9z.onrender.com/login";
+    var uri = "https://tailor-client-5cqi.onrender.com/login";
 
     final headerall = {'Content-Type': 'application/json'};
 
@@ -27,7 +28,7 @@ class Register {
       print("get id res");
       if (jsonres["userType"] != "Tailor") {
         await Provider.of<ClientProvider>(context, listen: false)
-            .GetALlAboutCurrentUser(jsonres["_id"]);
+            .GetALlAboutCurrentUser(jsonres["_id"], context);
 
         var tst = await prefs.setString('id', jsonres["_id"]);
         var tst1 = await prefs.setString('type', "CLIENT");
@@ -41,7 +42,10 @@ class Register {
         await Provider.of<TailorsProvider>(context, listen: false)
             .GetTailor(jsonres["_id"]);
         var tst = await prefs.setString('id', jsonres["_id"]);
+
         var tst1 = await prefs.setString('type', "TAILOR");
+        Provider.of<LocalDbProvider>(context, listen: false).GetIDLocal();
+        Provider.of<LocalDbProvider>(context, listen: false).GetTYPELocal();
         Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(
@@ -55,15 +59,24 @@ class Register {
   static Future<void> CreateAccount(
       email, name, password, gender, city, context) async {
     print("in registration clinet");
-    var uri = "https://tailor-client-ps9z.onrender.com/register/client";
+    print(email);
+    print(name);
+
+    print(password);
+
+    print(gender);
+
+    print(city);
+
+    var uri = "https://tailor-client-5cqi.onrender.com/register/client";
 
     final headerall = {'Content-Type': 'application/json'};
 
     final bodyall = convert.jsonEncode({
-      "email": "sidoa065@gmail.com",
-      "name": "Test",
-      "password": "Test1234!",
-      "gender": "Homme",
+      "email": email.toString(),
+      "name": name.toString(),
+      "password": password.toString(),
+      "gender": gender.toString(),
       "city": "Oran"
     });
 
@@ -74,7 +87,7 @@ class Register {
       var jsonres = convert.jsonDecode(res.body);
       print("get id res");
       await Provider.of<ClientProvider>(context, listen: false)
-          .GetALlAboutCurrentUser(jsonres["_id"]);
+          .GetALlAboutCurrentUser(jsonres["_id"], context);
       print(Provider.of<ClientProvider>(context, listen: false).client!.id);
     }
   }
@@ -82,15 +95,15 @@ class Register {
   static Future<void> CreateAccountTailor(
       email, name, password, gender, city, context) async {
     print("in registration tailor");
-    var uri = "https://tailor-client-ps9z.onrender.com/register/tailor";
+    var uri = "https://tailor-client-5cqi.onrender.com/register/tailor";
 
     final headerall = {'Content-Type': 'application/json'};
 
     final bodyall = convert.jsonEncode({
-      "email": "a.bouacheri@esi-sba.dz",
-      "name": "Test",
-      "password": "Test1234!",
-      "gender": "Homme",
+      "email": email.toString(),
+      "name": name.toString(),
+      "password": password.toString(),
+      "gender": gender.toString(),
       "city": "Oran",
       "phone": 088920283
     });
@@ -108,7 +121,7 @@ class Register {
 
   static Future<void> VerfiOTP(IdClient, OTPSTR, index, context) async {
     print("in registration");
-    var uri = "https://tailor-client-ps9z.onrender.com/verifyEmail/$IdClient";
+    var uri = "https://tailor-client-5cqi.onrender.com/verifyEmail/$IdClient";
     final headerall = {'Content-Type': 'application/json'};
 
     final bodyall = convert.jsonEncode({"uniqueString": OTPSTR});
@@ -116,13 +129,15 @@ class Register {
     var res =
         await http.post(Uri.parse(uri), headers: headerall, body: bodyall);
     print("in verefy ${res.statusCode}");
-
     if (res.statusCode == 200) {
+      print("valiiiiiiiiiiiiiiiiiiiiiiiiiiiide otp tailor");
       final SharedPreferences prefs = await SharedPreferences.getInstance();
 
       if (index == 1) {
         var tst = await prefs.setString('id', IdClient);
         var tst1 = await prefs.setString('type', "CLIENT");
+        Provider.of<LocalDbProvider>(context, listen: false).GetIDLocal();
+        Provider.of<LocalDbProvider>(context, listen: false).GetTYPELocal();
         Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(
@@ -135,7 +150,11 @@ class Register {
       } else {
         var tst = await prefs.setString('id', IdClient);
         var tst1 = await prefs.setString('type', "TAILOR");
+        Provider.of<LocalDbProvider>(context, listen: false).GetIDLocal();
+        Provider.of<LocalDbProvider>(context, listen: false).GetTYPELocal();
+
         print("in registration local tailor");
+
         Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(

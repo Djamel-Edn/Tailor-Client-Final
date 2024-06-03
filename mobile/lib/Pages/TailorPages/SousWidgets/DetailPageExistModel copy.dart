@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 class DetailPageExistModel extends StatelessWidget {
   var order;
   DetailPageExistModel({super.key, required this.order});
+  var cntxcircl;
 
   @override
   Widget build(BuildContext context) {
@@ -134,16 +135,21 @@ class DetailPageExistModel extends StatelessWidget {
                               ),
                               InkWell(
                                 onTap: () async {
-                                  // showDialog(
-                                  //     barrierDismissible: false,
-                                  //     context: context,
-                                  //     builder: (context) => Center(
-                                  //         child: CircularProgressIndicator()));
+                                  showDialog(
+                                      barrierDismissible: false,
+                                      context: context,
+                                      builder: (contextc) {
+                                        cntxcircl = contextc;
+                                        return Center(
+                                            child: CircularProgressIndicator(
+                                          color: Color(0xFFFFF4DE),
+                                        ));
+                                      });
                                   await Provider.of<ChatProvider>(context,
                                           listen: false)
                                       .GetChat(order["client"]["_id"],
                                           "6626eb65ed54ccf5c1e7e8ed");
-                                  // Navigator.pop(context);
+                                  Navigator.pop(cntxcircl);
 
                                   await Navigator.push(
                                       context,
@@ -200,6 +206,10 @@ class DetailPageExistModel extends StatelessWidget {
                                                           "PROFILE order has been Acccepted \n check other orders !",
                                                           textAlign:
                                                               TextAlign.center,
+                                                          style: TextStyle(
+                                                              fontFamily:
+                                                                  "Nanum_Myeongjo",
+                                                              fontSize: 22),
                                                         )
                                                       ],
                                                     ),
@@ -281,16 +291,19 @@ class DetailPageExistModel extends StatelessWidget {
                                   Expanded(
                                     child: InkWell(
                                       onTap: () async {
-                                        // showDialog(
-                                        //     context: context,
-                                        //     builder: (context) => Center(
-                                        //         child:
-                                        //             CircularProgressIndicator()));
+                                        showDialog(
+                                            context: context,
+                                            builder: (contextc) {
+                                              cntxcircl = contextc;
+                                              return Center(
+                                                  child:
+                                                      CircularProgressIndicator());
+                                            });
                                         await Provider.of<ChatProvider>(context,
                                                 listen: false)
                                             .GetChat(order["client"]["_id"],
                                                 "6626eb65ed54ccf5c1e7e8ed");
-                                        // Navigator.pop(context);
+                                        Navigator.pop(cntxcircl);
                                         await Navigator.push(
                                             context,
                                             MaterialPageRoute(

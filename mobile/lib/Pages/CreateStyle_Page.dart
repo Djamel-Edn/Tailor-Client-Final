@@ -15,6 +15,7 @@ class _SearchPageState extends State<CreateStylePage> {
   int CategorySelectedIndex = 0;
   String TypeSelected = "";
   bool AnyTypeSelected = false;
+  bool showback = true;
   List<BasicTile> Data = [
     BasicTile(title: "Tops", tiles: [
       Tiles(tile: "Blouse", isselected: false),
@@ -241,26 +242,31 @@ class _SearchPageState extends State<CreateStylePage> {
       )),
       child: Scaffold(
           appBar: AppBar(
+              toolbarHeight: 100,
               backgroundColor: Color(0xFFFFF4DE),
-              actions: [
-                IconButton(
-                    onPressed: () {
-                      Navigator.pop(context);
+              actions: [],
+              leading: Wrap(
+                children: [
+                  showback
+                      ? IconButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          icon: Icon(
+                            Icons.arrow_back_ios,
+                            color: Colors.black,
+                          ))
+                      : SizedBox(),
+                  InkWell(
+                    onTap: () {
+                      drawerController();
                     },
-                    icon: Icon(
-                      Icons.close,
-                      color: Colors.black,
-                      size: 30,
-                    ))
-              ],
-              leading: InkWell(
-                onTap: () {
-                  drawerController();
-                },
-                child: Container(
-                  height: 32,
-                  child: Image.asset("images/Lines.png"),
-                ),
+                    child: Container(
+                      height: 32,
+                      child: Image.asset("images/Lines.png"),
+                    ),
+                  ),
+                ],
               )),
           backgroundColor: Color(0xFFFFF4DE),
           body: Padding(

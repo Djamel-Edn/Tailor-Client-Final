@@ -30,7 +30,7 @@ class _ChatPAgeState extends State<ChatPAgeTailor> {
   late IO.Socket socket;
 
   void connect() {
-    socket = IO.io("https://tailor-client-ps9z.onrender.com", <String, dynamic>{
+    socket = IO.io("https://tailor-client-5cqi.onrender.com", <String, dynamic>{
       "transports": ["websocket"],
       "autoConnect": false,
     });

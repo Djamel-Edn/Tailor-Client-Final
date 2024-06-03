@@ -24,17 +24,39 @@ class ModelsProvider extends ChangeNotifier {
     _IsLoading = false;
 
     for (var model in _AllModels) {
-      model.category == CategoryData.category[2].category
-          ? ManModels.add(model)
-          : model.category == CategoryData.category[3].category
-              ? WomanModels.add(model)
-              : KidModels.add(model);
+      print(CategoryData.category[3].category);
+      print("ssss ${model.category == "Women"}");
+
+      print(model.category);
+      model.category == "Man"
+          ? _ManModels.add(model)
+          : model.category == "Women"
+              ? _WomanModels.add(model)
+              : model.category == "Kid"
+                  ? _KidModels.add(model)
+                  : null;
     }
     AllModelsByCategory.add(_AllModels);
     AllModelsByCategory.add(_AllModels);
     AllModelsByCategory.add(_ManModels);
     AllModelsByCategory.add(_WomanModels);
     AllModelsByCategory.add(_KidModels);
+    // AllModelsByCategory.add(_AllModels);
+    // AllModelsByCategory.add(_AllModels);
+    // AllModelsByCategory.add(_AllModels);
+    // AllModelsByCategory.add(_AllModels);
+    // AllModelsByCategory.add(_AllModels);
+    print(
+        "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz all${AllModelsByCategory[0].length}");
+    print(
+        "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz all${AllModelsByCategory[1].length}");
+    print(
+        "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz man${AllModelsByCategory[2].length}");
+    print(
+        "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzwoman ${AllModelsByCategory[3].length}");
+    print(
+        "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzkid ${AllModelsByCategory[4].length}");
+
     notifyListeners();
   }
 }

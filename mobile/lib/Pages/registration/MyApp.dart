@@ -5,6 +5,7 @@ import 'package:projetfinprepa/Pages/registration/sign.dart';
 import 'package:projetfinprepa/Providers/LocalDB.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class MyAppHia extends StatefulWidget {
   @override
@@ -13,15 +14,52 @@ class MyAppHia extends StatefulWidget {
 
 class _MyAppHiaState extends State<MyAppHia> {
   String? id;
+  late IO.Socket socket;
+
   @override
   void initState() {
     Provider.of<LocalDbProvider>(context, listen: false).GetTYPELocal();
     Provider.of<LocalDbProvider>(context, listen: false)
         .GetIDLocal()
         .whenComplete(() {
-      setState(() {});
+      setState(() {
+        connect();
+      });
     });
+
     super.initState();
+  }
+
+  void connect() {
+    socket = IO.io("https://tailor-client-5cqi.onrender.com", <String, dynamic>{
+      "transports": ["websocket"],
+      "autoConnect": false,
+    });
+    socket.connect();
+    print("connected order");
+    socket.emit(
+        "addNewUser", Provider.of<LocalDbProvider>(context, listen: false).id);
+    socket.onConnect((data) {
+      print("connected order onconnect");
+      socket.on("newOrder", (data) {
+        print('rrrrrr');
+        print(
+            "on emit tailor..........................we are in ORDER........$data");
+        print(mounted);
+        // if (mounted)
+        //   setState(() {
+        //     Provider.of<ChatProvider>(context, listen: false).SetMessage(
+        //         Message(
+        //             ChatId: data["message"]["ChatId"],
+        //             senderId: data["message"]["senderId"],
+        //             text: data["message"]["text"],
+        //             images: data["message"]["images"],
+        //             date: DateTime.now()));
+        //   });
+        // print(mounted);
+        // if (mounted) {
+      });
+    });
   }
 
   @override

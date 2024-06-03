@@ -82,10 +82,16 @@ class _CommandItemState extends State<CommandItemTailor> {
                           borderRadius: BorderRadius.circular(20)),
                       child: ClipRRect(
                           borderRadius: BorderRadius.circular(20),
-                          child: Image.asset(
-                            widget.order["postStyle"]!,
-                            fit: BoxFit.cover,
-                          )),
+                          child:
+                              widget.order["postStyle"].toString().length < 100
+                                  ? Image.asset(
+                                      widget.order["postStyle"]!,
+                                      fit: BoxFit.cover,
+                                    )
+                                  : Image.memory(
+                                      base64Decode(widget.order["postStyle"]),
+                                      fit: BoxFit.cover,
+                                    )),
                     ),
               SizedBox(
                 width: 10,

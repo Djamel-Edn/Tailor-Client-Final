@@ -1,16 +1,16 @@
 import 'dart:convert' as convert;
 
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:projetfinprepa/Data/Models_Class.dart';
 import 'package:projetfinprepa/Data/Tailor_Class.dart';
+import 'package:projetfinprepa/Providers/LocalDB.dart';
 import 'package:projetfinprepa/Providers/Tailors.dart';
 import 'package:provider/provider.dart';
 
 class ModelLogique {
   static Future<List<Model>> GetAllModels() async {
     List<Model> AllModel = [];
-    var uri = "https://tailor-client-ps9z.onrender.com/post/getall";
+    var uri = "https://tailor-client-5cqi.onrender.com/post/getall";
     var res = await http.get(Uri.parse(uri));
     if (res.statusCode == 200) {
       var jsonres = convert.jsonDecode(res.body);
@@ -52,8 +52,15 @@ class ModelLogique {
   }
 
   static Future<void> AddPost(
-      name, desc, image, price, categ, spec, context) async {
-    var uri = "https://tailor-client-ps9z.onrender.com/post/create";
+    name,
+    desc,
+    image,
+    price,
+    categ,
+    spec,
+    context,
+  ) async {
+    var uri = "https://tailor-client-5cqi.onrender.com/post/create";
 
     final headerall = {'Content-Type': 'application/json'};
     print("aaaaaaaaaaa add post");
@@ -65,32 +72,16 @@ class ModelLogique {
       "price": 0,
       "category": categ,
       "postSpeciality": spec,
-      "tailor": "6626eb65ed54ccf5c1e7e8ed"
+      "tailor": Provider.of<LocalDbProvider>(context, listen: false).id
     });
 
     var res =
         await http.post(Uri.parse(uri), headers: headerall, body: bodyall);
     print("adddddd post    ${res.statusCode}");
+
     if (res.statusCode == 201) {
-      Provider.of<TailorsProvider>(context, listen: false)
-          .GetTailor("6626eb65ed54ccf5c1e7e8ed");
-      Navigator.pop(context);
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            content: Wrap(
-              children: [Text("Your post is has been published.")],
-            ),
-          );
-        },
-      );
-      Future.delayed(
-        Duration(seconds: 2),
-        () {
-          Navigator.pop(context);
-        },
-      );
+      await Provider.of<TailorsProvider>(context, listen: false)
+          .GetTailor(Provider.of<LocalDbProvider>(context, listen: false).id);
     }
   }
 }

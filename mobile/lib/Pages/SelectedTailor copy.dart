@@ -8,20 +8,20 @@ import 'package:projetfinprepa/Providers/LocalDB.dart';
 import 'package:projetfinprepa/Providers/Tailors.dart';
 import 'package:provider/provider.dart';
 
-class TailorSelected extends StatefulWidget {
+class TailorSelectedTwo extends StatefulWidget {
   var image, qstsansrs;
 
-  TailorSelected({
+  TailorSelectedTwo({
     super.key,
     required this.image,
     required this.qstsansrs,
   });
 
   @override
-  State<TailorSelected> createState() => _SearchPageState();
+  State<TailorSelectedTwo> createState() => _SearchPageState();
 }
 
-class _SearchPageState extends State<TailorSelected> {
+class _SearchPageState extends State<TailorSelectedTwo> {
   @override
   int currentpage = 0;
   var cntxdialoge;
@@ -215,6 +215,9 @@ class _SearchPageState extends State<TailorSelected> {
                                                 );
                                               },
                                             );
+                                            List<int> imagebytes =
+                                                widget.image!.readAsBytesSync();
+
                                             await OrderLogique.AddOrderByMe(
                                                 Provider.of<LocalDbProvider>(
                                                         context,
@@ -223,7 +226,7 @@ class _SearchPageState extends State<TailorSelected> {
                                                 ResultTilors[index].id,
                                                 0,
                                                 [],
-                                                widget.image,
+                                                base64Encode(imagebytes),
                                                 widget.qstsansrs,
                                                 ResultTilors[index],
                                                 context);

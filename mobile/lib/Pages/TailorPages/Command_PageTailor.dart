@@ -53,39 +53,44 @@ class _MyCommandPageState extends State<MyCommandPageTailor> {
                   children: [
                     Expanded(
                       child: ListView.builder(
-                        itemCount: OrderAccepted.length,
+                        itemCount: OrderAccepted.length + 1,
                         itemBuilder: (context, index) {
-                          return Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: InkWell(
-                              onTap: () {
-                                if (OrderAccepted[index]["questionnaire"]
-                                        .length ==
-                                    0) {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            DetailPageExistModel(
-                                          order: OrderAccepted[index],
-                                        ),
-                                      ));
-                                } else {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            DetailPageNewModel(
-                                          order: OrderAccepted[index],
-                                        ),
-                                      ));
-                                }
-                              },
-                              child: CommandItemTailor(
-                                order: OrderAccepted[index],
-                              ),
-                            ),
-                          );
+                          return OrderAccepted.length != index
+                              ? Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: InkWell(
+                                    onTap: () {
+                                      if (OrderAccepted[index]["questionnaire"]
+                                              .length ==
+                                          0) {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  DetailPageExistModel(
+                                                order: OrderAccepted[index],
+                                              ),
+                                            ));
+                                      } else {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  DetailPageNewModel(
+                                                order: OrderAccepted[index],
+                                              ),
+                                            ));
+                                      }
+                                    },
+                                    child: CommandItemTailor(
+                                      order: OrderAccepted[index],
+                                    ),
+                                  ),
+                                )
+                              : SizedBox(
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.13,
+                                );
                         },
                       ),
                     ),

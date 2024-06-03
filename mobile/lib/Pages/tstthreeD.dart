@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:projetfinprepa/Pages/CreateStyle_Page.dart';
-import 'package:projetfinprepa/Pages/SousPages/FirstOfCreatStyle.dart';
+import 'package:projetfinprepa/Pages/ImportImagePage.dart';
 // import 'package:o3d/o3d.dart';
 
 // class tstthreed extends StatefulWidget {
@@ -179,21 +179,19 @@ class _MyAppState extends State<parx> {
                   ),
                   InkWell(
                     onTap: () async {
-                      File? image;
-                      final imagePicker = ImagePicker();
-                      var pickedimage = await imagePicker.pickImage(
-                          source: ImageSource.gallery);
-                      if (pickedimage != null) {
-                        image = File(pickedimage.path);
-                      }
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ImportImagePage(),
+                          ));
                     },
                     child: Container(
                       margin: EdgeInsets.symmetric(horizontal: 30),
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(color: Color(0xFF84643D))),
+                          color: Color(0xFFC7B7A7),
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(color: Color(0xFFFCF9F6))),
                       height: 50,
                       width: 200,
                       child: Padding(
@@ -201,12 +199,16 @@ class _MyAppState extends State<parx> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
+                            Image.asset("images/lucide_import.png"),
+                            SizedBox(
+                              width: 20,
+                            ),
                             Text(
                               "Import Image",
                               style: TextStyle(
                                 fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: Color(0xFF84643D),
+                                fontWeight: FontWeight.normal,
+                                color: Colors.white,
                                 fontFamily: "Nanum_Myeongjo",
                               ),
                             )
@@ -222,9 +224,9 @@ class _MyAppState extends State<parx> {
                     margin: EdgeInsets.symmetric(horizontal: 30),
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
-                        color: Color(0xFF84643D),
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: Color(0xFF84643D))),
+                        color: Color(0xFFC7B7A7),
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(color: Color(0xFFC7B7A7))),
                     height: 50,
                     width: 200,
                     child: Padding(
@@ -245,11 +247,15 @@ class _MyAppState extends State<parx> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
+                            Image.asset("images/Vector (12).png"),
+                            SizedBox(
+                              width: 20,
+                            ),
                             Text(
                               "Create New Style",
                               style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
+                                fontSize: 22,
+                                fontWeight: FontWeight.normal,
                                 color: Colors.white,
                                 fontFamily: "Nanum_Myeongjo",
                               ),
@@ -261,42 +267,6 @@ class _MyAppState extends State<parx> {
                   ),
                   SizedBox(
                     height: 20,
-                  ),
-                  Container(
-                    margin: EdgeInsets.symmetric(horizontal: 30),
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                        color: Color(0xFF84643D),
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: Color(0xFF84643D))),
-                    height: 50,
-                    width: 200,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: InkWell(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => FirstCreationStylePge(),
-                              ));
-                        },
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              "Create New Style",
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                                fontFamily: "Nanum_Myeongjo",
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
                   ),
                 ],
                 // itemBuilder: (context, index) {

@@ -26,7 +26,7 @@ class CategoryData {
     Categoey_Id(0, "Newest"),
     Categoey_Id(1, "Top"),
     Categoey_Id(2, "Man"),
-    Categoey_Id(3, "Woman"),
+    Categoey_Id(3, "Women"),
     Categoey_Id(4, "Kids")
   ];
 

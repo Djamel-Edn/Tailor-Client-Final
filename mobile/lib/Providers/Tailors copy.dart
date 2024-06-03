@@ -6,8 +6,8 @@ class ClientProvider extends ChangeNotifier {
   ClientClass? _client;
   ClientClass? get client => _client;
 
-  Future<void> GetALlAboutCurrentUser(IDCurrentUser) async {
-    _client = await ClientLogique.GetAllAboutClient(IDCurrentUser);
+  Future<void> GetALlAboutCurrentUser(IDCurrentUser, context) async {
+    _client = await ClientLogique.GetAllAboutClient(IDCurrentUser, context);
     notifyListeners();
   }
 

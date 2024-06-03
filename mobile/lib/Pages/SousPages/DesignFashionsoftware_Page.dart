@@ -22,27 +22,9 @@ class _DesignFashinSoftState extends State<DesignFashinSoft> {
       ..scrollBy(8, 180)
       ..setNavigationDelegate(
         NavigationDelegate(
-          onProgress: (int progress) {
-            // Update loading bar.
-          },
-          onPageStarted: (String url) {
-            // Future.delayed(Duration(milliseconds: 800), () {
-            //   controller.scrollTo(8, 168);
-            //   controller.scrollBy(
-            //       0, (MediaQuery.of(context).size.width * 1.1).toInt());
-            //   setState(() {});
-            // });
-          },
-          onPageFinished: (String url) {
-            // print("finish");
-
-            // Future.delayed(Duration(milliseconds: 800), () {
-            //   controller.scrollTo(8, 168);
-            //   controller.scrollBy(
-            //       0, (MediaQuery.of(context).size.width * 1.1).toInt());
-            //   setState(() {});
-            // });
-          },
+          onProgress: (int progress) {},
+          onPageStarted: (String url) {},
+          onPageFinished: (String url) {},
           onWebResourceError: (WebResourceError error) {},
           onNavigationRequest: (NavigationRequest request) {
             if (request.url.startsWith('https://www.youtube.com/')) {
@@ -64,11 +46,6 @@ class _DesignFashinSoftState extends State<DesignFashinSoft> {
 
   @override
   Widget build(BuildContext context) {
-    // _timer = Timer.periodic(Duration(seconds: 1), (timer) {
-    //   setState(() {
-    //     controller.scrollTo(0, 0);
-    //   });
-    // });
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: SafeArea(
