@@ -14,7 +14,7 @@ class ChatProvider extends ChangeNotifier {
 
   void SetMessage(newmessage) {
     _chat!.messages.add(newmessage);
-    print("ppppppppppppppppppppppppppppppppppp");
+    print("pppppppppppppppppppppppppppppppppppxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
     print(_chat!.messages.length);
     notifyListeners();
   }

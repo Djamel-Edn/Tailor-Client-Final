@@ -35,23 +35,27 @@ class _ChatPAgeState extends State<ChatPAge> {
       "autoConnect": false,
     });
     socket.connect();
-    print("connected");
+    print("connected jjjjjjjjjjjj");
 
     socket.emit(
         "addNewUser", Provider.of<LocalDbProvider>(context, listen: false).id);
     socket.onConnect((data) {
       socket.on("message", (data) {
         // pushmessage(data);
-        if (mounted)
-          setState(() {
-            Provider.of<ChatProvider>(context, listen: false).SetMessage(
-                Message(
-                    ChatId: data["message"]["ChatId"],
-                    senderId: data["message"]["senderId"],
-                    text: data["message"]["text"],
-                    images: data["message"]["images"],
-                    date: DateTime.now()));
-          });
+        print("qqqqqqqqqqqqqqqqqqqqqqqqqq in client account");
+        Future.delayed(Duration(seconds: 3), () {
+          print("after 3 s");
+          if (mounted)
+            setState(() {
+              Provider.of<ChatProvider>(context, listen: false).SetMessage(
+                  Message(
+                      ChatId: data["message"]["ChatId"],
+                      senderId: data["message"]["senderId"],
+                      text: data["message"]["text"],
+                      images: data["message"]["images"],
+                      date: DateTime.now()));
+            });
+        });
       });
     });
   }
@@ -70,7 +74,7 @@ class _ChatPAgeState extends State<ChatPAge> {
 
   void sendmessage(Message msg, IdReciever) {
     print(
-        "qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq socjet $msg");
+        "qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq socjet  ${msg.senderId} $IdReciever");
     Map<String, dynamic> msgobj = {
       "ChatId": msg.ChatId,
       "senderId": msg.senderId,

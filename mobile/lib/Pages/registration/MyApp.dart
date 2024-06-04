@@ -22,44 +22,10 @@ class _MyAppHiaState extends State<MyAppHia> {
     Provider.of<LocalDbProvider>(context, listen: false)
         .GetIDLocal()
         .whenComplete(() {
-      setState(() {
-        connect();
-      });
+      setState(() {});
     });
 
     super.initState();
-  }
-
-  void connect() {
-    socket = IO.io("https://tailor-client-5cqi.onrender.com", <String, dynamic>{
-      "transports": ["websocket"],
-      "autoConnect": false,
-    });
-    socket.connect();
-    print("connected order");
-    socket.emit(
-        "addNewUser", Provider.of<LocalDbProvider>(context, listen: false).id);
-    socket.onConnect((data) {
-      print("connected order onconnect");
-      socket.on("newOrder", (data) {
-        print('rrrrrr');
-        print(
-            "on emit tailor..........................we are in ORDER........$data");
-        print(mounted);
-        // if (mounted)
-        //   setState(() {
-        //     Provider.of<ChatProvider>(context, listen: false).SetMessage(
-        //         Message(
-        //             ChatId: data["message"]["ChatId"],
-        //             senderId: data["message"]["senderId"],
-        //             text: data["message"]["text"],
-        //             images: data["message"]["images"],
-        //             date: DateTime.now()));
-        //   });
-        // print(mounted);
-        // if (mounted) {
-      });
-    });
   }
 
   @override

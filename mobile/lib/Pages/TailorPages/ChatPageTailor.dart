@@ -41,9 +41,6 @@ class _ChatPAgeState extends State<ChatPAgeTailor> {
     socket.onConnect((data) {
       print("connected");
       socket.on("message", (data) {
-        print('rrrrrr');
-        print("on emit tailor..........................$data");
-        print(mounted);
         if (mounted)
           setState(() {
             Provider.of<ChatProvider>(context, listen: false).SetMessage(
@@ -54,8 +51,6 @@ class _ChatPAgeState extends State<ChatPAgeTailor> {
                     images: data["message"]["images"],
                     date: DateTime.now()));
           });
-        // print(mounted);
-        // if (mounted) {
       });
     });
   }
