@@ -11,6 +11,10 @@ class LocalDbProvider extends ChangeNotifier {
     _id = await Register.GetLocalDBId();
   }
 
+  Future<void> LOGOUT() async {
+    await Register.LOgOUT();
+  }
+
   Future<void> GetTYPELocal() async {
     _type = await Register.GetLocalDBType();
   }

@@ -7,6 +7,7 @@ import 'package:projetfinprepa/LogiquesFonctions/OrderLogique.dart';
 import 'package:projetfinprepa/Providers/LocalDB.dart';
 import 'package:projetfinprepa/Providers/Tailors.dart';
 import 'package:provider/provider.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class TailorSelected extends StatefulWidget {
   var image, qstsansrs;
@@ -25,6 +26,8 @@ class _SearchPageState extends State<TailorSelected> {
   @override
   int currentpage = 0;
   var cntxdialoge;
+  late IO.Socket socket;
+
   TextEditingController _controller = TextEditingController();
   List<Tailor> AllDataTailors = [];
 
@@ -42,6 +45,38 @@ class _SearchPageState extends State<TailorSelected> {
   List<Tailor> Result = [];
 
   int indexCategory = 0;
+
+  void ConnectOrderRealTime() {
+    socket = IO.io("https://tailor-client-5cqi.onrender.com", <String, dynamic>{
+      "transports": ["websocket"],
+      "autoConnect": false,
+    });
+    socket.connect();
+    print("connected on order real time");
+    socket.emit(
+        "addNewUser", Provider.of<LocalDbProvider>(context, listen: false).id);
+    socket.onConnect((data) {
+      print("connected on order real time");
+      socket.on("NewOrder", (data) {
+        print('rrrrrr');
+        print("on emit order..........................$data");
+        print(mounted);
+        // if (mounted)
+        //   setState(() {
+        //     Provider.of<ChatProvider>(context, listen: false).SetMessage(
+        //         Message(
+        //             ChatId: data["message"]["ChatId"],
+        //             senderId: data["message"]["senderId"],
+        //             text: data["message"]["text"],
+        //             images: data["message"]["images"],
+        //             date: DateTime.now()));
+        //   });
+        // print(mounted);
+        // if (mounted) {
+      });
+    });
+  }
+
   void _ShowResult(String query) {
     List<Tailor> Data;
     if (!_nearest) {
@@ -116,6 +151,7 @@ class _SearchPageState extends State<TailorSelected> {
         Provider.of<TailorsProvider>(context, listen: false).AllTailors;
 
     ResultTilors = AllDataTailors;
+    ConnectOrderRealTime();
   }
 
   Widget build(BuildContext context) {
@@ -226,6 +262,7 @@ class _SearchPageState extends State<TailorSelected> {
                                                 widget.image,
                                                 widget.qstsansrs,
                                                 ResultTilors[index],
+                                                socket,
                                                 context);
                                             Navigator.pop(cntxdialoge);
                                             showDialog(
@@ -370,6 +407,7 @@ class _SearchPageState extends State<TailorSelected> {
                                                 widget.image,
                                                 widget.qstsansrs,
                                                 ResultTilors[index],
+                                                socket,
                                                 context);
                                             Navigator.pop(cntxdialoge);
                                             showDialog(

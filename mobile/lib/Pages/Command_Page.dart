@@ -54,6 +54,15 @@ class _MyCommandPageState extends State<MyCommandPage> {
                             ScrollViewKeyboardDismissBehavior.onDrag,
                         itemCount: value.client!.orders!.length + 1,
                         itemBuilder: (context, index) {
+                          if (value.client!.orders!.length == 0) {
+                            return Center(
+                              child: Container(
+                                  alignment: Alignment.center,
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.75,
+                                  child: Text("ssssss")),
+                            );
+                          }
                           return value.client!.orders!.length != index
                               ? Padding(
                                   padding: const EdgeInsets.all(8.0),

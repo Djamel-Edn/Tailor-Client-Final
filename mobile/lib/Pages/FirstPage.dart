@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:projetfinprepa/Pages/Command_Page.dart';
 import 'package:projetfinprepa/Pages/Search_Page.dart';
+import 'package:projetfinprepa/Pages/Tailorprofile/profile.dart';
 import 'package:projetfinprepa/Pages/tstthreeD.dart';
 import 'package:projetfinprepa/Providers/LocalDB.dart';
 import 'package:projetfinprepa/Providers/Models.dart';
@@ -17,7 +18,13 @@ class FirstPage extends StatefulWidget {
 }
 
 class _FirstPageState extends State<FirstPage> {
-  List Pages = [HomePage(), SearchPage(), parx(), MyCommandPage()];
+  List Pages = [
+    HomePage(),
+    SearchPage(),
+    parx(),
+    MyCommandPage(),
+    TailorProfilePage()
+  ];
   int currentpage = 0;
   @override
   void initState() {

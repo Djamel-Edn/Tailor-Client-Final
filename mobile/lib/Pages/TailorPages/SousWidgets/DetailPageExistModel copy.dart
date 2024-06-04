@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:projetfinprepa/LogiquesFonctions/OrderLogique.dart';
 import 'package:projetfinprepa/Pages/TailorPages/ChatPageTailor.dart';
 import 'package:projetfinprepa/Providers/Chat.dart';
+import 'package:projetfinprepa/Providers/LocalDB.dart';
 import 'package:projetfinprepa/Widgets/CommandItemTailorLargeImages.dart';
 import 'package:provider/provider.dart';
 
@@ -147,8 +148,11 @@ class DetailPageExistModel extends StatelessWidget {
                                       });
                                   await Provider.of<ChatProvider>(context,
                                           listen: false)
-                                      .GetChat(order["client"]["_id"],
-                                          "6626eb65ed54ccf5c1e7e8ed");
+                                      .GetChat(
+                                          order["client"]["_id"],
+                                          Provider.of<LocalDbProvider>(context,
+                                                  listen: false)
+                                              .id);
                                   Navigator.pop(cntxcircl);
 
                                   await Navigator.push(
@@ -301,8 +305,12 @@ class DetailPageExistModel extends StatelessWidget {
                                             });
                                         await Provider.of<ChatProvider>(context,
                                                 listen: false)
-                                            .GetChat(order["client"]["_id"],
-                                                "6626eb65ed54ccf5c1e7e8ed");
+                                            .GetChat(
+                                                order["client"]["_id"],
+                                                Provider.of<LocalDbProvider>(
+                                                        context,
+                                                        listen: false)
+                                                    .id);
                                         Navigator.pop(cntxcircl);
                                         await Navigator.push(
                                             context,

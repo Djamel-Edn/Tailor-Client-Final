@@ -44,6 +44,7 @@ class _ProfilPageState extends State<ProfilPage> {
   var totalrating = 0.0;
   @override
   void initState() {
+    ConnectOrderRealTime();
     for (var e in widget.tailor.reviews!) {
       totalrating += double.parse(e["rating"].toString());
     }
@@ -67,6 +68,37 @@ class _ProfilPageState extends State<ProfilPage> {
     }
 
     super.initState();
+  }
+
+  void ConnectOrderRealTime() {
+    socket = IO.io("https://tailor-client-5cqi.onrender.com", <String, dynamic>{
+      "transports": ["websocket"],
+      "autoConnect": false,
+    });
+    socket.connect();
+    print("connected on order real time");
+    socket.emit(
+        "addNewUser", Provider.of<LocalDbProvider>(context, listen: false).id);
+    socket.onConnect((data) {
+      print("connected on order real time");
+      socket.on("NewOrder", (data) {
+        print('rrrrrr');
+        print("on emit order..........................$data");
+        print(mounted);
+        // if (mounted)
+        //   setState(() {
+        //     Provider.of<ChatProvider>(context, listen: false).SetMessage(
+        //         Message(
+        //             ChatId: data["message"]["ChatId"],
+        //             senderId: data["message"]["senderId"],
+        //             text: data["message"]["text"],
+        //             images: data["message"]["images"],
+        //             date: DateTime.now()));
+        //   });
+        // print(mounted);
+        // if (mounted) {
+      });
+    });
   }
 
   // void sendOrder(OrderEmit order) {
@@ -817,6 +849,7 @@ class _ProfilPageState extends State<ProfilPage> {
                                                         widget.tailor.id,
                                                         "1200",
                                                         IDSModel,
+                                                        socket,
                                                         context)
                                                     .then((value) async {
                                                   Provider.of<ClientProvider>(

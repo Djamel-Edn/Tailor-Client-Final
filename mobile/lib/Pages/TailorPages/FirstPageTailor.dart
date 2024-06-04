@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:projetfinprepa/Pages/TailorPages/Command_PageTailor.dart';
 import 'package:projetfinprepa/Pages/TailorPages/Home_PageTailor.dart';
 import 'package:projetfinprepa/Pages/TailorPages/PostModel.dart';
+import 'package:projetfinprepa/Pages/Tailorprofile/profile.dart';
 import 'package:projetfinprepa/Providers/LocalDB.dart';
 import 'package:projetfinprepa/Providers/Tailors.dart';
 import 'package:provider/provider.dart';
@@ -18,6 +19,7 @@ class _FirstPageState extends State<FirstPageTailor> {
     HomePageTailor(),
     PostModelPage(),
     MyCommandPageTailor(),
+    TailorProfilePage(),
   ];
   int currentpage = 0;
   @override

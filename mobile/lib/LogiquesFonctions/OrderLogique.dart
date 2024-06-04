@@ -11,7 +11,7 @@ import 'package:provider/provider.dart';
 
 class OrderLogique {
   static Future<OrderEmit?> AddOrder(
-      IdClient, IdTailor, TotalPrice, posts, context) async {
+      IdClient, IdTailor, TotalPrice, posts, socket, context) async {
     print("in add order");
     var uri = "https://tailor-client-5cqi.onrender.com/order/create";
     var uri2 = "https://tailor-client-5cqi.onrender.com/chat/fetch";
@@ -47,6 +47,8 @@ class OrderLogique {
           status: jsonres["status"],
           totalPrice: jsonres["totalPrice"],
           tailor: jsonres["tailor"]);
+      socket.emit("newOrder", jsonres);
+
       return orderobj;
       // "id": jsonres["_id"],
       // "models": jsonres["posts"],
@@ -64,7 +66,7 @@ class OrderLogique {
   }
 
   static Future<OrderEmit?> AddOrderByMe(IdClient, IdTailor, TotalPrice, posts,
-      image, List<QSTANSRSELECTED> qsts, Tailor tailor, context) async {
+      image, List<QSTANSRSELECTED> qsts, Tailor tailor, socket, context) async {
     print("in add order");
     var uri = "https://tailor-client-5cqi.onrender.com/order/create";
     // var uri2 = "https://tailor-client-5cqi.onrender.com/chat/fetch";
@@ -100,6 +102,7 @@ class OrderLogique {
           models: [],
           orderDate: jsonres["orderDate"],
           postStyle: jsonres["postStyle"]);
+
       Provider.of<ClientProvider>(context, listen: false).SetOrderTMP(order);
       OrderEmit orderobj = OrderEmit(
           orderDate: jsonres["orderDate"],
@@ -114,10 +117,21 @@ class OrderLogique {
       await Provider.of<TailorsProvider>(context, listen: false)
           .GetTailor(IdTailor);
       print("in add order by be prove apre get tailor");
+      socket.emit("newOrder", orderobj);
       // var res2 =
       //     await http.post(Uri.parse(uri2), headers: headerall, body: bodyall2);
       return orderobj;
     }
+  }
+
+  void sendOrder(order, IdReciever, socket) {
+    Map<String, dynamic> msgobj = {
+      "ChatId": order.ChatId,
+      "senderId": order.senderId,
+      "text": order.text,
+      "images": order.images,
+      "date": order.date.toString()
+    };
   }
 
   static Future<void> AcceptOrder(idOrder, status, totalPrice, context) async {

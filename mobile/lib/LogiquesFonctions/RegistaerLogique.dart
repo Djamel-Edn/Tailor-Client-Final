@@ -178,6 +178,13 @@ class Register {
     return id;
   }
 
+  static Future<void> LOgOUT() async {
+    String? id;
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    await prefs.clear();
+  }
+
   static Future<String?> GetLocalDBType() async {
     String? type;
     final SharedPreferences prefs = await SharedPreferences.getInstance();
