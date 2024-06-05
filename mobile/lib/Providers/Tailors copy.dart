@@ -17,8 +17,14 @@ class ClientProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> EditProfilclient(IdTailor, name, context) async {
-    await Register.EditProfileClient(IdTailor, name, context);
+  Future<void> EditProfilclient(IdTailor, name, p, context) async {
+    await Register.EditProfileClient(IdTailor, name, p, context);
+
+    notifyListeners();
+  }
+
+  Future<void> EditPasswordClient(IdTailor, newpaasword, context) async {
+    await Register.EditPasswordClient(IdTailor, newpaasword, context);
 
     notifyListeners();
   }

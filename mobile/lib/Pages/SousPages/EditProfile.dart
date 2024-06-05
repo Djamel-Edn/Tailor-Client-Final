@@ -143,12 +143,26 @@ class _EditProfileState extends State<EditProfile> {
                   // widget.userProfile.phoneNumber = _phoneNumberController.text;
                   // You can add additional logic to save to database or API here
                   // After saving, you might want to navigate back to the profile page
-                  await tailorProv.EditProfilTailor(
-                      Provider.of<LocalDbProvider>(context, listen: false).id,
-                      _fullNameController.text,
-                      _addressController.text,
-                      int.parse(_phoneNumberController.text),
-                      context);
+                  print(_image);
+                  if (_image != null) {
+                    List<int> imagebytes = _image!.readAsBytesSync();
+                    print("ddddddddddddddddddd");
+                    await tailorProv.EditProfilTailor(
+                        Provider.of<LocalDbProvider>(context, listen: false).id,
+                        _fullNameController.text,
+                        _addressController.text,
+                        int.parse(_phoneNumberController.text),
+                        base64Encode(imagebytes),
+                        context);
+                  } else {
+                    await tailorProv.EditProfilTailor(
+                        Provider.of<LocalDbProvider>(context, listen: false).id,
+                        _fullNameController.text,
+                        _addressController.text,
+                        int.parse(_phoneNumberController.text),
+                        null,
+                        context);
+                  }
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF84643D),

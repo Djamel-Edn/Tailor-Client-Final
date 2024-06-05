@@ -60,7 +60,12 @@ class _MyCommandPageState extends State<MyCommandPage> {
                                   alignment: Alignment.center,
                                   height:
                                       MediaQuery.of(context).size.height * 0.75,
-                                  child: Text("ssssss")),
+                                  child: Text(
+                                    "No Commands ",
+                                    style: TextStyle(
+                                        fontFamily: "Nanum_Myeongjo",
+                                        fontSize: 32),
+                                  )),
                             );
                           }
                           return value.client!.orders!.length != index
@@ -144,7 +149,7 @@ class _MyCommandPageState extends State<MyCommandPage> {
                                                                                 const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                                                                             child:
                                                                                 Image.asset(
-                                                                              "images/star.png",
+                                                                              "images/starss.png",
                                                                               fit: BoxFit.cover,
                                                                               color: Color(0xFF84643D),
                                                                             ),
@@ -197,6 +202,8 @@ class _MyCommandPageState extends State<MyCommandPage> {
                                                                                   child: CircularProgressIndicator(),
                                                                                 );
                                                                               });
+                                                                          print(
+                                                                              "snulllllllllll ${Provider.of<LocalDbProvider>(context, listen: false).id}");
                                                                           await RevLogique.CreateRev(
                                                                               Provider.of<LocalDbProvider>(context, listen: false).id,
                                                                               value.client!.orders![index].tailor.id,

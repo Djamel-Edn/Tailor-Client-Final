@@ -2,6 +2,9 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:projetfinprepa/Providers/LocalDB.dart';
+import 'package:projetfinprepa/Providers/Tailors%20copy.dart';
+import 'package:provider/provider.dart';
 
 class Password extends StatefulWidget {
   const Password({Key? key}) : super(key: key);
@@ -141,36 +144,6 @@ class _NewPasswordState extends State<Password> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: TextField(
-                    controller: _currentPasswordController,
-                    obscureText: true,
-                    onChanged: _checkCurrentPasswordValidity,
-                    decoration: InputDecoration(
-                      hintText: 'Current Password',
-                      errorText: _currentPasswordError,
-                      contentPadding:
-                          EdgeInsets.symmetric(vertical: 13, horizontal: 16),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(
-                            20), // Increased border radius
-                        borderSide: BorderSide(
-                            color: Color.fromARGB(
-                                255, 239, 236, 232)), // Border color
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(
-                            20), // Increased border radius
-                        borderSide:
-                            BorderSide(color: Colors.brown), // Border color
-                      ),
-                      filled: true,
-                      fillColor: Color(0xFFEFE9E2), // Background color
-                    ),
-                  ),
-                ),
-                SizedBox(height: 20),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: TextField(
                     controller: _newPasswordController,
                     obscureText: true,
                     onChanged: _checkPasswordValidity,
@@ -210,7 +183,14 @@ class _NewPasswordState extends State<Password> {
                         _passwordError == null &&
                         _confirmPasswordError == null &&
                         !_isLoading) {
-                      _savePassword(context);
+                      print("ssssssssssssssss ${_newPasswordController.text}");
+                      Provider.of<ClientProvider>(context, listen: false)
+                          .EditPasswordClient(
+                              Provider.of<LocalDbProvider>(context,
+                                      listen: false)
+                                  .id,
+                              _newPasswordController.text,
+                              context);
                     }
                   },
                   child: Container(

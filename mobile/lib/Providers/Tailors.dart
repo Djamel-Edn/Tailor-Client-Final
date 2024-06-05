@@ -39,6 +39,7 @@ class TailorsProvider extends ChangeNotifier {
         _AllTailors.add(tailor);
       }
     }
+    notifyListeners();
   }
 
   Future<void> GetTailor(IdTailor) async {
@@ -73,8 +74,8 @@ class TailorsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> EditProfilTailor(IdTailor, name, city, phone, context) async {
-    await Register.EditProfile(IdTailor, name, city, phone, context);
+  Future<void> EditProfilTailor(IdTailor, name, city, phone, p, context) async {
+    await Register.EditProfile(IdTailor, name, city, phone, p, context);
 
     notifyListeners();
   }

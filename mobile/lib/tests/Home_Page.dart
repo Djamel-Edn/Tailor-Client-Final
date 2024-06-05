@@ -93,12 +93,16 @@ class _HomePageState extends State<HomePage> {
                             Provider.of<ClientProvider>(context, listen: false)
                                         .client !=
                                     null
-                                ? Text(
-                                    "Hi,${Provider.of<ClientProvider>(context, listen: false).client!.name}",
-                                    style: TextStyle(
-                                        fontSize: 20,
-                                        color: Colors.black,
-                                        fontFamily: "Nanum_Myeongjo"),
+                                ? Container(
+                                    child: Expanded(
+                                      child: Text(
+                                        "Hi,${Provider.of<ClientProvider>(context, listen: false).client!.name}",
+                                        style: TextStyle(
+                                            fontSize: 20,
+                                            color: Colors.black,
+                                            fontFamily: "Nanum_Myeongjo"),
+                                      ),
+                                    ),
                                   )
                                 : Text(
                                     "Hi, there",

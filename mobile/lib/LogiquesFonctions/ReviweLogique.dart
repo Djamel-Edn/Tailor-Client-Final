@@ -18,6 +18,7 @@ class RevLogique {
       "tailorId": tailorId,
     });
 
+    print("client id $clientId");
     var res =
         await http.post(Uri.parse(uri), headers: headerall, body: bodyall);
     print(res.statusCode);
