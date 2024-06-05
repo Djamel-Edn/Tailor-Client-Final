@@ -200,14 +200,29 @@ class Register {
     return type;
   }
 
-  static Future<void> EditProfile(iduser, name, city, phone, context) async {
+  static Future<void> EditProfile(iduser, name, city, phone, p, context) async {
     print("in registration tailor");
     var uri = "https://tailor-client-5cqi.onrender.com/update/$iduser";
 
     final headerall = {'Content-Type': 'application/json'};
 
-    final bodyall = convert.jsonEncode(
-        {"name": name.toString(), "city": city.toString(), "phone": 123});
+    final bodyall;
+    if (p != null) {
+      bodyall = convert.jsonEncode({
+        "name": name.toString(),
+        "city": city.toString(),
+        "phone": 123,
+        "profilePicture": p
+      });
+    } else {
+      bodyall = convert.jsonEncode({
+        "name": name.toString(),
+        "city": city.toString(),
+        "phone": 123,
+        "profilePicture": p
+      });
+    }
+
     var res = await http.put(Uri.parse(uri), headers: headerall, body: bodyall);
     print("in eiiiiiiiiiiiiiiiit profile");
     print(res.statusCode);
@@ -219,15 +234,22 @@ class Register {
     }
   }
 
-  static Future<void> EditProfileClient(iduser, name, context) async {
+  static Future<void> EditProfileClient(iduser, name, p, context) async {
     print("in registration tailor");
     var uri = "https://tailor-client-5cqi.onrender.com/update/$iduser";
 
     final headerall = {'Content-Type': 'application/json'};
 
-    final bodyall = convert.jsonEncode({
-      "name": name.toString(),
-    });
+    final bodyall;
+    if (p != null) {
+      bodyall =
+          convert.jsonEncode({"name": name.toString(), "profilePicture": p});
+    } else {
+      bodyall = convert.jsonEncode({
+        "name": name.toString(),
+      });
+    }
+
     var res = await http.put(Uri.parse(uri), headers: headerall, body: bodyall);
     print("in eiiiiiiiiiiiiiiiit profile");
     print(res.statusCode);
@@ -237,5 +259,41 @@ class Register {
       await Provider.of<ClientProvider>(context, listen: false)
           .GetALlAboutCurrentUser(jsonres["_id"], context);
     }
+  }
+
+  static Future<void> EditPasswordClient(iduser, newPassword, context) async {
+    print("in registration tailor");
+    var uri = "https://tailor-client-5cqi.onrender.com/updatePassword/$iduser";
+
+    final headerall = {'Content-Type': 'application/json'};
+
+    final bodyall = convert.jsonEncode({
+      "newPassword": newPassword.toString(),
+    });
+
+    var res = await http.put(Uri.parse(uri), headers: headerall, body: bodyall);
+    print("in eiiiiiiiiiiiiiiiit password");
+    print(iduser);
+    print(newPassword);
+    print(res.statusCode);
+    if (res.statusCode == 200) {}
+  }
+
+  static Future<void> EditPasswordTailor(iduser, newPassword, context) async {
+    print("in registration tailor");
+    var uri = "https://tailor-client-5cqi.onrender.com/updatePassword/$iduser";
+
+    final headerall = {'Content-Type': 'application/json'};
+
+    final bodyall = convert.jsonEncode({
+      "newPassword": newPassword.toString(),
+    });
+
+    var res = await http.put(Uri.parse(uri), headers: headerall, body: bodyall);
+    print("in eiiiiiiiiiiiiiiiit password");
+    print(iduser);
+    print(newPassword);
+    print(res.statusCode);
+    if (res.statusCode == 200) {}
   }
 }

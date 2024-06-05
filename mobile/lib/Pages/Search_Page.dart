@@ -771,9 +771,10 @@ class _SearchPageState extends State<SearchPage> {
                                   _nearest = value!;
                                   if (value) {
                                     ResultTilorsNearest = ResultTilors.where(
-                                        (element) =>
-                                            element.name == "Rajaa" ||
-                                            element.name == "Nour").toList();
+                                            (element) =>
+                                                element.city == "sidi belabbes")
+                                        .toList();
+                                    print(ResultTilors[1].city);
                                   }
                                 });
                               },

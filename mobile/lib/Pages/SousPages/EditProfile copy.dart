@@ -1,4 +1,5 @@
 // Define a class to represent user information
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -116,11 +117,21 @@ class _EditProfileState extends State<EditProfileClient> {
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () async {
-                  print("sssssssss");
-                  await clientProv.EditProfilclient(
-                      Provider.of<LocalDbProvider>(context, listen: false).id,
-                      _fullNameController.text,
-                      context);
+                  if (_image != null) {
+                    List<int> imagebytes = _image!.readAsBytesSync();
+                    print("ddddddddddddddddddd");
+                    await clientProv.EditProfilclient(
+                        Provider.of<LocalDbProvider>(context, listen: false).id,
+                        _fullNameController.text,
+                        base64Encode(imagebytes),
+                        context);
+                  } else {
+                    await clientProv.EditProfilclient(
+                        Provider.of<LocalDbProvider>(context, listen: false).id,
+                        _fullNameController.text,
+                        null,
+                        context);
+                  }
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF84643D),
