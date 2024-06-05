@@ -73,7 +73,7 @@ io.on('connection', (socket) => {
     console.log(order)
     console.log('usertoget',usertoget)
     console.log('usertoget.socketId',usertoget.socketId)
-      io.to(usertoget.socketId).emit('newOrder', order);
+      io.to(usertoget[0].socketId).emit('newOrder', order);
     })
   
   socket.on('newReview', ( review) => {
