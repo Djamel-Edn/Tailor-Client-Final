@@ -100,9 +100,9 @@ io.on('connection', (socket) => {
   })
   socket.on('updateOrder', ( orderId) => {
     const order=Order.findOne({_id:orderId}).populate('posts').populate('client').populate('tailor')
-    user=onlineUsers.find(user=>  user.userId === order.client._id)
     console.log(order)
     console.log('userstoget',user)
+    user=onlineUsers.find(user=>  user.userId === order.client._id)
       io.to(user.socketId).emit('updateOrder', order);
 
   })
