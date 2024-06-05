@@ -12,6 +12,7 @@ const messageRoute = require('./Routes/messageRoute');
 const reviewRoute = require('./Routes/reviewsRoute');
 const { Server } = require("socket.io");
 const http = require("http"); 
+const Client = require('./Models/clientModel');
 
 app.use(cors({
     origin: '*',
@@ -68,11 +69,10 @@ io.on('connection', (socket) => {
         console.log('User not found or socketId is not valid');
       }
     });
-  socket.on('newOrder', ( order) => {
+  socket.on('newOrder',async  ( order) => {
     usertoget=onlineUsers.filter(user=> user.userId === order.tailor)
-    console.log(order)
-    console.log('usertoget',usertoget)
-    console.log('usertoget.socketId',usertoget.socketId)
+    const client =await Client.findOne(order.client);
+    order.client=client
       io.to(usertoget[0].socketId).emit('newOrder', order);
     })
   
