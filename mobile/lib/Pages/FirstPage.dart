@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:projetfinprepa/Pages/Command_Page.dart';
 import 'package:projetfinprepa/Pages/Search_Page.dart';
-import 'package:projetfinprepa/Pages/Tailorprofile/profile.dart';
+import 'package:projetfinprepa/Pages/Tailorprofile/profile%20copy.dart';
 import 'package:projetfinprepa/Pages/tstthreeD.dart';
 import 'package:projetfinprepa/Providers/LocalDB.dart';
 import 'package:projetfinprepa/Providers/Models.dart';
@@ -23,7 +23,7 @@ class _FirstPageState extends State<FirstPage> {
     SearchPage(),
     parx(),
     MyCommandPage(),
-    TailorProfilePage()
+    ClientProfilePage()
   ];
   int currentpage = 0;
   @override

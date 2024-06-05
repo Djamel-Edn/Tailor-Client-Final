@@ -1,11 +1,10 @@
 // Define a class to represent user information
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:projetfinprepa/Providers/LocalDB.dart';
-import 'package:projetfinprepa/Providers/Tailors.dart';
+import 'package:projetfinprepa/Providers/Tailors%20copy.dart';
 import 'package:provider/provider.dart';
 
 class UserProfile {
@@ -24,15 +23,14 @@ class UserProfile {
   });
 }
 
-class EditProfile extends StatefulWidget {
+class EditProfileClient extends StatefulWidget {
   @override
   _EditProfileState createState() => _EditProfileState();
 }
 
-class _EditProfileState extends State<EditProfile> {
+class _EditProfileState extends State<EditProfileClient> {
   TextEditingController _fullNameController = TextEditingController();
-  TextEditingController _addressController = TextEditingController();
-  TextEditingController _phoneNumberController = TextEditingController();
+
   File? _image;
   final ImagePicker _picker = ImagePicker();
 
@@ -40,14 +38,8 @@ class _EditProfileState extends State<EditProfile> {
   void initState() {
     super.initState();
     _fullNameController.text =
-        Provider.of<TailorsProvider>(context, listen: false).tailor!.name!;
-    _addressController.text =
-        Provider.of<TailorsProvider>(context, listen: false).tailor!.city!;
-    _phoneNumberController.text =
-        Provider.of<TailorsProvider>(context, listen: false)
-            .tailor!
-            .phone!
-            .toString();
+        Provider.of<ClientProvider>(context, listen: false).client!.name;
+
     // _fullNameController.text = "dddddddd";
     // _addressController.text = "dddddddd";
     // _phoneNumberController.text = "skkkkk";
@@ -57,7 +49,7 @@ class _EditProfileState extends State<EditProfile> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFFCF9F6),
-      body: Consumer<TailorsProvider>(builder: (context, tailorProv, child) {
+      body: Consumer<ClientProvider>(builder: (context, clientProv, child) {
         return SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -72,7 +64,7 @@ class _EditProfileState extends State<EditProfile> {
                       icon: const Icon(Icons.arrow_back),
                     ),
                     const Text(
-                      " EDIT PROFILE  ",
+                      " EDIT PROFILE ",
                       style: TextStyle(
                         color: Color(0xFF000000),
                         fontSize: 23,
@@ -87,17 +79,15 @@ class _EditProfileState extends State<EditProfile> {
                 child: Center(
                   child: Stack(
                     children: <Widget>[
-                      CircleAvatar(
-                        radius: 80.0,
-                        backgroundImage: _image == null
-                            ? tailorProv.tailor!.profilePicture ==
-                                    "../utils/pp.png"
-                                ? AssetImage("images/profileimage.png")
-                                : MemoryImage(base64Decode(
-                                        tailorProv.tailor!.profilePicture!))
-                                    as ImageProvider
-                            : FileImage(_image!) as ImageProvider,
-                      ),
+                      _image == null
+                          ? CircleAvatar(
+                              radius: 80.0,
+                              backgroundImage:
+                                  AssetImage("images/profileimage.png"),
+                            )
+                          : CircleAvatar(
+                              backgroundImage: FileImage(_image!),
+                            ),
                       Positioned(
                         bottom: 10.0,
                         right: 10.0,
@@ -123,31 +113,13 @@ class _EditProfileState extends State<EditProfile> {
                 title: 'Full Name',
                 controller: _fullNameController,
               ),
-              UserInfoItem(
-                title: 'Address',
-                controller: _addressController,
-              ),
-              UserInfoItem(
-                title: 'Phone Number',
-                controller: _phoneNumberController,
-              ),
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () async {
                   print("sssssssss");
-                  // Save changes
-                  // widget.userProfile.fullName = _fullNameController.text;
-                  // widget.userProfile.gender = _genderController.text;
-                  // widget.userProfile.address = _addressController.text;
-                  // widget.userProfile.email = _emailController.text;
-                  // widget.userProfile.phoneNumber = _phoneNumberController.text;
-                  // You can add additional logic to save to database or API here
-                  // After saving, you might want to navigate back to the profile page
-                  await tailorProv.EditProfilTailor(
+                  await clientProv.EditProfilclient(
                       Provider.of<LocalDbProvider>(context, listen: false).id,
                       _fullNameController.text,
-                      _addressController.text,
-                      int.parse(_phoneNumberController.text),
                       context);
                 },
                 style: ElevatedButton.styleFrom(
@@ -229,8 +201,7 @@ class _EditProfileState extends State<EditProfile> {
   @override
   void dispose() {
     _fullNameController.dispose();
-    _addressController.dispose();
-    _phoneNumberController.dispose();
+
     super.dispose();
   }
 }

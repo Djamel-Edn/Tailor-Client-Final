@@ -206,10 +206,8 @@ class Register {
 
     final headerall = {'Content-Type': 'application/json'};
 
-    print(int.parse(phone));
     final bodyall = convert.jsonEncode(
-        {"name": name.toString(), "city": city.toString(), "phone": phone});
-
+        {"name": name.toString(), "city": city.toString(), "phone": 123});
     var res = await http.put(Uri.parse(uri), headers: headerall, body: bodyall);
     print("in eiiiiiiiiiiiiiiiit profile");
     print(res.statusCode);
@@ -218,6 +216,26 @@ class Register {
 
       await Provider.of<TailorsProvider>(context, listen: false)
           .GetTailor(jsonres["_id"]);
+    }
+  }
+
+  static Future<void> EditProfileClient(iduser, name, context) async {
+    print("in registration tailor");
+    var uri = "https://tailor-client-5cqi.onrender.com/update/$iduser";
+
+    final headerall = {'Content-Type': 'application/json'};
+
+    final bodyall = convert.jsonEncode({
+      "name": name.toString(),
+    });
+    var res = await http.put(Uri.parse(uri), headers: headerall, body: bodyall);
+    print("in eiiiiiiiiiiiiiiiit profile");
+    print(res.statusCode);
+    if (res.statusCode == 200) {
+      var jsonres = convert.jsonDecode(res.body);
+
+      await Provider.of<ClientProvider>(context, listen: false)
+          .GetALlAboutCurrentUser(jsonres["_id"], context);
     }
   }
 }
