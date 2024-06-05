@@ -167,17 +167,24 @@ class _ProfilPageState extends State<ProfilPage> {
                                           height: MediaQuery.of(context)
                                                   .size
                                                   .height *
-                                              0.11,
+                                              0.1,
                                         )
                                       : CircleAvatar(
                                           radius: 46,
                                           foregroundImage: MemoryImage(
-                                            base64Decode(widget
-                                                .tailor.profilePicture!
-                                                .substring(23)),
+                                            base64Decode(
+                                                widget.tailor.profilePicture!),
                                           ),
                                         )
-                                  : SizedBox(),
+                                  : ForRead
+                                      ? CircleAvatar(
+                                          radius: 46,
+                                          foregroundImage: AssetImage(
+                                              "images/profileimage.png"),
+                                        )
+                                      : SizedBox(
+                                          height: 80,
+                                        ),
                               // CircleAvatar(
                               //     radius: 46,
                               //     foregroundImage: AssetImage(
