@@ -13,6 +13,7 @@ const reviewRoute = require('./Routes/reviewsRoute');
 const { Server } = require("socket.io");
 const http = require("http"); 
 const Client = require('./Models/clientModel');
+const orderModel = require('./Models/orderModel');
 
 app.use(cors({
     origin: '*',
@@ -72,17 +73,16 @@ io.on('connection', (socket) => {
     socket.on('newOrder', async (order) => {
       try {
           const usertoget = onlineUsers.filter(user => user.userId === order.tailor);
-  
+        
           if (usertoget.length > 0) {
-              const client = await Client.findOne({ _id: order.client });
-  
-              if (client) {
-                  order.client = client;
+              
+          OrderFull=await order.findOne({_id:order._id}).populate('posts').populate('client')
+             
+                  order.client = OrderFull.client;
+                  order.posts=OrderFull.posts
   
                   io.to(usertoget[0].socketId).emit('newOrder', order);
-              } else {
-                  console.error(`Client with ID ${order.client} not found`);
-              }
+              
           } else {
               console.error(`Tailor with ID ${order.tailor} is not online`);
           }
