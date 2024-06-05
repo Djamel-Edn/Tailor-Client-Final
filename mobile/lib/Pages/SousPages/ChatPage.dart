@@ -8,10 +8,13 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:projetfinprepa/Data/Chat_Class.dart';
 import 'package:projetfinprepa/Data/Message_Class.dart';
+import 'package:projetfinprepa/Data/Tailor_Class.dart';
 import 'package:projetfinprepa/Providers/Chat.dart';
 import 'package:projetfinprepa/Providers/LocalDB.dart';
+import 'package:projetfinprepa/Providers/Tailors.dart';
 import 'package:provider/provider.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:url_launcher/url_launcher.dart';
 
 class ChatPAge extends StatefulWidget {
   String IdTailor;
@@ -28,6 +31,7 @@ class _ChatPAgeState extends State<ChatPAge> {
   File? image;
   Uint8List? bytes;
   late IO.Socket socket;
+  Tailor? tailor;
   @override
   void connect() {
     socket = IO.io("https://tailor-client-5cqi.onrender.com", <String, dynamic>{
@@ -90,6 +94,8 @@ class _ChatPAgeState extends State<ChatPAge> {
   }
 
   void initState() {
+    Provider.of<TailorsProvider>(context, listen: false)
+        .GetTailor(widget.IdTailor);
     connect();
 
     // Provider.of<ChatProvider>(context, listen: false)
@@ -126,13 +132,17 @@ class _ChatPAgeState extends State<ChatPAge> {
           centerTitle: false,
           actions: [
             IconButton(
-                onPressed: () {
-                  Navigator.pop(context);
+                onPressed: () async {
+                  final Uri url = Uri(
+                      scheme: 'tel',
+                      path:
+                          '${Provider.of<TailorsProvider>(context, listen: false).tailor!.phone!.toString()}');
+                  await launchUrl(url);
                 },
                 icon: Icon(Icons.phone)),
             IconButton(
                 onPressed: () {
-                  Navigator.pop(context);
+                  print("object");
                 },
                 icon: Icon(Icons.linear_scale_sharp)),
           ],
