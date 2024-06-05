@@ -98,9 +98,11 @@ io.on('connection', (socket) => {
     console.log('usertoget',usertoget)
       io.to(usertoget.socketId).emit('newReview', review);
   })
-  socket.on('updateOrder', ( orderId) => {
-    const order=Order.findOne({_id:orderId}).populate('posts').populate('client').populate('tailor')
-    console.log(order)
+  socket.on('updateOrder',async ( orderId) => {
+    console.log('orderId',orderId)
+    const order=await Order.findOne({_id:orderId}).populate('posts').populate('client').populate('tailor')
+    
+    console.log('order',order)
     console.log('userstoget',user)
     user=onlineUsers.find(user=>  user.userId === order.client._id)
       io.to(user.socketId).emit('updateOrder', order);
