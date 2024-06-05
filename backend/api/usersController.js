@@ -440,7 +440,12 @@ const getTailor = async (req, res) => {
                     { path: 'posts', model: 'Post' }
                 ]
             })
-            .populate('reviews')
+            .populate({
+                path:'reviews',
+                populate:{
+                 path:'client',model:'Client'
+                }
+            })
             .populate('posts');
 
         if (user) {
