@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:projetfinprepa/Data/Client_Class.dart';
 import 'package:projetfinprepa/LogiquesFonctions/ClientLogique.dart';
+import 'package:projetfinprepa/LogiquesFonctions/RegistaerLogique.dart';
 
 class ClientProvider extends ChangeNotifier {
   ClientClass? _client;
@@ -13,6 +14,12 @@ class ClientProvider extends ChangeNotifier {
 
   Future<void> SetOrderTMP(order) async {
     _client!.orders!.add(order);
+    notifyListeners();
+  }
+
+  Future<void> EditProfilclient(IdTailor, name, context) async {
+    await Register.EditProfileClient(IdTailor, name, context);
+
     notifyListeners();
   }
 }
