@@ -133,7 +133,7 @@ const registerTailor = async (req, res) => {
             city,
             verified: false,
             address: '',
-            gender: '',
+            
             speciality: '',
             description: '',
             rating: 0,
