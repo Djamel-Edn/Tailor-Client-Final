@@ -13,7 +13,7 @@ const reviewRoute = require('./Routes/reviewsRoute');
 const { Server } = require("socket.io");
 const http = require("http"); 
 const Client = require('./Models/clientModel');
-const orderModel = require('./Models/orderModel');
+const Order = require('./Models/orderModel');
 
 app.use(cors({
     origin: '*',
@@ -76,7 +76,7 @@ io.on('connection', (socket) => {
         
           if (usertoget.length > 0) {
               
-          OrderFull=await order.findOne({_id:order._id}).populate('posts').populate('client')
+          OrderFull=await Order.findOne({_id:order._id}).populate('posts').populate('client')
              
                   order.client = OrderFull.client;
                   order.posts=OrderFull.posts
