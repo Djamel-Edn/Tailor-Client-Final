@@ -93,19 +93,24 @@ class Register {
   }
 
   static Future<void> CreateAccountTailor(
-      email, name, password, gender, city, context) async {
+      email, name, password, gender, city, phone, context) async {
     print("in registration tailor");
     var uri = "https://tailor-client-5cqi.onrender.com/register/tailor";
 
     final headerall = {'Content-Type': 'application/json'};
-
+    print(email);
+    print(name);
+    print(password);
+    print(gender);
+    print(city);
+    print(int.parse(phone));
     final bodyall = convert.jsonEncode({
       "email": email.toString(),
       "name": name.toString(),
       "password": password.toString(),
       "gender": gender.toString(),
-      "city": "Oran",
-      "phone": 088920283
+      "city": city.toString(),
+      "phone": int.parse(phone)
     });
 
     var res =
@@ -193,5 +198,26 @@ class Register {
     // await prefs.clear();
 
     return type;
+  }
+
+  static Future<void> EditProfile(iduser, name, city, phone, context) async {
+    print("in registration tailor");
+    var uri = "https://tailor-client-5cqi.onrender.com/update/$iduser";
+
+    final headerall = {'Content-Type': 'application/json'};
+
+    print(int.parse(phone));
+    final bodyall = convert.jsonEncode(
+        {"name": name.toString(), "city": city.toString(), "phone": phone});
+
+    var res = await http.put(Uri.parse(uri), headers: headerall, body: bodyall);
+    print("in eiiiiiiiiiiiiiiiit profile");
+    print(res.statusCode);
+    if (res.statusCode == 200) {
+      var jsonres = convert.jsonDecode(res.body);
+
+      await Provider.of<TailorsProvider>(context, listen: false)
+          .GetTailor(jsonres["_id"]);
+    }
   }
 }

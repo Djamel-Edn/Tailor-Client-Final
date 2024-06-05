@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:projetfinprepa/Pages/SousPages/EditProfile.dart';
 import 'package:projetfinprepa/Pages/Tailorprofile/Myinformation.dart';
 import 'package:projetfinprepa/Pages/Tailorprofile/settings.dart';
 import 'package:projetfinprepa/Pages/registration/MyApp.dart';
@@ -195,7 +196,7 @@ class _TailorProfilePageState extends State<TailorProfilePage> {
                         backgroundImage: tailorsProvider
                                     .tailor!.profilePicture ==
                                 "../utils/pp.png"
-                            ? AssetImage("images/jamel.jpg")
+                            ? AssetImage("images/profileimage.png")
                             : MemoryImage(base64Decode(
                                     tailorsProvider.tailor!.profilePicture!))
                                 as ImageProvider,
@@ -220,13 +221,10 @@ class _TailorProfilePageState extends State<TailorProfilePage> {
                   leadingIcon: Icons.edit,
                   title: 'Edit Profile',
                   onTap: () {
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //     builder: ((context) =>
-                    //         EditProfile1(userProfile: userProfile)),
-                    //   ),
-                    // );
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: ((context) => EditProfile())),
+                    );
                   },
                 ),
                 ContainerItem(
