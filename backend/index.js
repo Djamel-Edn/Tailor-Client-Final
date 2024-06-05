@@ -101,7 +101,7 @@ io.on('connection', (socket) => {
   socket.on('updateOrder',async ( orderId) => {
     console.log('orderId',orderId)
     const order=await Order.findOne({_id:orderId}).populate('posts').populate('client').populate('tailor')
-    console.log('client'order.client._id)
+    console.log('clientID',order.client._id)
   const user=onlineUsers.find(user=>  user.userId === order.client._id)
     
     console.log('order',order)
