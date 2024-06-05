@@ -69,12 +69,28 @@ io.on('connection', (socket) => {
         console.log('User not found or socketId is not valid');
       }
     });
-  socket.on('newOrder',async  ( order) => {
-    usertoget=onlineUsers.filter(user=> user.userId === order.tailor)
-    const client =await Client.findOne(order.client);
-    order.client=client
-      io.to(usertoget[0].socketId).emit('newOrder', order);
-    })
+    socket.on('newOrder', async (order) => {
+      try {
+          const usertoget = onlineUsers.filter(user => user.userId === order.tailor);
+  
+          if (usertoget.length > 0) {
+              const client = await Client.findOne({ _id: order.client });
+  
+              if (client) {
+                  order.client = client;
+  
+                  io.to(usertoget[0].socketId).emit('newOrder', order);
+              } else {
+                  console.error(`Client with ID ${order.client} not found`);
+              }
+          } else {
+              console.error(`Tailor with ID ${order.tailor} is not online`);
+          }
+      } catch (error) {
+          console.error('Error processing new order:', error);
+      }
+  });
+  
   
   socket.on('newReview', ( review) => {
     usertoget=onlineUsers.filter( user.userId === review.tailorId)
