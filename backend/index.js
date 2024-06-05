@@ -98,14 +98,13 @@ io.on('connection', (socket) => {
     console.log('usertoget',usertoget)
       io.to(usertoget.socketId).emit('newReview', review);
   })
-  socket.on('updateOrder', ( order) => {
-    
-    userstoget=onlineUsers.filter(user=> user.userId==order.tailor || user.userId === order.client)
+  socket.on('updateOrder', ( orderId) => {
+    const order=Order.findOne({_id:orderId}).populate('posts').populate('client').populate('tailor')
+    user=onlineUsers.find(user=>  user.userId === order.client._id)
     console.log(order)
-    console.log('userstoget',userstoget)
-    userstoget.forEach(user => {
+    console.log('userstoget',user)
       io.to(user.socketId).emit('updateOrder', order);
-    });
+
   })
     socket.on('disconnect', () => {
       onlineUsers = onlineUsers.filter(user => user.socketId !== socket.id);
