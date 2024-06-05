@@ -1,5 +1,10 @@
 import 'dart:convert';
 
+import 'package:dzair_data_usage/daira.dart';
+import 'package:dzair_data_usage/dzair.dart';
+import 'package:dzair_data_usage/langs.dart';
+import 'package:dzair_data_usage/postCode.dart';
+import 'package:dzair_data_usage/wilaya.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:icons_plus/icons_plus.dart';
@@ -22,18 +27,12 @@ class _SignUpScreenState extends State<SignUpScreen1> {
   TextEditingController _confirmPasswordController = TextEditingController();
   TextEditingController _emailController = TextEditingController();
   TextEditingController _phoneNumberController = TextEditingController();
+  Dzair dzair = Dzair();
 
+  List<Wilaya?>? wilayas;
+  List<Daira?>? dairas;
+  List<PostCode?>? postcodes;
   String? selectedGender;
-  List<String> wilayas = [
-    'Adrar',
-    'Chlef',
-    'Laghouat',
-    'Oum El Bouaghi',
-    'Batna',
-    'Béjaïa',
-    'Biskra',
-    // Add more wilayas here...
-  ];
 
   String? selectedWilaya;
   var contexdialog;
@@ -81,15 +80,20 @@ class _SignUpScreenState extends State<SignUpScreen1> {
   }
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    wilayas = dzair.getWilayat();
+    dairas = dzair.getDairat();
+    postcodes = dzair.getPostCodes();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFFCF9F6),
       body: Stack(
         children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 0, left: 90),
-            child: Image.asset('images/shad.png'),
-          ),
           Padding(
             padding:
                 const EdgeInsets.only(bottom: 0, left: 0, right: 62, top: 410),
@@ -97,14 +101,17 @@ class _SignUpScreenState extends State<SignUpScreen1> {
           ),
           SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.all(25),
+              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 25),
               child: Form(
                 key: _formKey,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Center(
-                        child: Text('SIGN UP', style: TextStyle(fontSize: 30))),
+                        child: Padding(
+                      padding: const EdgeInsets.only(top: 40),
+                      child: Text('SIGN UP', style: TextStyle(fontSize: 30)),
+                    )),
                     SizedBox(height: 40),
                     TextFormField(
                       controller: _nameController,
@@ -164,10 +171,10 @@ class _SignUpScreenState extends State<SignUpScreen1> {
                           selectedWilaya = newValue;
                         });
                       },
-                      items: wilayas.map((String wilaya) {
+                      items: wilayas?.map((Wilaya? wilaya) {
                         return DropdownMenuItem<String>(
-                          value: wilaya,
-                          child: Text(wilaya),
+                          value: wilaya?.getWilayaName(Language.FR),
+                          child: Text(wilaya?.getWilayaName(Language.FR) ?? ''),
                         );
                       }).toList(),
                       decoration: InputDecoration(
@@ -306,12 +313,14 @@ class _SignUpScreenState extends State<SignUpScreen1> {
                                   );
                                 },
                               );
+
                               Register.CreateAccountTailor(
                                       _emailController.text,
                                       _nameController.text,
                                       _passwordController.text,
-                                      "Female",
-                                      "ORAN",
+                                      selectedGender,
+                                      selectedWilaya,
+                                      _phoneNumberController.text,
                                       context)
                                   .then((value) {
                                 Navigator.pop(contexdialog);

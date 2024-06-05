@@ -3,6 +3,7 @@ import 'dart:convert' as convert;
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:projetfinprepa/Data/Tailor_Class.dart';
+import 'package:projetfinprepa/LogiquesFonctions/RegistaerLogique.dart';
 
 class TailorsProvider extends ChangeNotifier {
   List<Tailor> _AllTailors = [];
@@ -43,9 +44,10 @@ class TailorsProvider extends ChangeNotifier {
   Future<void> GetTailor(IdTailor) async {
     var uri = "https://tailor-client-5cqi.onrender.com/getTailor/$IdTailor";
     var res = await http.get(Uri.parse(uri));
-    print("getttttttttttttttttttthhhhhhhhhhhhhhhh ${res.statusCode}");
     if (res.statusCode == 200) {
       var jsonres = convert.jsonDecode(res.body);
+      print(
+          "getttttttttttttttttttthhhhhhhhhhhhhhhh ${res.statusCode} gettttttt gender ${jsonres["gender"]}");
 
       _tailor = Tailor(
           Speciality: jsonres["speciality"],
@@ -67,6 +69,12 @@ class TailorsProvider extends ChangeNotifier {
           orders: jsonres["orders"]);
     }
     print("getttttttttttttttttttthhhhhhhhhhhhhhhh ${res.statusCode}");
+
+    notifyListeners();
+  }
+
+  Future<void> EditProfilTailor(IdTailor, name, city, phone, context) async {
+    await Register.EditProfile(IdTailor, name, city, phone, context);
 
     notifyListeners();
   }

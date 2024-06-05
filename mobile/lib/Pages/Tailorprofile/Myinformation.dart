@@ -72,7 +72,9 @@ class _MyinformationState extends State<Myinformation1> {
                   backgroundColor: Color.fromARGB(255, 208, 190, 172),
                   backgroundImage: tailorsProvider.tailor!.profilePicture ==
                           "../utils/pp.png"
-                      ? AssetImage("images/jamel.jpg")
+                      ? AssetImage(
+                          "images/profileimage.png",
+                        )
                       : MemoryImage(base64Decode(
                               tailorsProvider.tailor!.profilePicture!))
                           as ImageProvider,
@@ -80,13 +82,16 @@ class _MyinformationState extends State<Myinformation1> {
                 SizedBox(height: 20),
                 UserInfoItem(
                     title: 'Full Name', value: tailorsProvider.tailor!.name!),
-                UserInfoItem(title: 'Gender', value: "Female"),
-                UserInfoItem(title: 'Address', value: 'Sidi Bel Abbes'),
+                UserInfoItem(
+                    title: 'Gender', value: tailorsProvider.tailor!.gender!),
+                UserInfoItem(
+                    title: 'Address', value: tailorsProvider.tailor!.city!),
                 UserInfoItem(
                     title: 'Email', value: tailorsProvider.tailor!.email!),
                 UserInfoItem(
                     title: 'Phone Number',
-                    value: "+213 " + tailorsProvider.tailor!.phone!.toString()),
+                    value:
+                        tailorsProvider.tailor!.phone!.toString().substring(3)),
                 SizedBox(height: 70),
               ],
             ),
