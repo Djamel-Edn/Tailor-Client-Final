@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:projetfinprepa/LogiquesFonctions/RegistaerLogique.dart';
+import 'package:projetfinprepa/Pages/registration/verfyforget.dart';
 
 class forget extends StatefulWidget {
   const forget({Key? key}) : super(key: key);
@@ -139,7 +141,17 @@ class _ForgetState extends State<forget> {
                   ),
                   const SizedBox(height: 40),
                   ElevatedButton(
-                    onPressed: () => _sendEmail(context),
+                    onPressed: () async {
+                      print("qqqqqqqqqqqqqqqqqq ${_emailController.text}");
+                      await Register.resetpassword(_emailController.text)
+                          .then((value) {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    Verifyforget(IDUSER: value)));
+                      });
+                    },
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all<Color>(
                         Color(0xFF84643D),

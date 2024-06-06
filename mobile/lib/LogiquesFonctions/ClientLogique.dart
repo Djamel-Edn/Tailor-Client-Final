@@ -13,7 +13,7 @@ class ClientLogique {
     ClientClass? client;
     List<Order> orders = [];
     List<Model> models = [];
-    var uri = "https://tailor-client-5cqi.onrender.com/getClient/${IDCLIENT}";
+    var uri = "https://tailor-client-final.onrender.com/getClient/${IDCLIENT}";
     var res = await http.get(Uri.parse(uri));
     print("in gettttttttttttttttttttttttt client ${res.statusCode}");
 

@@ -17,7 +17,8 @@ class _MyAppHiaState extends State<MyAppHia> {
   late IO.Socket socket;
 
   void ConnectOrderRealTime() {
-    socket = IO.io("https://tailor-client-5cqi.onrender.com", <String, dynamic>{
+    socket =
+        IO.io("https://tailor-client-final.onrender.com", <String, dynamic>{
       "transports": ["websocket"],
       "autoConnect": false,
     });

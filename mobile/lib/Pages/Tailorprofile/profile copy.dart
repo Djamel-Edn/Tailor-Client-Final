@@ -229,14 +229,6 @@ class _TailorProfilePageState extends State<ClientProfilePage> {
                   },
                 ),
                 ContainerItem(
-                  key: _currentStateButtonKey,
-                  leadingIcon: Icons.event_available_sharp,
-                  title: 'Current state ',
-                  onTap: () {
-                    _showOverlay(context);
-                  },
-                ),
-                ContainerItem(
                   leadingIcon: Icons.settings,
                   title: 'Settings',
                   onTap: () {

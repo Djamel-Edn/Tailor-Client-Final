@@ -13,7 +13,7 @@ class TailorsProvider extends ChangeNotifier {
 
   Future<void> GetAllTailors() async {
     _AllTailors = [];
-    var uri = "https://tailor-client-5cqi.onrender.com/getallTailors";
+    var uri = "https://tailor-client-final.onrender.com/getallTailors";
     var res = await http.get(Uri.parse(uri));
     if (res.statusCode == 200) {
       var jsonres = convert.jsonDecode(res.body);
@@ -43,7 +43,7 @@ class TailorsProvider extends ChangeNotifier {
   }
 
   Future<void> GetTailor(IdTailor) async {
-    var uri = "https://tailor-client-5cqi.onrender.com/getTailor/$IdTailor";
+    var uri = "https://tailor-client-final.onrender.com/getTailor/$IdTailor";
     var res = await http.get(Uri.parse(uri));
     if (res.statusCode == 200) {
       var jsonres = convert.jsonDecode(res.body);

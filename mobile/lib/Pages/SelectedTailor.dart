@@ -326,9 +326,7 @@ class _SearchPageState extends State<TailorSelected> {
                                                                   ResultTilors[
                                                                           index]
                                                                       .profilePicture
-                                                                      .toString()
-                                                                      .substring(
-                                                                          23)),
+                                                                      .toString()),
                                                             ),
                                                           )
                                                         : CircleAvatar(
@@ -491,9 +489,7 @@ class _SearchPageState extends State<TailorSelected> {
                                                               ResultTilorsNearest[
                                                                       index]
                                                                   .profilePicture
-                                                                  .toString()
-                                                                  .substring(
-                                                                      23)),
+                                                                  .toString()),
                                                         ),
                                                       )
                                                     : CircleAvatar(

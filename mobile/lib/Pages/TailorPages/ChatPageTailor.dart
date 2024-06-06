@@ -30,7 +30,8 @@ class _ChatPAgeState extends State<ChatPAgeTailor> {
   late IO.Socket socket;
 
   void connect() {
-    socket = IO.io("https://tailor-client-5cqi.onrender.com", <String, dynamic>{
+    socket =
+        IO.io("https://tailor-client-final.onrender.com", <String, dynamic>{
       "transports": ["websocket"],
       "autoConnect": false,
     });
@@ -128,9 +129,8 @@ class _ChatPAgeState extends State<ChatPAgeTailor> {
                   ? widget.chat!.client.profilePicture != "/../utils/pp.png"
                       ? CircleAvatar(
                           radius: 25,
-                          backgroundImage: MemoryImage(base64Decode(widget
-                              .chat!.tailor.profilePicture!
-                              .substring(23))),
+                          backgroundImage: MemoryImage(base64Decode(
+                              widget.chat!.client.profilePicture!)),
                         )
                       : CircleAvatar(
                           radius: 25,

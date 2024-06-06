@@ -23,6 +23,7 @@ class _SignState extends State<sign> {
   late TextEditingController _passwordController;
   late TextEditingController _emailController;
   late GoogleSignIn _googleSignIn;
+  var cntxdialogue;
 
   @override
   void initState() {
@@ -357,10 +358,24 @@ class _SignState extends State<sign> {
                       width: double.infinity,
                       child: ElevatedButton(
                         onPressed: () async {
+                          showDialog(
+                            context: context,
+                            builder: (contextd) {
+                              cntxdialogue = contextd;
+
+                              return Center(
+                                child: CircularProgressIndicator(
+                                  color: Color(0xFFFCF9F6),
+                                ),
+                              );
+                            },
+                          );
                           await Register.LoginAccount(
                               _emailController.text.trim(),
                               _passwordController.text.trim(),
                               context);
+                          print("sssssssssssss");
+                          Navigator.pop(cntxdialogue);
                         },
                         style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all<Color>(

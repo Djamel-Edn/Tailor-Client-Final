@@ -10,7 +10,7 @@ import 'package:provider/provider.dart';
 class ModelLogique {
   static Future<List<Model>> GetAllModels() async {
     List<Model> AllModel = [];
-    var uri = "https://tailor-client-5cqi.onrender.com/post/getall";
+    var uri = "https://tailor-client-final.onrender.com/post/getall";
     var res = await http.get(Uri.parse(uri));
     if (res.statusCode == 200) {
       var jsonres = convert.jsonDecode(res.body);
@@ -60,7 +60,7 @@ class ModelLogique {
     spec,
     context,
   ) async {
-    var uri = "https://tailor-client-5cqi.onrender.com/post/create";
+    var uri = "https://tailor-client-final.onrender.com/post/create";
 
     final headerall = {'Content-Type': 'application/json'};
     print("aaaaaaaaaaa add post");

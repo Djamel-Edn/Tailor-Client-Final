@@ -34,7 +34,7 @@ class _EditProfileState extends State<EditProfileClient> {
 
   File? _image;
   final ImagePicker _picker = ImagePicker();
-
+  var cntxdialogue;
   @override
   void initState() {
     super.initState();
@@ -87,6 +87,7 @@ class _EditProfileState extends State<EditProfileClient> {
                                   AssetImage("images/profileimage.png"),
                             )
                           : CircleAvatar(
+                              radius: 80.0,
                               backgroundImage: FileImage(_image!),
                             ),
                       Positioned(
@@ -117,6 +118,18 @@ class _EditProfileState extends State<EditProfileClient> {
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () async {
+                  showDialog(
+                    barrierDismissible: false,
+                    context: context,
+                    builder: (contextd) {
+                      cntxdialogue = contextd;
+                      return Center(
+                        child: CircularProgressIndicator(
+                          color: Color(0xFFFCF9F6),
+                        ),
+                      );
+                    },
+                  );
                   if (_image != null) {
                     List<int> imagebytes = _image!.readAsBytesSync();
                     print("ddddddddddddddddddd");
@@ -132,6 +145,7 @@ class _EditProfileState extends State<EditProfileClient> {
                         null,
                         context);
                   }
+                  Navigator.pop(cntxdialogue);
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF84643D),

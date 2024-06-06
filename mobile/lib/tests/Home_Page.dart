@@ -747,17 +747,20 @@ class _HomePageState extends State<HomePage> {
                                                                         "images/profileimage.png")),
                                                           ),
                                                     SizedBox(
-                                                      width: 2,
+                                                      width: 5,
                                                     ),
-                                                    Text(
-                                                      "${value.AllModelsByCategory[indexCategory][index].tailor!.name}",
-                                                      style: TextStyle(
-                                                          fontFamily:
-                                                              "Nanum_Myeongjo",
-                                                          color: Colors.black,
-                                                          fontSize: 15,
-                                                          fontWeight:
-                                                              FontWeight.w300),
+                                                    Expanded(
+                                                      child: Text(
+                                                        "${value.AllModelsByCategory[indexCategory][index].tailor!.name}",
+                                                        style: TextStyle(
+                                                            fontFamily:
+                                                                "Nanum_Myeongjo",
+                                                            color: Colors.black,
+                                                            fontSize: 13,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w300),
+                                                      ),
                                                     ),
                                                     SizedBox(
                                                       width: 8,
@@ -766,7 +769,7 @@ class _HomePageState extends State<HomePage> {
                                                       children: [
                                                         Icon(
                                                           Icons.star,
-                                                          size: 30,
+                                                          size: 22,
                                                           color: Colors.yellow,
                                                         ),
                                                         Text(

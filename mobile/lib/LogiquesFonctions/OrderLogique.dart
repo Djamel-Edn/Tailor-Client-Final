@@ -13,8 +13,8 @@ class OrderLogique {
   static Future<OrderEmit?> AddOrder(
       IdClient, IdTailor, TotalPrice, posts, socket, context) async {
     print("in add order");
-    var uri = "https://tailor-client-5cqi.onrender.com/order/create";
-    var uri2 = "https://tailor-client-5cqi.onrender.com/chat/fetch";
+    var uri = "https://tailor-client-final.onrender.com/order/create";
+    var uri2 = "https://tailor-client-final.onrender.com/chat/fetch";
     //  late IO.Socket socket;
 
     final headerall = {'Content-Type': 'application/json'};
@@ -68,8 +68,8 @@ class OrderLogique {
   static Future<OrderEmit?> AddOrderByMe(IdClient, IdTailor, TotalPrice, posts,
       image, List<QSTANSRSELECTED> qsts, Tailor tailor, socket, context) async {
     print("in add order");
-    var uri = "https://tailor-client-5cqi.onrender.com/order/create";
-    // var uri2 = "https://tailor-client-5cqi.onrender.com/chat/fetch";
+    var uri = "https://tailor-client-final.onrender.com/order/create";
+    // var uri2 = "https://tailor-client-final.onrender.com/chat/fetch";
     final headerall = {'Content-Type': 'application/json'};
 
     List<Map<String, dynamic>> jsonListOfObjects = qsts.map((obj) {
@@ -136,7 +136,7 @@ class OrderLogique {
 
   static Future<void> AcceptOrder(idOrder, status, totalPrice, context) async {
     print("in update order");
-    var uri = "https://tailor-client-5cqi.onrender.com/order/update/$idOrder";
+    var uri = "https://tailor-client-final.onrender.com/order/update/$idOrder";
 
     final headerall = {'Content-Type': 'application/json'};
     print("aqqqqqqqqqqqqqwwwwwwww");
@@ -156,7 +156,7 @@ class OrderLogique {
 
   static Future<void> RejectedOrder(idOrder, status, context) async {
     print("in update order");
-    var uri = "https://tailor-client-5cqi.onrender.com/order/update/$idOrder";
+    var uri = "https://tailor-client-final.onrender.com/order/update/$idOrder";
 
     final headerall = {'Content-Type': 'application/json'};
     print("aqqqqqqqqqqqqqwwwwwwww");
@@ -176,7 +176,7 @@ class OrderLogique {
 
   static Future<void> DeletOrder(idOrder, context) async {
     print("in update order");
-    var uri = "https://tailor-client-5cqi.onrender.com/order/delete/$idOrder";
+    var uri = "https://tailor-client-final.onrender.com/order/delete/$idOrder";
 
     final headerall = {'Content-Type': 'application/json'};
     print("aqqqqqqqqqqqqqwwwwwwww");

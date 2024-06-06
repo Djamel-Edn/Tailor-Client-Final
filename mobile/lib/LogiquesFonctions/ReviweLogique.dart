@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 class RevLogique {
   static Future<void> CreateRev(clientId, tailorId, text, rating, cntx) async {
     print("in create review");
-    var uri = "https://tailor-client-5cqi.onrender.com/review/create";
+    var uri = "https://tailor-client-final.onrender.com/review/create";
 
     final headerall = {'Content-Type': 'application/json'};
 
@@ -30,7 +30,7 @@ class RevLogique {
 
   static Future<void> AddFavTailor(clientId, tailorId, cntx) async {
     print("in create review");
-    var uri = "https://tailor-client-5cqi.onrender.com/addLike/$clientId";
+    var uri = "https://tailor-client-final.onrender.com/addLike/$clientId";
 
     final headerall = {'Content-Type': 'application/json'};
 
@@ -48,7 +48,7 @@ class RevLogique {
 
   static Future<void> AddLikePost(clientId, postId, cntx) async {
     print("in create like");
-    var uri = "https://tailor-client-5cqi.onrender.com/addFavorite/$clientId";
+    var uri = "https://tailor-client-final.onrender.com/addFavorite/$clientId";
 
     final headerall = {'Content-Type': 'application/json'};
 

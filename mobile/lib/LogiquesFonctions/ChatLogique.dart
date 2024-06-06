@@ -10,7 +10,7 @@ class ChatLogique {
   static Future GetChat(IdClient, IdTailor) async {
     Chat? chat;
     List<Message> messages = [];
-    var uri = "https://tailor-client-5cqi.onrender.com/chat/fetch";
+    var uri = "https://tailor-client-final.onrender.com/chat/fetch";
 
     final headerall = {'Content-Type': 'application/json'};
     final bodyall =
@@ -80,7 +80,7 @@ class ChatLogique {
 
   static Future PostMessage(IdSender, IdChat, textmsg, images) async {
     Message? message;
-    var uri = "https://tailor-client-5cqi.onrender.com/message/create";
+    var uri = "https://tailor-client-final.onrender.com/message/create";
 
     final headerall = {'Content-Type': 'application/json'};
     final bodyall = convert.jsonEncode({

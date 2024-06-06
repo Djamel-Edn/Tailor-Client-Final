@@ -774,7 +774,6 @@ class _SearchPageState extends State<SearchPage> {
                                             (element) =>
                                                 element.city == "sidi belabbes")
                                         .toList();
-                                    print(ResultTilors[1].city);
                                   }
                                 });
                               },
@@ -840,9 +839,7 @@ class _SearchPageState extends State<SearchPage> {
                                                               ResultTilors[
                                                                       index]
                                                                   .profilePicture
-                                                                  .toString()
-                                                                  .substring(
-                                                                      23)),
+                                                                  .toString()),
                                                         ),
                                                       )
                                                     : CircleAvatar(
@@ -937,9 +934,7 @@ class _SearchPageState extends State<SearchPage> {
                                                               ResultTilorsNearest[
                                                                       index]
                                                                   .profilePicture
-                                                                  .toString()
-                                                                  .substring(
-                                                                      23)),
+                                                                  .toString()),
                                                         ),
                                                       )
                                                     : CircleAvatar(

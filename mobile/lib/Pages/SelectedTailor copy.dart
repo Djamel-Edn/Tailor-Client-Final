@@ -223,9 +223,9 @@ class _SearchPageState extends State<TailorSelectedTwo> {
                                   _nearest = value!;
                                   if (value) {
                                     ResultTilorsNearest = ResultTilors.where(
-                                        (element) =>
-                                            element.name == "Rajaa" ||
-                                            element.name == "Nour").toList();
+                                            (element) =>
+                                                element.city == "sidi belabbes")
+                                        .toList();
                                   }
                                 });
                               },
@@ -251,7 +251,6 @@ class _SearchPageState extends State<TailorSelectedTwo> {
                                             );
                                             List<int> imagebytes =
                                                 widget.image!.readAsBytesSync();
-
                                             await OrderLogique.AddOrderByMe(
                                                 Provider.of<LocalDbProvider>(
                                                         context,
@@ -327,9 +326,7 @@ class _SearchPageState extends State<TailorSelectedTwo> {
                                                                   ResultTilors[
                                                                           index]
                                                                       .profilePicture
-                                                                      .toString()
-                                                                      .substring(
-                                                                          23)),
+                                                                      .toString()),
                                                             ),
                                                           )
                                                         : CircleAvatar(
@@ -492,9 +489,7 @@ class _SearchPageState extends State<TailorSelectedTwo> {
                                                               ResultTilorsNearest[
                                                                       index]
                                                                   .profilePicture
-                                                                  .toString()
-                                                                  .substring(
-                                                                      23)),
+                                                                  .toString()),
                                                         ),
                                                       )
                                                     : CircleAvatar(

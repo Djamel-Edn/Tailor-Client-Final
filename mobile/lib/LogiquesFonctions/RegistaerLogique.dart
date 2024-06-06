@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:projetfinprepa/Pages/FirstPage.dart';
 import 'package:projetfinprepa/Pages/TailorPages/FirstPageTailor.dart';
+import 'package:projetfinprepa/Pages/registration/Newpassword.dart';
+import 'package:projetfinprepa/Pages/registration/sign.dart';
 import 'package:projetfinprepa/Providers/LocalDB.dart';
 import 'package:projetfinprepa/Providers/Tailors%20copy.dart';
 import 'package:projetfinprepa/Providers/Tailors.dart';
@@ -13,7 +15,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class Register {
   static Future<void> LoginAccount(email, password, context) async {
     print("in logi clinet");
-    var uri = "https://tailor-client-5cqi.onrender.com/login";
+    var uri = "https://tailor-client-final.onrender.com/login";
 
     final headerall = {'Content-Type': 'application/json'};
 
@@ -32,6 +34,7 @@ class Register {
 
         var tst = await prefs.setString('id', jsonres["_id"]);
         var tst1 = await prefs.setString('type', "CLIENT");
+
         Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(
@@ -44,8 +47,9 @@ class Register {
         var tst = await prefs.setString('id', jsonres["_id"]);
 
         var tst1 = await prefs.setString('type', "TAILOR");
-        Provider.of<LocalDbProvider>(context, listen: false).GetIDLocal();
-        Provider.of<LocalDbProvider>(context, listen: false).GetTYPELocal();
+        await Provider.of<LocalDbProvider>(context, listen: false).GetIDLocal();
+        await Provider.of<LocalDbProvider>(context, listen: false)
+            .GetTYPELocal();
         Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(
@@ -68,7 +72,7 @@ class Register {
 
     print(city);
 
-    var uri = "https://tailor-client-5cqi.onrender.com/register/client";
+    var uri = "https://tailor-client-final.onrender.com/register/client";
 
     final headerall = {'Content-Type': 'application/json'};
 
@@ -95,7 +99,7 @@ class Register {
   static Future<void> CreateAccountTailor(
       email, name, password, gender, city, phone, context) async {
     print("in registration tailor");
-    var uri = "https://tailor-client-5cqi.onrender.com/register/tailor";
+    var uri = "https://tailor-client-final.onrender.com/register/tailor";
 
     final headerall = {'Content-Type': 'application/json'};
     print(email);
@@ -126,7 +130,7 @@ class Register {
 
   static Future<void> VerfiOTP(IdClient, OTPSTR, index, context) async {
     print("in registration");
-    var uri = "https://tailor-client-5cqi.onrender.com/verifyEmail/$IdClient";
+    var uri = "https://tailor-client-final.onrender.com/verifyEmail/$IdClient";
     final headerall = {'Content-Type': 'application/json'};
 
     final bodyall = convert.jsonEncode({"uniqueString": OTPSTR});
@@ -152,6 +156,13 @@ class Register {
 
         print("ggggggggggggg hhh save local ${tst}");
         print("in registration clinet local");
+      } else if (index == -1) {
+        //
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => NewPassword(IDUSER: IdClient),
+            ));
       } else {
         var tst = await prefs.setString('id', IdClient);
         var tst1 = await prefs.setString('type', "TAILOR");
@@ -202,7 +213,7 @@ class Register {
 
   static Future<void> EditProfile(iduser, name, city, phone, p, context) async {
     print("in registration tailor");
-    var uri = "https://tailor-client-5cqi.onrender.com/update/$iduser";
+    var uri = "https://tailor-client-final.onrender.com/update/$iduser";
 
     final headerall = {'Content-Type': 'application/json'};
 
@@ -236,7 +247,7 @@ class Register {
 
   static Future<void> EditProfileClient(iduser, name, p, context) async {
     print("in registration tailor");
-    var uri = "https://tailor-client-5cqi.onrender.com/update/$iduser";
+    var uri = "https://tailor-client-final.onrender.com/update/$iduser";
 
     final headerall = {'Content-Type': 'application/json'};
 
@@ -263,7 +274,7 @@ class Register {
 
   static Future<void> EditPasswordClient(iduser, newPassword, context) async {
     print("in registration tailor");
-    var uri = "https://tailor-client-5cqi.onrender.com/updatePassword/$iduser";
+    var uri = "https://tailor-client-final.onrender.com/updatePassword/$iduser";
 
     final headerall = {'Content-Type': 'application/json'};
 
@@ -279,9 +290,29 @@ class Register {
     if (res.statusCode == 200) {}
   }
 
+  static Future<void> EditForgotPassword(iduser, newPassword, context) async {
+    var uri = "https://tailor-client-final.onrender.com/updatePassword/$iduser";
+
+    final headerall = {'Content-Type': 'application/json'};
+
+    final bodyall = convert.jsonEncode({
+      "newPassword": newPassword.toString(),
+    });
+
+    var res = await http.put(Uri.parse(uri), headers: headerall, body: bodyall);
+
+    if (res.statusCode == 200) {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => sign(),
+          ));
+    }
+  }
+
   static Future<void> EditPasswordTailor(iduser, newPassword, context) async {
     print("in registration tailor");
-    var uri = "https://tailor-client-5cqi.onrender.com/updatePassword/$iduser";
+    var uri = "https://tailor-client-final.onrender.com/updatePassword/$iduser";
 
     final headerall = {'Content-Type': 'application/json'};
 
@@ -295,5 +326,29 @@ class Register {
     print(newPassword);
     print(res.statusCode);
     if (res.statusCode == 200) {}
+  }
+
+  //// forget
+
+  static Future<String> resetpassword(email) async {
+    String id = "";
+    print("in registration tailor");
+    var uri = "https://tailor-client-final.onrender.com/resetPassword";
+
+    final headerall = {'Content-Type': 'application/json'};
+
+    final bodyall = convert.jsonEncode({
+      "email": email,
+    });
+
+    var res =
+        await http.post(Uri.parse(uri), headers: headerall, body: bodyall);
+    print("in eiiiiiiiiiiiiiiiit restet password");
+    print(res.statusCode);
+    if (res.statusCode == 200) {
+      var jsonres = convert.jsonDecode(res.body);
+      id = jsonres;
+    }
+    return id;
   }
 }

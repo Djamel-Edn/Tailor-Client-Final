@@ -1,10 +1,13 @@
 import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:projetfinprepa/LogiquesFonctions/RegistaerLogique.dart';
 import 'package:projetfinprepa/Pages/registration/sign.dart';
 
 class NewPassword extends StatefulWidget {
-  const NewPassword({Key? key}) : super(key: key);
+  var IDUSER;
+  NewPassword({required this.IDUSER});
 
   @override
   _NewPasswordState createState() => _NewPasswordState();
@@ -12,7 +15,8 @@ class NewPassword extends StatefulWidget {
 
 class _NewPasswordState extends State<NewPassword> {
   final TextEditingController _newPasswordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
   String? _passwordError;
   String? _confirmPasswordError;
   bool _isLoading = false;
@@ -63,7 +67,6 @@ class _NewPasswordState extends State<NewPassword> {
       );
 
       if (response.statusCode == 200) {
-      
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -71,12 +74,12 @@ class _NewPasswordState extends State<NewPassword> {
           ),
         );
       } else {
-        
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
             title: const Text('Error'),
-            content: Text('Failed to save password. Error code: ${response.statusCode}'),
+            content: Text(
+                'Failed to save password. Error code: ${response.statusCode}'),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
@@ -92,7 +95,8 @@ class _NewPasswordState extends State<NewPassword> {
         context: context,
         builder: (context) => AlertDialog(
           title: const Text('Error'),
-          content: const Text('An unexpected error occurred. Please try again later.'),
+          content: const Text(
+              'An unexpected error occurred. Please try again later.'),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
@@ -126,7 +130,8 @@ class _NewPasswordState extends State<NewPassword> {
             child: Image.asset('images/shad.png'),
           ),
           Padding(
-            padding: const EdgeInsets.only(bottom: 0, left: 0, right: 62, top: 410),
+            padding:
+                const EdgeInsets.only(bottom: 0, left: 0, right: 62, top: 410),
             child: Image.asset('images/mimi.png'),
           ),
           SafeArea(
@@ -153,9 +158,11 @@ class _NewPasswordState extends State<NewPassword> {
                     decoration: InputDecoration(
                       hintText: 'New Password',
                       errorText: _passwordError,
-                      contentPadding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+                      contentPadding:
+                          EdgeInsets.symmetric(vertical: 16, horizontal: 16),
                       border: OutlineInputBorder(),
-                      focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.brown)),
+                      focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.brown)),
                     ),
                   ),
                 ),
@@ -169,17 +176,23 @@ class _NewPasswordState extends State<NewPassword> {
                     decoration: InputDecoration(
                       hintText: 'Confirm Password',
                       errorText: _confirmPasswordError,
-                      contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+                      contentPadding: const EdgeInsets.symmetric(
+                          vertical: 16, horizontal: 16),
                       border: OutlineInputBorder(),
-                      focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.brown)),
+                      focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.brown)),
                     ),
                   ),
                 ),
                 SizedBox(height: 30),
                 GestureDetector(
                   onTap: () {
-                    if (_passwordError == null && _confirmPasswordError == null) {
-                      _savePassword(context);
+                    if (_passwordError == null &&
+                        _confirmPasswordError == null) {
+                      print(
+                          "sssssssssssssssssss ${_newPasswordController.text}");
+                      Register.EditForgotPassword(
+                          widget.IDUSER, _newPasswordController.text, context);
                     }
                   },
                   child: Container(
@@ -187,7 +200,8 @@ class _NewPasswordState extends State<NewPassword> {
                       color: Color.fromARGB(255, 166, 131, 89),
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    padding: const EdgeInsets.symmetric(horizontal: 110, vertical: 12),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 110, vertical: 12),
                     child: _isLoading
                         ? CircularProgressIndicator() // Show loading indicator while saving password
                         : const Text(

@@ -12,7 +12,7 @@ class DetailPageExistModel extends StatelessWidget {
   var order;
   DetailPageExistModel({super.key, required this.order});
   var cntxcircl;
-
+  var cntxdialoge;
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -93,12 +93,14 @@ class DetailPageExistModel extends StatelessWidget {
                               ),
                               Expanded(
                                 child: InkWell(
-                                  onTap: () {
-                                    OrderLogique.AcceptOrder(order["_id"],
+                                  onTap: () async {
+                                    await OrderLogique.AcceptOrder(order["_id"],
                                             "Completed", 3131, context)
                                         .then((value) => showDialog(
-                                              context: context,
-                                              builder: (context) => AlertDialog(
+                                            context: context,
+                                            builder: (contextf) {
+                                              cntxdialoge = contextf;
+                                              return AlertDialog(
                                                 content: Wrap(
                                                   children: [
                                                     Text(
@@ -108,9 +110,8 @@ class DetailPageExistModel extends StatelessWidget {
                                                     )
                                                   ],
                                                 ),
-                                              ),
-                                            ));
-                                    // Navigator.pop(context);
+                                              );
+                                            }));
                                   },
                                   child: Container(
                                     alignment: Alignment.center,
@@ -197,13 +198,17 @@ class DetailPageExistModel extends StatelessWidget {
                                   ),
                                   Expanded(
                                     child: InkWell(
-                                      onTap: () {
-                                        OrderLogique.AcceptOrder(order["_id"],
-                                                "Accepted", 3131, context)
+                                      onTap: () async {
+                                        await OrderLogique.AcceptOrder(
+                                                order["_id"],
+                                                "Accepted",
+                                                3131,
+                                                context)
                                             .then((value) => showDialog(
-                                                  context: context,
-                                                  builder: (context) =>
-                                                      AlertDialog(
+                                                context: context,
+                                                builder: (contextd) {
+                                                  cntxdialoge = contextd;
+                                                  return AlertDialog(
                                                     content: Wrap(
                                                       children: [
                                                         Text(
@@ -217,9 +222,8 @@ class DetailPageExistModel extends StatelessWidget {
                                                         )
                                                       ],
                                                     ),
-                                                  ),
-                                                ));
-                                        Navigator.pop(context);
+                                                  );
+                                                }));
                                       },
                                       child: Container(
                                         alignment: Alignment.center,

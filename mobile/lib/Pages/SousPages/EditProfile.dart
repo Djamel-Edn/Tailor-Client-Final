@@ -35,7 +35,7 @@ class _EditProfileState extends State<EditProfile> {
   TextEditingController _phoneNumberController = TextEditingController();
   File? _image;
   final ImagePicker _picker = ImagePicker();
-
+  var cntxdialogue;
   @override
   void initState() {
     super.initState();
@@ -134,6 +134,18 @@ class _EditProfileState extends State<EditProfile> {
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () async {
+                  showDialog(
+                    barrierDismissible: false,
+                    context: context,
+                    builder: (contextd) {
+                      cntxdialogue = contextd;
+                      return Center(
+                        child: CircularProgressIndicator(
+                          color: Color(0xFFFCF9F6),
+                        ),
+                      );
+                    },
+                  );
                   print("sssssssss");
                   // Save changes
                   // widget.userProfile.fullName = _fullNameController.text;
@@ -163,6 +175,7 @@ class _EditProfileState extends State<EditProfile> {
                         null,
                         context);
                   }
+                  Navigator.pop(cntxdialogue);
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF84643D),
